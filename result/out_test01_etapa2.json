@@ -74,4 +74,48 @@
   "timestamp" : 110,
   "results" : [ "How I Built This", "TED Radio Hour" ],
   "message" : "Search returned 2 results"
+}, {
+  "command" : "search",
+  "user" : "alice22",
+  "timestamp" : 180,
+  "results" : [ "Stairway to Heaven", "Black Dog", "Whole Lotta Love", "Good Times Bad Times" ],
+  "message" : "Search returned 4 results"
+}, {
+  "command" : "search",
+  "user" : "alice22",
+  "timestamp" : 240,
+  "results" : [ "Big Pimpin'" ],
+  "message" : "Search returned 1 results"
+}, {
+  "command" : "select",
+  "user" : "alice22",
+  "timestamp" : 250,
+  "message" : "Successfully selected Big Pimpin'."
+}, {
+  "command" : "load",
+  "user" : "alice22",
+  "timestamp" : 280,
+  "message" : "Playback loaded successfully."
+}, {
+  "command" : "status",
+  "user" : "alice22",
+  "timestamp" : 420,
+  "stats" : {
+    "name" : "Big Pimpin'",
+    "remainedTime" : 144,
+    "repeat" : "No Repeat",
+    "shuffle" : false,
+    "paused" : false
+  }
+}, {
+  "command" : "status",
+  "user" : "alice22",
+  "timestamp" : 700,
+  "stats" : {
+    "name" : "",
+    "remainedTime" : 0,
+    "repeat" : "No Repeat",
+    "shuffle" : false,
+    "paused" : true
+  }
 } ]

@@ -1,5 +1,8 @@
 package main;
 
+import main.Commands.Types.Song;
+
+import java.util.ArrayList;
 import java.util.Map;
 
 public class SearchBar {
@@ -11,7 +14,25 @@ public class SearchBar {
     private int itemNumber;
     private String playlistName;
     private int playlistId;
-    private  int seed;
+    private int seed;
+
+
+//    etapa 2
+    private String nextPage;
+    private String description;
+    private String name;
+    private String date;
+    private double price; // nu stiu daca trebuie double
+    private int age;
+    private String city;
+    private int releaseYear;
+    private ArrayList<Song> songs;
+
+
+
+
+
+
 
     /**
      * default constructor
@@ -137,5 +158,85 @@ public class SearchBar {
      */
     public int getSeed() {
         return seed;
+    }
+
+
+//    etapa 2
+
+
+    public void setSeed(int seed) {
+        this.seed = seed;
+    }
+
+    public String getNextPage() {
+        return nextPage;
+    }
+
+    public void setNextPage(String nextPage) {
+        this.nextPage = nextPage;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public int getReleaseYear() {
+        return releaseYear;
+    }
+
+    public void setReleaseYear(int releaseYear) {
+        this.releaseYear = releaseYear;
+    }
+
+    public ArrayList<Song> getSongs() {
+        return songs;
+    }
+
+    public void setSongs(ArrayList<Song> songs) {
+        this.songs = songs;
     }
 }

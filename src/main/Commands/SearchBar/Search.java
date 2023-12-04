@@ -149,38 +149,38 @@ public class Search implements Command {
 
     /**
      * This method is used to set the search.
-     * @param currentUser the current user
+     * @param user the current user
      * @param songs every song
      * @param everyPlaylist every playlist
      * @param podcasts every podcast
      */
-    public void setSearch(final User currentUser, final ArrayList<Song> songs,
+    public void setSearch(final User user, final ArrayList<Song> songs,
                           final ArrayList<Playlist> everyPlaylist,
                           final ArrayList<Podcast> podcasts) {
 
 //                if only type is songs:
         if (this.type.equals("song")) {
-            this.searchingBySongType(currentUser.getEverySong());
-            currentUser.setTypeFoundBySearch(0);
+            this.searchingBySongType(user.getEverySong());
+            user.setTypeFoundBySearch(0);
         }
 
 //                if only type is podcasts:
         if (this.type.equals("podcast")) {
             this.searchingByPodcastType(podcasts);
-            currentUser.setTypeFoundBySearch(1);
+            user.setTypeFoundBySearch(1);
         }
 
 //                if only type is playlist:
         if (this.type.equals("playlist")) {
             this.searchingByPlaylistType(everyPlaylist);
-            currentUser.setTypeFoundBySearch(2);
+            user.setTypeFoundBySearch(2);
         }
 
-        currentUser.setCurrentSearch(this);
-        currentUser.setTypeSelected(-1);
-        currentUser.setCurrentType(null);
-        currentUser.setTypeLoaded(-1);
-        currentUser.setRepeatString("No Repeat");
+        user.setCurrentSearch(this);
+        user.setTypeSelected(-1);
+        user.setCurrentType(null);
+        user.setTypeLoaded(-1);
+        user.setRepeatString("No Repeat");
     }
 
     /**
