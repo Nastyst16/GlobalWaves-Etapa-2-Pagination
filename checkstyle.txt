@@ -1,0 +1,22 @@
+Starting audit...
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\Commands\Player\Load.java:3:12: Using the '.*' form of import should be avoided - main.*. [AvoidStarImport]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\Commands\Player\Load.java:93: Line is longer than 100 characters (found 104). [LineLength]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\Commands\Player\Load.java:102: Line is longer than 100 characters (found 105). [LineLength]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\Commands\Player\Repeat.java:31:57: Parameter repeatStatus should be final. [FinalParameters]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\Commands\Player\ShowPreferredSongs.java:34:38: 'user' hides a field. [HiddenField]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\Commands\Player\Status.java:4:12: Using the '.*' form of import should be avoided - main.*. [AvoidStarImport]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\Commands\SearchBar\Search.java:4:12: Using the '.*' form of import should be avoided - main.*. [AvoidStarImport]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\Commands\SearchBar\Search.java:72:27: 'results' hides a field. [HiddenField]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\Commands\Types\Episode.java:4:1: Redundant import from the same package - main.Commands.Types.Type. [RedundantImport]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\Commands\Types\Song.java:4:1: Redundant import from the same package - main.Commands.Types.Type. [RedundantImport]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\Commands\Types\Type.java:9:5: Redundant 'public' modifier. [RedundantModifier]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\Commands\Types\Type.java:15:5: Redundant 'public' modifier. [RedundantModifier]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\Commands\Types\Type.java:20:5: Redundant 'public' modifier. [RedundantModifier]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\Main.java:9:20: Using the '.*' form of import should be avoided - fileio.input.*. [AvoidStarImport]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\Main.java:10:28: Using the '.*' form of import should be avoided - main.Commands.Player.*. [AvoidStarImport]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\Main.java:13:27: Using the '.*' form of import should be avoided - main.Commands.Types.*. [AvoidStarImport]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\Main.java:75:5: Method length is 257 lines (max allowed is 150). [MethodLength]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\User.java:7:27: Using the '.*' form of import should be avoided - main.Commands.Types.*. [AvoidStarImport]
+[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-1-AudioPlayer\.\src\main\User.java:148:14: 'currentType' hides a field. [HiddenField]
+Audit done.
+Checkstyle ends with 19 errors.
