@@ -2,6 +2,7 @@ package main.Commands.SearchBar;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
+import main.CommandVisitor;
 import main.Commands.Types.Playlist;
 import main.User;
 
@@ -15,6 +16,11 @@ public class Select implements Command {
     private String selectedName;
     private String message;
 
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
+    }
 
     /**
      * Constructor for Select command.

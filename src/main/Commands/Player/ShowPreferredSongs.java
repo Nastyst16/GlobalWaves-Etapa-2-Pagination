@@ -1,6 +1,7 @@
 package main.Commands.Player;
 
 import main.Command;
+import main.CommandVisitor;
 import main.Commands.Types.Song;
 import main.User;
 
@@ -11,6 +12,12 @@ public class ShowPreferredSongs implements Command {
     private final String user;
     private final int timestamp;
     private final ArrayList<String> result;
+
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
+    }
 
     /**
      * Constructor

@@ -1,6 +1,7 @@
 package main.Commands.Player;
 
 import main.Command;
+import main.CommandVisitor;
 import main.User;
 
 public class Backward implements Command {
@@ -9,6 +10,12 @@ public class Backward implements Command {
     private final int timestamp;
     private String message;
     private static final int SECONDS_TO_FORWARD = 90;
+
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
+    }
 
     /**
      * Constructor.

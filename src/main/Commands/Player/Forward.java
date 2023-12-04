@@ -1,6 +1,7 @@
 package main.Commands.Player;
 
 import main.Command;
+import main.CommandVisitor;
 import main.User;
 
 public class Forward implements Command {
@@ -10,6 +11,11 @@ public class Forward implements Command {
     private String message;
     private static final int SECONDS_TO_FORWARD = 90;
 
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
+    }
 
     /**
      * Constructor

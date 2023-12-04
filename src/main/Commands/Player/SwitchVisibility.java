@@ -2,6 +2,7 @@ package main.Commands.Player;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
+import main.CommandVisitor;
 import main.User;
 
 public class SwitchVisibility implements Command {
@@ -10,6 +11,12 @@ public class SwitchVisibility implements Command {
     private final int timestamp;
     private final int id;
     private String message;
+
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
+    }
 
     /**
      * This constructor is used to create a new SwitchVisibility command.

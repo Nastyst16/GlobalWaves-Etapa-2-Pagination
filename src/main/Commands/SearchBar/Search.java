@@ -20,6 +20,12 @@ public class Search implements Command {
     private String message;
     private static final int MAX_SIZE = 5;
 
+    @Override
+    public void accept(final CommandVisitor visitor) {
+        visitor.visit(this);
+    }
+
+
     /**
      * Constructor for Search
      * @param command the command to be executed
@@ -262,6 +268,6 @@ public class Search implements Command {
      */
     @Override
     public void execute() {
-
+//        this.setSearch(user, songs, everyPlaylist, podcasts)
     }
 }

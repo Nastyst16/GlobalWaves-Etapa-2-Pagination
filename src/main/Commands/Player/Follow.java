@@ -1,6 +1,7 @@
 package main.Commands.Player;
 
 import main.Command;
+import main.CommandVisitor;
 import main.Commands.Types.Playlist;
 import main.User;
 import java.util.ArrayList;
@@ -11,6 +12,11 @@ public class Follow implements Command {
     private final int timestamp;
     private String message;
 
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
+    }
 
     /**
      * Constructor

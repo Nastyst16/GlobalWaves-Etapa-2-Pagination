@@ -1,6 +1,7 @@
 package main.Commands.Player;
 
 import main.Command;
+import main.CommandVisitor;
 import main.Commands.Types.Song;
 
 import java.util.ArrayList;
@@ -12,6 +13,12 @@ public class GetTop5Songs implements Command {
     private final int timestamp;
     private final ArrayList<String> result;
     private static final int TOP_NR = 5;
+
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
+    }
 
     /**
      * Constructor

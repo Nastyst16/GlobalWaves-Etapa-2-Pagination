@@ -13,6 +13,12 @@ public class Load implements Command {
     private final int timestamp;
     private String message;
 
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
+    }
+
     /**
      * Constructor
      *

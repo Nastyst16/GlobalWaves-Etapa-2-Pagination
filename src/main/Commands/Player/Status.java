@@ -18,6 +18,11 @@ public class Status implements Command {
     private int remainingTime;
 
 
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
+    }
+
     /**
      * Constructor
      * @param command String

@@ -170,6 +170,9 @@ public final class Main {
 
                 ((Search) (commands.get(index))).setSearch(user, songs, everyPlaylist, podcasts);
 
+//                ((Search) (commands.get(index))).accept(new
+//                        ConcreteCommandVisitor(user, songs, everyPlaylist, podcasts));
+
             } else if (command.equals("select")) {
 
                 commands.add(new Select(input.getCommand(), input.getUsername(),

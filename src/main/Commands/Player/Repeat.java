@@ -1,6 +1,7 @@
 package main.Commands.Player;
 
 import main.Command;
+import main.CommandVisitor;
 import main.User;
 
 public class Repeat implements Command {
@@ -8,6 +9,12 @@ public class Repeat implements Command {
     private final String user;
     private final int timestamp;
     private String message;
+
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
+    }
 
     /**
      * Repeat constructor

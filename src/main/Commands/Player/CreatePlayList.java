@@ -2,6 +2,7 @@ package main.Commands.Player;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
+import main.CommandVisitor;
 import main.Commands.Types.Playlist;
 
 public class CreatePlayList implements Command {
@@ -12,6 +13,11 @@ public class CreatePlayList implements Command {
     private final String message;
     private  Playlist playlist;
 
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
+    }
 
     public CreatePlayList(final String command, final String user, final int timestamp,
                           final String playlistName, final String message) {

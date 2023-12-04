@@ -2,6 +2,7 @@ package main.Commands.Player;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
+import main.CommandVisitor;
 import main.Commands.Types.Type;
 import main.User;
 
@@ -14,6 +15,12 @@ public class Shuffle implements Command {
     private final int timestamp;
     private final int seed;
     private String message;
+
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
+    }
 
     /**
      * Constructor
