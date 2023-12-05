@@ -2,9 +2,8 @@ package main;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import main.Commands.SearchBar.Search;
-import main.Commands.SearchBar.Select;
-import main.Commands.Types.*;
+import main.commands.searchBar.*;
+import main.commands.types.*;
 
 import java.util.ArrayList;
 
@@ -43,6 +42,11 @@ public class User {
     private ArrayList<String> likedPlaylists;
     private ArrayList<Podcast> podcastsPlayed;
     private Playlist selectedPlaylist;
+
+//    Stage 2 variables
+    private String currentPage;
+    private boolean online;
+
 
     public User(final String username, final int age, final String city,
                 final ArrayList<Song> everySong, final ArrayList<Podcast> everyPodcast) {
@@ -90,6 +94,12 @@ public class User {
 
             this.everySong.add(copySong);
         }
+
+
+//        Stage 2:
+        currentPage = null;
+        online = true;
+
     }
 
 
@@ -294,6 +304,12 @@ public class User {
         this.currentType = currentType;
         user.setCurrentType(currentType);
     }
+
+
+//    Stage 2 methods:
+
+
+
 
     /**
      * get the age
@@ -786,5 +802,24 @@ public class User {
      */
     public ArrayList<Integer> getOriginalIndices() {
         return originalIndices;
+    }
+
+
+//    Stage 2 getter and setters:
+
+    public String getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(String currentPage) {
+        this.currentPage = currentPage;
+    }
+
+    public boolean getOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
     }
 }

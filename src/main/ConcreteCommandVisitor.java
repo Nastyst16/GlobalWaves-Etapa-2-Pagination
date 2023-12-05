@@ -1,11 +1,11 @@
 package main;
 
-import main.Commands.Player.*;
-import main.Commands.SearchBar.Search;
-import main.Commands.SearchBar.Select;
-import main.Commands.Types.Playlist;
-import main.Commands.Types.Podcast;
-import main.Commands.Types.Song;
+import main.commands.pageSystem.ChangePage;
+import main.commands.searchBar.*;
+import main.commands.types.*;
+import main.commands.player.*;
+import main.commands.user.GetOnlineUsers;
+import main.commands.user.SwitchConnectionStatus;
 
 import java.util.ArrayList;
 
@@ -32,7 +32,7 @@ public class ConcreteCommandVisitor implements CommandVisitor {
         this.podcasts = podcasts;
     }
 
-@Override
+    @Override
     public void visit(Search search) {
         search.execute(commands, input, user, songs, everyPlaylist, podcasts);
     }
@@ -130,5 +130,20 @@ public class ConcreteCommandVisitor implements CommandVisitor {
     @Override
     public void visit(GetTop5Songs getTop5Songs) {
         getTop5Songs.execute(commands, input, user, songs, everyPlaylist, podcasts);
+    }
+
+    @Override
+    public void visit(ChangePage changePage) {
+        changePage.execute(commands, input, user, songs, everyPlaylist, podcasts);
+    }
+
+    @Override
+    public void visit(SwitchConnectionStatus switchConnectionStatus) {
+        switchConnectionStatus.execute(commands, input, user, songs, everyPlaylist, podcasts);
+    }
+
+    @Override
+    public void visit(GetOnlineUsers getOnlineUsers) {
+        getOnlineUsers.execute(commands, input, user, songs, everyPlaylist, podcasts);
     }
 }

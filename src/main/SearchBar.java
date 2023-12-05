@@ -1,6 +1,6 @@
 package main;
 
-import main.Commands.Types.Song;
+import main.commands.types.Song;
 
 import java.util.ArrayList;
 import java.util.Map;

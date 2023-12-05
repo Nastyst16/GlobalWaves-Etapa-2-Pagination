@@ -1,9 +1,8 @@
 package main;
 
-import main.Commands.SearchBar.Search;
-import main.Commands.Types.Playlist;
-import main.Commands.Types.Podcast;
-import main.Commands.Types.Song;
+import main.commands.types.Playlist;
+import main.commands.types.Podcast;
+import main.commands.types.Song;
 
 import java.util.ArrayList;
 

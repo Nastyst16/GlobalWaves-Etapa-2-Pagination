@@ -1,8 +1,10 @@
 package main;
 
-import main.Commands.Player.*;
-import main.Commands.SearchBar.Search;
-import main.Commands.SearchBar.Select;
+import main.commands.pageSystem.ChangePage;
+import main.commands.searchBar.*;
+import main.commands.player.*;
+import main.commands.user.GetOnlineUsers;
+import main.commands.user.SwitchConnectionStatus;
 
 public interface CommandVisitor {
     void visit(Search search);
@@ -27,10 +29,9 @@ public interface CommandVisitor {
     void visit(GetTop5Songs getTop5Songs);
 
 
-//    etapa_2
-
-//    void visit();
-//    void visit();
-//    void visit();
+//    Stage 2:
+    void visit(ChangePage changePage);
+    void visit(SwitchConnectionStatus switchConnectionStatus);
+    void visit(GetOnlineUsers getOnlineUsers);
 
 }

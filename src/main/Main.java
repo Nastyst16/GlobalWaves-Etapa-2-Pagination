@@ -7,10 +7,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import fileio.input.*;
-import main.Commands.Player.*;
-import main.Commands.SearchBar.Search;
-import main.Commands.SearchBar.Select;
-import main.Commands.Types.*;
+import main.commands.pageSystem.*;
+import main.commands.searchBar.*;
+import main.commands.types.*;
+import main.commands.player.*;
+import main.commands.user.*;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -148,7 +150,7 @@ public final class Main {
             }
 
 //            calculating how many seconds have gone sine the last command
-            if (user != null && user.getCurrentType() != null && !user.isPaused()) {
+            if (user != null && user.getCurrentType() != null && !user.isPaused() && user.getOnline()) {
                 int newSecsGone = input.getTimestamp() - user.getPrevTimestamp();
 
                 Type currentType = user.getCurrentType();
@@ -168,109 +170,43 @@ public final class Main {
             int index = commands.size();
 
 
+//            if for debugging
+            if (input.getTimestamp() == 430) {
+                int x = 5;
+            }
+
+
+
             executor.setExecutor(commands, input, user, songs, everyPlaylist, podcasts);
 
             switch (command) {
-                case "search":
-                    commands.add(new Search(input.getCommand(), input.getUsername(),
-                            input.getTimestamp(), input.getType(), input.getFilters()));
-                    break;
+                case "search":              commands.add(new Search(input));                break;
+                case "select":              commands.add(new Select(input));                break;
+                case "load":                commands.add(new Load(input));                  break;
+                case "playPause":           commands.add(new PlayPause(input));             break;
+                case "repeat":              commands.add(new Repeat(input));                break;
+                case "status":              commands.add(new Status(input));                break;
+                case "shuffle":             commands.add(new Shuffle(input));               break;
+                case "createPlaylist":      commands.add(new CreatePlayList(input));        break;
+                case "addRemoveInPlaylist": commands.add(new AddRemoveInPlaylist(input));   break;
+                case "like":                commands.add(new Like(input));                  break;
+                case "showPlaylists":       commands.add(new ShowPlaylists(input));         break;
+                case "showPreferredSongs":  commands.add(new ShowPreferredSongs(input));    break;
+                case "next":                commands.add(new Next(input));                  break;
+                case "prev":                commands.add(new Prev(input));                  break;
+                case "forward":             commands.add(new Forward(input));               break;
+                case "backward":            commands.add(new Backward(input));              break;
+                case "follow":              commands.add(new Follow(input));                break;
+                case "switchVisibility":    commands.add(new SwitchVisibility(input));      break;
+                case "getTop5Playlists":    commands.add(new GetTop5Playlists(input));      break;
+                case "getTop5Songs":        commands.add(new GetTop5Songs(input));          break;
 
-                case "select":
-                    commands.add(new Select(input.getCommand(), input.getUsername(),
-                            input.getTimestamp(), input.getItemNumber()));
-                    break;
+//                Stage 2:
+                case "switchConnectionStatus": commands.add(new SwitchConnectionStatus(input)); break;
+                case "getOnlineUsers":      commands.add(new GetOnlineUsers(input, users)); break;
+                case "changePage":          commands.add(new ChangePage(input));            break;
 
-                case "load":
-                    commands.add(new Load(input.getCommand(), input.getUsername(),
-                            input.getTimestamp()));
-                    break;
-
-                case "playPause":
-                    commands.add(new PlayPause(input.getCommand(), input.getUsername(),
-                            input.getTimestamp()));
-                    break;
-
-                case "repeat":
-                    commands.add(new Repeat(input.getCommand(), input.getUsername(),
-                            input.getTimestamp()));
-                    break;
-
-                case "status":
-                    commands.add(new Status(input.getCommand(), input.getUsername(),
-                            input.getTimestamp()));
-                    break;
-
-                case "shuffle":
-                    commands.add(new Shuffle(input.getCommand(), input.getUsername(),
-                            input.getTimestamp(), input.getSeed()));
-                    break;
-
-                case "createPlaylist":
-                    commands.add(new CreatePlayList(input.getCommand(), input.getUsername(),
-                            input.getTimestamp(), input.getPlaylistName(), null));
-                    break;
-
-                case "addRemoveInPlaylist":
-                    commands.add(new AddRemoveInPlaylist(input.getCommand(), input.getUsername(),
-                            input.getTimestamp(), input.getPlaylistId()));
-                    break;
-
-                case "like":
-                    commands.add(new Like(input.getCommand(), input.getUsername(),
-                            input.getTimestamp()));
-                    break;
-
-                case "showPlaylists":
-                    commands.add(new ShowPlaylists(input.getCommand(), input.getUsername(),
-                            input.getTimestamp()));
-                    break;
-
-                case "showPreferredSongs":
-                    commands.add(new ShowPreferredSongs(input.getCommand(), input.getUsername(),
-                            input.getTimestamp()));
-                    break;
-
-                case "next":
-                    commands.add((new Next(input.getCommand(), input.getUsername(),
-                            input.getTimestamp())));
-                    break;
-
-                case "prev":
-                    commands.add((new Prev(input.getCommand(), input.getUsername(),
-                            input.getTimestamp())));
-                    break;
-
-                case "forward":
-                    commands.add((new Forward(input.getCommand(), input.getUsername(),
-                            input.getTimestamp())));
-                    break;
-
-                case "backward":
-                    commands.add((new Backward(input.getCommand(), input.getUsername(),
-                            input.getTimestamp())));
-                    break;
-
-                case "follow":
-                    commands.add((new Follow(input.getCommand(), input.getUsername(),
-                            input.getTimestamp())));
-                    break;
-
-                case "switchVisibility":
-                    commands.add((new SwitchVisibility(input.getCommand(), input.getUsername(),
-                            input.getTimestamp(), input.getPlaylistId())));
-                    break;
-
-                case "getTop5Playlists":
-                    commands.add(new GetTop5Playlists(input.getCommand(), input.getTimestamp()));
-                    break;
-
-                case "getTop5Songs":
-                    commands.add(new GetTop5Songs(input.getCommand(), input.getTimestamp()));
-                    break;
-
-                default:
-                    break;
+                default: break;
             }
 //            we have the command created, now we use the visitor design pattern
             commands.get(index).accept(executor);
