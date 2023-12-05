@@ -2,7 +2,13 @@ package main.Commands.Player;
 
 import main.Command;
 import main.CommandVisitor;
+import main.Commands.Types.Playlist;
+import main.Commands.Types.Podcast;
+import main.Commands.Types.Song;
+import main.SearchBar;
 import main.User;
+
+import java.util.ArrayList;
 
 public class PlayPause implements Command {
     private final String command;
@@ -98,7 +104,10 @@ public class PlayPause implements Command {
      * Executes the command
      */
     @Override
-    public void execute() {
-
+    public void execute(final ArrayList<Command> commands, final SearchBar input,
+                        final User user, final ArrayList<Song> songs,
+                        final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts) {
+        this.setPlayPause(user);
     }
 }

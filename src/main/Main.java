@@ -131,6 +131,10 @@ public final class Main {
 //        every playlist from every user;
         ArrayList<Playlist> everyPlaylist = new ArrayList<>();
 
+
+//        creationg the executor
+        ConcreteCommandVisitor executor = new ConcreteCommandVisitor();
+
 //        parsing the Json content into corresponding commands
         for (SearchBar input : searchBarInputs) {
 
@@ -163,166 +167,113 @@ public final class Main {
             }
             int index = commands.size();
 
-            if (command.equals("search")) {
-//                adding the search command, and initializing
-                commands.add(new Search(input.getCommand(), input.getUsername(),
-                        input.getTimestamp(), input.getType(), input.getFilters()));
 
-                ((Search) (commands.get(index))).setSearch(user, songs, everyPlaylist, podcasts);
+            executor.setExecutor(commands, input, user, songs, everyPlaylist, podcasts);
 
-//                ((Search) (commands.get(index))).accept(new
-//                        ConcreteCommandVisitor(user, songs, everyPlaylist, podcasts));
+            switch (command) {
+                case "search":
+                    commands.add(new Search(input.getCommand(), input.getUsername(),
+                            input.getTimestamp(), input.getType(), input.getFilters()));
+                    break;
 
-            } else if (command.equals("select")) {
+                case "select":
+                    commands.add(new Select(input.getCommand(), input.getUsername(),
+                            input.getTimestamp(), input.getItemNumber()));
+                    break;
 
-                commands.add(new Select(input.getCommand(), input.getUsername(),
-                        input.getTimestamp(), input.getItemNumber()));
+                case "load":
+                    commands.add(new Load(input.getCommand(), input.getUsername(),
+                            input.getTimestamp()));
+                    break;
 
-                ((Select) (commands.get(index))).setSelect(user, everyPlaylist);
+                case "playPause":
+                    commands.add(new PlayPause(input.getCommand(), input.getUsername(),
+                            input.getTimestamp()));
+                    break;
 
-            } else if (command.equals("load")) {
+                case "repeat":
+                    commands.add(new Repeat(input.getCommand(), input.getUsername(),
+                            input.getTimestamp()));
+                    break;
 
-                commands.add(new Load(input.getCommand(), input.getUsername(),
-                        input.getTimestamp()));
+                case "status":
+                    commands.add(new Status(input.getCommand(), input.getUsername(),
+                            input.getTimestamp()));
+                    break;
 
-                ((Load) (commands.get(index))).setLoad(user, everyPlaylist, podcasts);
+                case "shuffle":
+                    commands.add(new Shuffle(input.getCommand(), input.getUsername(),
+                            input.getTimestamp(), input.getSeed()));
+                    break;
 
-            } else if (command.equals("playPause")) {
-                commands.add(new PlayPause(input.getCommand(), input.getUsername(),
-                        input.getTimestamp()));
+                case "createPlaylist":
+                    commands.add(new CreatePlayList(input.getCommand(), input.getUsername(),
+                            input.getTimestamp(), input.getPlaylistName(), null));
+                    break;
 
-                ((PlayPause) (commands.get(index))).setPlayPause(user);
+                case "addRemoveInPlaylist":
+                    commands.add(new AddRemoveInPlaylist(input.getCommand(), input.getUsername(),
+                            input.getTimestamp(), input.getPlaylistId()));
+                    break;
 
-            } else if (command.equals("repeat")) {
-//
-                commands.add(new Repeat(input.getCommand(), input.getUsername(),
-                        input.getTimestamp()));
+                case "like":
+                    commands.add(new Like(input.getCommand(), input.getUsername(),
+                            input.getTimestamp()));
+                    break;
 
-                user.setRepeatStatus(((Repeat) (commands.get(index))).setRepeatMessage(user,
-                        user.getRepeatStatus(), user.getTypeLoaded()));
+                case "showPlaylists":
+                    commands.add(new ShowPlaylists(input.getCommand(), input.getUsername(),
+                            input.getTimestamp()));
+                    break;
 
-            } else if (command.equals("status")) {
+                case "showPreferredSongs":
+                    commands.add(new ShowPreferredSongs(input.getCommand(), input.getUsername(),
+                            input.getTimestamp()));
+                    break;
 
-                commands.add(new Status(input.getCommand(), input.getUsername(),
-                        input.getTimestamp()));
+                case "next":
+                    commands.add((new Next(input.getCommand(), input.getUsername(),
+                            input.getTimestamp())));
+                    break;
 
-                if (user.getCurrentType() != null) {
-                    ((Status) (commands.get(index))).settingStats(user);
-                } else {
-                    ((Status) (commands.get(index))).settingNoType(user);
-                }
+                case "prev":
+                    commands.add((new Prev(input.getCommand(), input.getUsername(),
+                            input.getTimestamp())));
+                    break;
 
-                if (((Status) (commands.get(index))).getRemainingTime() == 0
-                        && user.getRepeatStatus() == 0) {
-                    user.setPaused(true);
-                    user.setCurrentType(null);
-                }
+                case "forward":
+                    commands.add((new Forward(input.getCommand(), input.getUsername(),
+                            input.getTimestamp())));
+                    break;
 
-            } else if (command.equals("shuffle")) {
-                commands.add(new Shuffle(input.getCommand(), input.getUsername(),
-                        input.getTimestamp(), input.getSeed()));
+                case "backward":
+                    commands.add((new Backward(input.getCommand(), input.getUsername(),
+                            input.getTimestamp())));
+                    break;
 
-                user.setShuffleSeed(input.getSeed());
+                case "follow":
+                    commands.add((new Follow(input.getCommand(), input.getUsername(),
+                            input.getTimestamp())));
+                    break;
 
-                ((Shuffle) (commands.get(index))).settingShuffle(user);
+                case "switchVisibility":
+                    commands.add((new SwitchVisibility(input.getCommand(), input.getUsername(),
+                            input.getTimestamp(), input.getPlaylistId())));
+                    break;
 
-            } else if (command.equals("createPlaylist")) {
+                case "getTop5Playlists":
+                    commands.add(new GetTop5Playlists(input.getCommand(), input.getTimestamp()));
+                    break;
 
-//                verify if a playlist with the same name exists;
-                String message = "Playlist created successfully.";
-                for (Playlist playlist : everyPlaylist) {
-                    if (playlist.getName().equals(input.getPlaylistName())) {
-                        message = "A playlist with the same name already exists.";
-                    }
-                }
+                case "getTop5Songs":
+                    commands.add(new GetTop5Songs(input.getCommand(), input.getTimestamp()));
+                    break;
 
-                commands.add(new CreatePlayList(input.getCommand(), input.getUsername(),
-                        input.getTimestamp(), input.getPlaylistName(), message));
-
-                if (!message.equals("A playlist with the same name already exists.")) {
-                    user.addPlaylistToList(((CreatePlayList) (commands.get(index))).getPlaylist());
-                    everyPlaylist.add(((CreatePlayList) (commands.get(index))).getPlaylist());
-                }
-
-            } else if (command.equals("addRemoveInPlaylist")) {
-                commands.add(new AddRemoveInPlaylist(input.getCommand(), input.getUsername(),
-                        input.getTimestamp(), input.getPlaylistId()));
-
-//                setting message;
-                ((AddRemoveInPlaylist) (commands.get(index))).
-                        setMessage(user, input.getPlaylistId());
-
-            } else if (command.equals("like")) {
-                commands.add(new Like(input.getCommand(), input.getUsername(),
-                        input.getTimestamp()));
-
-                ((Like) (commands.get(index))).likeHelper(user, songs);
-
-            } else if (command.equals("showPlaylists")) {
-                commands.add(new ShowPlaylists(input.getCommand(), input.getUsername(),
-                        input.getTimestamp()));
-
-//                copying the playlists
-                ArrayList<Playlist> copyList = new ArrayList<>();
-                ((ShowPlaylists) (commands.get(index))).copyPlaylists(user, copyList);
-
-                ((ShowPlaylists) (commands.get(index))).setResult(copyList);
-
-            } else if (command.equals("showPreferredSongs")) {
-                commands.add(new ShowPreferredSongs(input.getCommand(), input.getUsername(),
-                        input.getTimestamp()));
-
-                ((ShowPreferredSongs) (commands.get(index))).setResult(user);
-
-            } else if (command.equals("next")) {
-                user.setNext(true);
-
-                commands.add((new Next(input.getCommand(), input.getUsername(),
-                        input.getTimestamp())));
-
-                ((Next) (commands.get(index))).setNext(user);
-
-                user.setNext(false);
-            } else if (command.equals("prev")) {
-                commands.add((new Prev(input.getCommand(), input.getUsername(),
-                        input.getTimestamp())));
-
-                ((Prev) (commands.get(index))).setPrev(user);
-
-            } else if (command.equals("forward")) {
-                commands.add((new Forward(input.getCommand(), input.getUsername(),
-                        input.getTimestamp())));
-
-                ((Forward) (commands.get(index))).setForward(user);
-
-            } else if (command.equals("backward")) {
-                commands.add((new Backward(input.getCommand(), input.getUsername(),
-                        input.getTimestamp())));
-
-                ((Backward) (commands.get(index))).setBackward(user);
-
-            } else if (command.equals("follow")) {
-                commands.add((new Follow(input.getCommand(), input.getUsername(),
-                        input.getTimestamp())));
-
-                ((Follow) (commands.get(index))).setFollow(user, everyPlaylist);
-
-            } else if (command.equals("switchVisibility")) {
-                commands.add((new SwitchVisibility(input.getCommand(), input.getUsername(),
-                        input.getTimestamp(), input.getPlaylistId())));
-
-                ((SwitchVisibility) (commands.get(index))).setVisibility(user);
-
-            } else if (command.equals("getTop5Playlists")) {
-                commands.add(new GetTop5Playlists(input.getCommand(), input.getTimestamp()));
-
-                ((GetTop5Playlists) (commands.get(index))).searchTop5Playlists(everyPlaylist);
-
-            } else if (command.equals("getTop5Songs")) {
-                commands.add(new GetTop5Songs(input.getCommand(), input.getTimestamp()));
-
-                ((GetTop5Songs) (commands.get(index))).searchTop5Songs(songs);
+                default:
+                    break;
             }
+//            we have the command created, now we use the visitor design pattern
+            commands.get(index).accept(executor);
         }
 //        parsing the requeriments
         if (!commands.isEmpty()) {

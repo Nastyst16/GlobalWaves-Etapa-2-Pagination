@@ -4,13 +4,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
 import main.CommandVisitor;
 import main.Commands.Types.Playlist;
+import main.Commands.Types.Podcast;
+import main.Commands.Types.Song;
+import main.SearchBar;
+import main.User;
+
+import java.util.ArrayList;
 
 public class CreatePlayList implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
     private String playlistName;
-    private final String message;
+    private String message;
     private  Playlist playlist;
 
 
@@ -74,6 +80,11 @@ public class CreatePlayList implements Command {
         return message;
     }
 
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     /**
      * @return playlist
      */
@@ -93,7 +104,26 @@ public class CreatePlayList implements Command {
      * @return the songs
      */
     @Override
-    public void execute() {
+    public void execute(final ArrayList<Command> commands, final SearchBar input,
+                        final User user, final ArrayList<Song> songs,
+                        final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts) {
+
+
+//                verify if a playlist with the same name exists;
+        String message = "Playlist created successfully.";
+        for (Playlist playlist : everyPlaylist) {
+            if (playlist.getName().equals(input.getPlaylistName())) {
+                message = "A playlist with the same name already exists.";
+            }
+        }
+
+        this.setMessage(message);
+
+        if (!message.equals("A playlist with the same name already exists.")) {
+            user.addPlaylistToList(this.getPlaylist());
+            everyPlaylist.add(this.getPlaylist());
+        }
 
     }
 }

@@ -191,7 +191,10 @@ public class Load implements Command {
     }
 
     @Override
-    public void execute() {
-
+    public void execute(final ArrayList<Command> commands, final SearchBar input,
+                        final User user, final ArrayList<Song> songs,
+                        final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts) {
+        this.setLoad(user, everyPlaylist, podcasts);
     }
 }

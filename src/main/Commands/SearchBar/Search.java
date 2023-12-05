@@ -267,7 +267,11 @@ public class Search implements Command {
      * This method is used to execute the command.
      */
     @Override
-    public void execute() {
-//        this.setSearch(user, songs, everyPlaylist, podcasts)
+    public void execute(final ArrayList<Command> commands, final SearchBar input,
+                        final User user, final ArrayList<Song> songs,
+                        final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts) {
+
+        this.setSearch(user, songs, everyPlaylist, podcasts);
     }
 }

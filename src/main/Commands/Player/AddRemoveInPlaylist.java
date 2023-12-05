@@ -3,8 +3,13 @@ package main.Commands.Player;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
 import main.CommandVisitor;
+import main.Commands.Types.Playlist;
+import main.Commands.Types.Podcast;
 import main.Commands.Types.Song;
+import main.SearchBar;
 import main.User;
+
+import java.util.ArrayList;
 
 /**
  * Represents a command to add or remove a song in a playlist.
@@ -117,7 +122,11 @@ public class AddRemoveInPlaylist implements Command {
     }
 
     @Override
-    public void execute() {
-
+    public void execute(final ArrayList<Command> commands, final SearchBar input,
+                        final User user, final ArrayList<Song> songs,
+                        final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts) {
+//        setting message
+        this.setMessage(user, input.getPlaylistId());
     }
 }

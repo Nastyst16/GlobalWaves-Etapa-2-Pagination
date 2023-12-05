@@ -2,10 +2,12 @@ package main.Commands.Player;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.*;
+import main.Commands.Types.Playlist;
 import main.Commands.Types.Podcast;
 import main.Commands.Types.Song;
 import main.Commands.Types.Type;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -145,7 +147,21 @@ public class Status implements Command {
      * Execute the command
      */
     @Override
-    public void execute() {
+    public void execute(final ArrayList<Command> commands, final SearchBar input,
+                        final User user, final ArrayList<Song> songs,
+                        final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts) {
 
+        if (user.getCurrentType() != null) {
+            this.settingStats(user);
+        } else {
+            this.settingNoType(user);
+        }
+
+        if (this.getRemainingTime() == 0
+                && user.getRepeatStatus() == 0) {
+            user.setPaused(true);
+            user.setCurrentType(null);
+        }
     }
 }
