@@ -3,6 +3,7 @@ package main.commands.player;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
 import main.CommandVisitor;
+import main.commands.types.Album;
 import main.commands.types.Playlist;
 import main.commands.types.Podcast;
 import main.commands.types.Song;
@@ -24,6 +25,15 @@ public class AddRemoveInPlaylist implements Command {
 
 
     @Override
+    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
+                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
+                        final ArrayList<Album> albums) {
+//        setting message
+        this.setMessage(user, input.getPlaylistId());
+    }
+
+    @Override
     public void accept(CommandVisitor visitor) {
         visitor.visit(this);
     }
@@ -38,6 +48,46 @@ public class AddRemoveInPlaylist implements Command {
         this.timestamp = input.getTimestamp();
         this.playlistId = input.getPlaylistId();
     }
+
+
+    /**
+     * Sets the message based on the execution of the command.
+     *
+     * @param user The current user issuing the command.
+     * @param index       The index of the playlist in the user's playlist list.
+     */
+    public void setMessage(final User user, final int index) {
+
+//        if the user is offline
+        if (!user.getOnline()) {
+            this.message = this.user + " is offline.";
+            return;
+        }
+
+        if (user.getTypeLoaded() == 2
+                || user.getTypeLoaded() == 1) {
+            this.message = "The loaded source is not a song.";
+            return;
+        }
+
+        if (user.getCurrentType() == null) {
+            this.message = "Please load a source before adding to or removing from the playlist.";
+        } else {
+            if (index > user.getPlayListList().size()) {
+                this.message = "The specified playlist does not exist.";
+            } else {
+                if (user.getTypeSelected() == 2
+                        || user.getTypeSelected() == 1) {
+                    this.message = "The loaded source is not a song.";
+                } else {
+                    this.message = user.getPlayListList().get(index - 1).
+                            addRemoveSong((Song) user.getCurrentType());
+                }
+            }
+        }
+    }
+
+
 
     /**
      * Gets the command string associated with this {@code AddRemoveInPlaylist} instance.
@@ -85,43 +135,4 @@ public class AddRemoveInPlaylist implements Command {
         return message;
     }
 
-
-    /**
-     * Sets the message based on the execution of the command.
-     *
-     * @param currentUser The current user issuing the command.
-     * @param index       The index of the playlist in the user's playlist list.
-     */
-    public void setMessage(final User currentUser, final int index) {
-        if (currentUser.getTypeLoaded() == 2
-                || currentUser.getTypeLoaded() == 1) {
-            this.message = "The loaded source is not a song.";
-            return;
-        }
-
-        if (currentUser.getCurrentType() == null) {
-            this.message = "Please load a source before adding to or removing from the playlist.";
-        } else {
-            if (index > currentUser.getPlayListList().size()) {
-                this.message = "The specified playlist does not exist.";
-            } else {
-                if (currentUser.getTypeSelected() == 2
-                        || currentUser.getTypeSelected() == 1) {
-                    this.message = "The loaded source is not a song.";
-                } else {
-                    this.message = currentUser.getPlayListList().get(index - 1).
-                            addRemoveSong((Song) currentUser.getCurrentType());
-                }
-            }
-        }
-    }
-
-    @Override
-    public void execute(final ArrayList<Command> commands, final SearchBar input,
-                        final User user, final ArrayList<Song> songs,
-                        final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts) {
-//        setting message
-        this.setMessage(user, input.getPlaylistId());
-    }
 }

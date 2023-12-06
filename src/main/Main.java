@@ -8,10 +8,16 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import fileio.input.*;
 import main.commands.pageSystem.*;
+import main.commands.player.admin.AddUser;
+import main.commands.player.admin.ShowAlbums;
+import main.commands.player.artist.AddAlbum;
+import main.commands.player.statistics.GetOnlineUsers;
+import main.commands.player.statistics.GetTop5Playlists;
+import main.commands.player.statistics.GetTop5Songs;
 import main.commands.searchBar.*;
 import main.commands.types.*;
 import main.commands.player.*;
-import main.commands.user.*;
+import main.commands.player.user.*;
 
 
 import java.io.File;
@@ -85,7 +91,6 @@ public final class Main {
 
 //        reading songs
         ArrayList<SongInput> songInputs = library.getSongs();
-        int songsCount = 0;
 
         ArrayList<Song> songs = new ArrayList<>();
 //        storing songs
@@ -93,8 +98,6 @@ public final class Main {
             songs.add(new Song(songInput.getName(), songInput.getDuration(), songInput.getAlbum(),
                     songInput.getTags(), songInput.getLyrics(), songInput.getGenre(),
                     songInput.getReleaseYear(), songInput.getArtist()));
-
-            ++songsCount;
         }
 
 //        reading Podcasts && Episodes
@@ -126,12 +129,14 @@ public final class Main {
 //        reading input test files
         ArrayList<SearchBar> searchBarInputs = objectMapper.
                 readValue(new File(CheckerConstants.TESTS_PATH + filePathInput),
-                        new TypeReference<>() { });
+                        new TypeReference<ArrayList<SearchBar>>() { });
 
         ArrayList<Command> commands = new ArrayList<>();
 
 //        every playlist from every user;
         ArrayList<Playlist> everyPlaylist = new ArrayList<>();
+//        every album from every artist
+        ArrayList<Album> everyAlbum = new ArrayList<>();
 
 
 //        creationg the executor
@@ -171,13 +176,13 @@ public final class Main {
 
 
 //            if for debugging
-            if (input.getTimestamp() == 430) {
+            if (input.getTimestamp() == 395) {
                 int x = 5;
             }
 
-
-
-            executor.setExecutor(commands, input, user, songs, everyPlaylist, podcasts);
+//            creating the commands
+            executor.setExecutor(commands, input, user, songs,
+                    everyPlaylist, podcasts, users, everyAlbum);
 
             switch (command) {
                 case "search":              commands.add(new Search(input));                break;
@@ -203,8 +208,13 @@ public final class Main {
 
 //                Stage 2:
                 case "switchConnectionStatus": commands.add(new SwitchConnectionStatus(input)); break;
-                case "getOnlineUsers":      commands.add(new GetOnlineUsers(input, users)); break;
+                case "getOnlineUsers":      commands.add(new GetOnlineUsers(input));        break;
                 case "changePage":          commands.add(new ChangePage(input));            break;
+                case "addUser":             commands.add(new AddUser(input));               break;
+                case "addAlbum":            commands.add(new AddAlbum(input));              break;
+                case "showAlbums":          commands.add(new ShowAlbums(input));            break;
+                case "printCurrentPage":    commands.add(new PrintCurrentPage(input));      break;
+
 
                 default: break;
             }

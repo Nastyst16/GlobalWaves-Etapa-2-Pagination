@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 
-public class Song implements Type {
+public class    Song implements Type {
     private String name;
     private int duration;
     private String album;
@@ -84,7 +84,6 @@ public class Song implements Type {
      * set duration
      * @param duration
      */
-    @JsonIgnore
     public void setDuration(final int duration) {
         this.duration = duration;
     }
@@ -101,7 +100,6 @@ public class Song implements Type {
      * set album
      * @param album
      */
-    @JsonIgnore
     public void setAlbum(final String album) {
         this.album = album;
     }
@@ -118,7 +116,6 @@ public class Song implements Type {
      * set tags
      * @param tags
      */
-    @JsonIgnore
     public void setTags(final List<String> tags) {
         this.tags = tags;
     }
@@ -135,7 +132,6 @@ public class Song implements Type {
      * set lyrics
      * @param lyrics
      */
-    @JsonIgnore
     public void setLyrics(final String lyrics) {
         this.lyrics = lyrics;
     }
@@ -152,7 +148,6 @@ public class Song implements Type {
      * set genre
      * @param genre
      */
-    @JsonIgnore
     public void setGenre(final String genre) {
         this.genre = genre;
     }
@@ -169,7 +164,6 @@ public class Song implements Type {
      * set release year
      * @param releaseYear
      */
-    @JsonIgnore
     public void setReleaseYear(final int releaseYear) {
         this.releaseYear = releaseYear;
     }
@@ -186,7 +180,6 @@ public class Song implements Type {
      * set artist
      * @param artist
      */
-    @JsonIgnore
     public void setArtist(final String artist) {
         this.artist = artist;
     }

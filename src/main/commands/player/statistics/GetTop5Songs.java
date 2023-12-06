@@ -1,7 +1,8 @@
-package main.commands.player;
+package main.commands.player.statistics;
 
 import main.Command;
 import main.CommandVisitor;
+import main.commands.types.Album;
 import main.commands.types.Playlist;
 import main.commands.types.Podcast;
 import main.commands.types.Song;
@@ -18,6 +19,18 @@ public class GetTop5Songs implements Command {
     private final ArrayList<String> result;
     private static final int TOP_NR = 5;
 
+
+    /**
+     * Execute the command
+     */
+    @Override
+    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
+                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
+                        final ArrayList<Album> albums) {
+
+        this.searchTop5Songs(songs);
+    }
 
     @Override
     public void accept(CommandVisitor visitor) {
@@ -78,15 +91,5 @@ public class GetTop5Songs implements Command {
         return result;
     }
 
-    /**
-     * Execute the command
-     */
-    @Override
-    public void execute(final ArrayList<Command> commands, final SearchBar input,
-                        final User user, final ArrayList<Song> songs,
-                        final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts) {
 
-        this.searchTop5Songs(songs);
-    }
 }

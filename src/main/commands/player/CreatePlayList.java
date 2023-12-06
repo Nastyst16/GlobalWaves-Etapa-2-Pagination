@@ -3,6 +3,7 @@ package main.commands.player;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
 import main.CommandVisitor;
+import main.commands.types.Album;
 import main.commands.types.Playlist;
 import main.commands.types.Podcast;
 import main.commands.types.Song;
@@ -18,6 +19,36 @@ public class CreatePlayList implements Command {
     private String playlistName;
     private String message;
     private  Playlist playlist;
+
+
+    @Override
+    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
+                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
+                        final ArrayList<Album> albums) {
+
+//        if the user is offline
+        if (user.getOnline() == false) {
+            this.message = this.user + " is offline.";
+            return;
+        }
+
+//                verify if a playlist with the same name exists;
+        String message = "Playlist created successfully.";
+        for (Playlist playlist : everyPlaylist) {
+            if (playlist.getName().equals(input.getPlaylistName())) {
+                message = "A playlist with the same name already exists.";
+            }
+        }
+
+        this.setMessage(message);
+
+        if (!message.equals("A playlist with the same name already exists.")) {
+            user.addPlaylistToList(this.getPlaylist());
+            everyPlaylist.add(this.getPlaylist());
+        }
+
+    }
 
 
     @Override
@@ -99,30 +130,5 @@ public class CreatePlayList implements Command {
         this.playlist = playlist;
     }
 
-    /**
-     * @return the songs
-     */
-    @Override
-    public void execute(final ArrayList<Command> commands, final SearchBar input,
-                        final User user, final ArrayList<Song> songs,
-                        final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts) {
 
-
-//                verify if a playlist with the same name exists;
-        String message = "Playlist created successfully.";
-        for (Playlist playlist : everyPlaylist) {
-            if (playlist.getName().equals(input.getPlaylistName())) {
-                message = "A playlist with the same name already exists.";
-            }
-        }
-
-        this.setMessage(message);
-
-        if (!message.equals("A playlist with the same name already exists.")) {
-            user.addPlaylistToList(this.getPlaylist());
-            everyPlaylist.add(this.getPlaylist());
-        }
-
-    }
 }

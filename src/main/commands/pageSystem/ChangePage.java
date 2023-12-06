@@ -15,6 +15,15 @@ public class ChangePage implements Command {
     private final String nextPage;
     private String message;
 
+
+    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
+                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
+                        final ArrayList<Album> albums) {
+
+        this.setChangePage(user);
+    }
+
     public ChangePage(SearchBar input) {
         this.command = input.getCommand();
         this.user = input.getUsername();
@@ -24,6 +33,12 @@ public class ChangePage implements Command {
     }
 
     public void setChangePage(User user) {
+
+//        if the user is offline
+        if (!user.getOnline()) {
+            this.message = this.user + " is offline.";
+            return;
+        }
 
         if (this.getNextPage().equals("Home") || this.getNextPage().equals("LikedContent")) {
 
@@ -43,13 +58,7 @@ public class ChangePage implements Command {
     }
 
 
-    public void execute(final ArrayList<Command> commands, final SearchBar input,
-                        final User user, final ArrayList<Song> songs,
-                        final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts) {
 
-        this.setChangePage(user);
-    }
 
 
     public String getCommand() {

@@ -2,6 +2,7 @@ package main.commands;
 
 import main.Command;
 import main.CommandVisitor;
+import main.commands.types.Album;
 import main.commands.types.Playlist;
 import main.commands.types.Podcast;
 import main.commands.types.Song;
@@ -17,10 +18,10 @@ public class Default implements Command {
 
     }
 
-    public void execute(final ArrayList<Command> commands, final SearchBar input,
-                        final User user, final ArrayList<Song> songs,
-                        final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts) {
+    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
+                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
+                        final ArrayList<Album> albums) {
         System.out.println("Invalid command");
     }
 

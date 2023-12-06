@@ -2,6 +2,7 @@ package main.commands.player;
 
 import main.Command;
 import main.CommandVisitor;
+import main.commands.types.Album;
 import main.commands.types.Playlist;
 import main.commands.types.Podcast;
 import main.commands.types.Song;
@@ -15,6 +16,19 @@ public class ShowPreferredSongs implements Command {
     private final String user;
     private final int timestamp;
     private final ArrayList<String> result;
+
+
+    /**
+     * Execute.
+     */
+    @Override
+    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
+                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
+                        final ArrayList<Album> albums) {
+
+        this.setResult(user);
+    }
 
 
     @Override
@@ -80,17 +94,5 @@ public class ShowPreferredSongs implements Command {
      */
     public ArrayList<String> getResult() {
         return result;
-    }
-
-    /**
-     * Execute.
-     */
-    @Override
-    public void execute(final ArrayList<Command> commands, final SearchBar input,
-                        final User user, final ArrayList<Song> songs,
-                        final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts) {
-
-        this.setResult(user);
     }
 }

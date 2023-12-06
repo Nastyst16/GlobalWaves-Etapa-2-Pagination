@@ -2,6 +2,7 @@ package main.commands.player;
 
 import main.Command;
 import main.CommandVisitor;
+import main.commands.types.Album;
 import main.commands.types.Playlist;
 import main.commands.types.Podcast;
 import main.commands.types.Song;
@@ -15,6 +16,18 @@ public class PlayPause implements Command {
     private final String user;
     private final int timestamp;
     private String message;
+
+
+    /**
+     * Executes the command
+     */
+    @Override
+    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
+                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
+                        final ArrayList<Album> albums) {
+        this.setPlayPause(user);
+    }
 
 
     @Override
@@ -36,19 +49,25 @@ public class PlayPause implements Command {
     /**
      * Pauses or resumes playback
      *
-     * @param currentUser the user that called the command
+     * @param user the user that called the command
      */
-    public void setPlayPause(final User currentUser) {
+    public void setPlayPause(final User user) {
 
-        if (!currentUser.isPaused() && currentUser.getTypeLoaded() != -1) {
+//        if the user is offline
+        if (user.getOnline() == false) {
+            this.message = this.user + " is offline.";
+            return;
+        }
+
+        if (!user.isPaused() && user.getTypeLoaded() != -1) {
             this.message = "Playback paused successfully.";
 
-            currentUser.setPaused(true);
+            user.setPaused(true);
 
-        } else if (currentUser.isPaused() && currentUser.getTypeLoaded() != -1) {
+        } else if (user.isPaused() && user.getTypeLoaded() != -1) {
             this.message = "Playback resumed successfully.";
 
-            currentUser.setPaused(false);
+            user.setPaused(false);
         }
     }
 
@@ -97,14 +116,5 @@ public class PlayPause implements Command {
         this.message = message;
     }
 
-    /**
-     * Executes the command
-     */
-    @Override
-    public void execute(final ArrayList<Command> commands, final SearchBar input,
-                        final User user, final ArrayList<Song> songs,
-                        final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts) {
-        this.setPlayPause(user);
-    }
+
 }

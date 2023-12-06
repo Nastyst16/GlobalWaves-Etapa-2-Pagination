@@ -2,6 +2,7 @@ package main.commands.player;
 
 import main.Command;
 import main.CommandVisitor;
+import main.commands.types.Album;
 import main.commands.types.Playlist;
 import main.commands.types.Podcast;
 import main.commands.types.Song;
@@ -17,6 +18,18 @@ public class Backward implements Command {
     private String message;
     private static final int SECONDS_TO_FORWARD = 90;
 
+
+    /**
+     * Executes the command.
+     */
+    @Override
+    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
+                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
+                        final ArrayList<Album> albums) {
+
+        this.setBackward(user);
+    }
 
     @Override
     public void accept(CommandVisitor visitor) {
@@ -35,18 +48,25 @@ public class Backward implements Command {
 
     /**
      * goes back 90 seconds in the current track
-     * @param currentUser the current user
+     * @param user the current user
      */
-    public void setBackward(final User currentUser) {
-        if (currentUser.getTypeLoaded() != 1) {
+    public void setBackward(final User user) {
+
+//        if the user is offline
+        if (user.getOnline() == false) {
+            this.message = this.user + " is offline.";
+            return;
+        }
+
+        if (user.getTypeLoaded() != 1) {
             this.message = "The loaded source is not a podcast.";
             return;
         }
-        if (currentUser.getCurrentType() == null) {
+        if (user.getCurrentType() == null) {
             this.message = "Please load a source before returning to the previous track.";
             return;
         }
-        currentUser.getCurrentType().setSecondsGone(currentUser.
+        user.getCurrentType().setSecondsGone(user.
                 getCurrentType().getSecondsGone() - SECONDS_TO_FORWARD);
         this.message = "Rewound successfully.";
     }
@@ -98,15 +118,5 @@ public class Backward implements Command {
         this.message = message;
     }
 
-    /**
-     * Executes the command.
-     */
-    @Override
-    public void execute(final ArrayList<Command> commands, final SearchBar input,
-                        final User user, final ArrayList<Song> songs,
-                        final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts) {
 
-        this.setBackward(user);
-    }
 }

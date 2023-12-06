@@ -3,10 +3,7 @@ package main.commands.player;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
 import main.CommandVisitor;
-import main.commands.types.Playlist;
-import main.commands.types.Podcast;
-import main.commands.types.Song;
-import main.commands.types.Type;
+import main.commands.types.*;
 import main.SearchBar;
 import main.User;
 
@@ -20,6 +17,21 @@ public class Shuffle implements Command {
     private final int timestamp;
     private final int seed;
     private String message;
+
+
+    /**
+     * Execute the command.
+     */
+    @Override
+    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
+                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
+                        final ArrayList<Album> albums) {
+
+        user.setShuffleSeed(input.getSeed());
+
+        this.settingShuffle(user);
+    }
 
 
     @Override
@@ -40,36 +52,43 @@ public class Shuffle implements Command {
 
     /**
      * settingShuffle
-     * @param currentUser the current user
+     * @param user the current user
      */
-    public void settingShuffle(final User currentUser) {
-        Type currentType = currentUser.getCurrentType();
+    public void settingShuffle(final User user) {
 
-        if (currentType != null && currentUser.getTypeLoaded() == 2) {
+//        if the user is offline
+        if (user.getOnline() == false) {
+            this.message = this.user + " is offline.";
+            return;
+        }
 
-            if (!currentUser.isShuffle()) {
+        Type currentType = user.getCurrentType();
+
+        if (currentType != null && user.getTypeLoaded() == 2) {
+
+            if (!user.isShuffle()) {
                 this.message = "Shuffle function activated successfully.";
-                currentUser.setShuffle(true);
+                user.setShuffle(true);
 
-                for (int i = 0; i < currentUser.getCurrentPlaylist().getSongList().size(); i++) {
-                    currentUser.getOriginalIndices().add(i);
+                for (int i = 0; i < user.getCurrentPlaylist().getSongList().size(); i++) {
+                    user.getOriginalIndices().add(i);
                 }
-                currentUser.getShuffledIndices().addAll(currentUser.getOriginalIndices());
+                user.getShuffledIndices().addAll(user.getOriginalIndices());
 
                 Random rand = new Random(this.seed);
-                Collections.shuffle(currentUser.getShuffledIndices(), rand);
+                Collections.shuffle(user.getShuffledIndices(), rand);
 
             } else {
                 this.message = "Shuffle function deactivated successfully.";
-                currentUser.setShuffle(false);
+                user.setShuffle(false);
 
-                currentUser.getOriginalIndices().clear();
-                currentUser.getShuffledIndices().clear();
+                user.getOriginalIndices().clear();
+                user.getShuffledIndices().clear();
 
             }
-            currentUser.setShuffleSeed(this.seed);
+            user.setShuffleSeed(this.seed);
 
-        } else if (currentType != null && currentUser.getTypeLoaded() != 2) {
+        } else if (currentType != null && user.getTypeLoaded() != 2) {
             this.message = "The loaded source is not a playlist.";
         } else if (currentType == null) {
             this.message = "Please load a source before using the shuffle function.";
@@ -132,17 +151,5 @@ public class Shuffle implements Command {
         this.message = message;
     }
 
-    /**
-     * Execute the command.
-     */
-    @Override
-    public void execute(final ArrayList<Command> commands, final SearchBar input,
-                        final User user, final ArrayList<Song> songs,
-                        final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts) {
 
-        user.setShuffleSeed(input.getSeed());
-
-        this.settingShuffle(user);
-    }
 }

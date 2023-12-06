@@ -2,6 +2,7 @@ package main.commands.player;
 
 import main.Command;
 import main.CommandVisitor;
+import main.commands.types.Album;
 import main.commands.types.Playlist;
 import main.commands.types.Podcast;
 import main.commands.types.Song;
@@ -16,6 +17,18 @@ public class Like implements Command {
     private final int timestamp;
     private String message;
 
+
+    /**
+     * executes the command
+     */
+    @Override
+    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
+                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
+                        final ArrayList<Album> albums) {
+
+        this.likeHelper(user, songs);
+    }
 
     @Override
     public void accept(CommandVisitor visitor) {
@@ -48,18 +61,23 @@ public class Like implements Command {
     /**
      * evaluates the command
      *
-     * @param currentUser the user that called the command
+     * @param user the user that called the command
      * @param songs       the list of songs
      */
-    public void likeHelper(final User currentUser, final ArrayList<Song> songs) {
+    public void likeHelper(final User user, final ArrayList<Song> songs) {
 
-        if (currentUser.getCurrentType() != null) {
+        if (user.getOnline() == false) {
+            this.message = this.user + " is offline.";
+            return;
+        }
+
+        if (user.getCurrentType() != null) {
 //                    if we have loaded a song
-            boolean like = currentUser.setLikedSongs((Song) currentUser.getCurrentType(), songs);
+            boolean like = user.setLikedSongs((Song) user.getCurrentType(), songs);
             this.setMessageIfLiked(like);
-        } else if (currentUser.getTypeLoaded() == 2) {
+        } else if (user.getTypeLoaded() == 2) {
 //                    if we have loaded a playlist
-            boolean like = currentUser.setLikedPlaylist();
+            boolean like = user.setLikedPlaylist();
             this.setMessageIfLiked(like);
         } else {
             this.message = "Please load a source before liking or unliking.";
@@ -111,15 +129,4 @@ public class Like implements Command {
         this.message = message;
     }
 
-    /**
-     * executes the command
-     */
-    @Override
-    public void execute(final ArrayList<Command> commands, final SearchBar input,
-                        final User user, final ArrayList<Song> songs,
-                        final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts) {
-
-        this.likeHelper(user, songs);
-    }
 }

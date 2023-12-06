@@ -1,6 +1,7 @@
 package main.commands.player;
 
 import main.*;
+import main.commands.types.Album;
 import main.commands.types.Playlist;
 import main.commands.types.Podcast;
 import main.commands.types.Song;
@@ -12,6 +13,17 @@ public class Load implements Command {
     private final String user;
     private final int timestamp;
     private String message;
+
+
+    @Override
+    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
+                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
+                        final ArrayList<Album> albums) {
+
+        this.setLoad(user, everyPlaylist, podcasts);
+    }
+
 
 
     @Override
@@ -32,98 +44,104 @@ public class Load implements Command {
 
     /** load command method
      *
-     * @param currentUser current user
+     * @param user current user
      * @param everyPlaylist every playlist
      * @param podcasts every podcast
      */
-    public void setLoad(final User currentUser, final ArrayList<Playlist> everyPlaylist,
+    public void setLoad(final User user, final ArrayList<Playlist> everyPlaylist,
                     final ArrayList<Podcast> podcasts) {
 
+//        if the user is offline
+        if (user.getOnline() == false) {
+            this.message = this.user + " is offline.";
+            return;
+        }
+
 //          if the last command was select
-        if (currentUser.getCurrentSelect() != null) {
+        if (user.getCurrentSelect() != null) {
 //          if the last selection was succesfully we can do the load
 //          boolean selectSuccessful = currentSelect.getMessage().contains("Successfully");
-        boolean selectSuccessful = currentUser.getCurrentSelect().
+        boolean selectSuccessful = user.getCurrentSelect().
                 getMessage().contains("Successfully");
 
         if (selectSuccessful) {
             this.message = "Playback loaded successfully.";
 
-            currentUser.setLoadMade(1);
-            currentUser.setPaused(false);
-            currentUser.setRepeatStatus(0);
-            currentUser.setRepeatString("No Repeat");
-            currentUser.setSecondsGone(0);
+            user.setLoadMade(1);
+            user.setPaused(false);
+            user.setRepeatStatus(0);
+            user.setRepeatString("No Repeat");
+            user.setSecondsGone(0);
 
-            if (currentUser.getTypeSelected() == 0) {
-                for (Song song : currentUser.getEverySong()) {
-                    if (song.getName().equals(currentUser.
+            if (user.getTypeSelected() == 0) {
+                for (Song song : user.getEverySong()) {
+                    if (song.getName().equals(user.
                             getCurrentSelect().getSelectedName())) {
-                        currentUser.setCurrentType(song);
+                        user.setCurrentType(song);
 
-                        currentUser.getCurrentType().setSecondsGone(0);
+                        user.getCurrentType().setSecondsGone(0);
 
-                        currentUser.setTypeLoaded(0);
+                        user.setTypeLoaded(0);
                         break;
                     }
                 }
-            } else if (currentUser.getTypeSelected() == 1) {
+            } else if (user.getTypeSelected() == 1) {
                 for (Podcast podcast : podcasts) {
-                    if (podcast.getName().equals(currentUser.
+                    if (podcast.getName().equals(user.
                             getCurrentSelect().getSelectedName())) {
 
-                        if (currentUser.getPodcastsPlayed().contains(podcast)) {
-                            int indexPodcast = currentUser.getPodcastsPlayed().indexOf(podcast);
+                        if (user.getPodcastsPlayed().contains(podcast)) {
+                            int indexPodcast = user.getPodcastsPlayed().indexOf(podcast);
 
-                            currentUser.setCurrentType(currentUser.getPodcastsPlayed().
+                            user.setCurrentType(user.getPodcastsPlayed().
                                     get(indexPodcast));
-                            int indexEpisode = ((Podcast) (currentUser.getCurrentType())).
+                            int indexEpisode = ((Podcast) (user.getCurrentType())).
                                     getLastRemainingEpisode();
-                            currentUser.setCurrentType(((Podcast) (currentUser.
+                            user.setCurrentType(((Podcast) (user.
                                     getCurrentType())).getEpisodes().get(indexEpisode));
 
-                            currentUser.setCurrentPodcast(podcast);
+                            user.setCurrentPodcast(podcast);
 
                         } else {
-//                              adding to the currentUser the loaded podcast
-                            currentUser.addPodcastPlayed(podcast);
+//                              adding to the user the loaded podcast
+                            user.addPodcastPlayed(podcast);
 
-                            int lastPodcast = currentUser.getPodcastsPlayed().size() - 1;
-                            int lastEpisode = currentUser.getPodcastsPlayed().
+                            int lastPodcast = user.getPodcastsPlayed().size() - 1;
+                            int lastEpisode = user.getPodcastsPlayed().
                                     get(lastPodcast).getEpisodes().size() - 1;
 
 //                              setting last episode watched to 0
-                            currentUser.getPodcastsPlayed().get(lastPodcast).setLastRemainingEpisode(0);
+                            user.getPodcastsPlayed().get(lastPodcast).setLastRemainingEpisode(0);
 //                              setting the remaining second;
-                            currentUser.getPodcastsPlayed().get(lastPodcast).getEpisodes().
+                            user.getPodcastsPlayed().get(lastPodcast).getEpisodes().
                                     get(lastEpisode).setSecondsGone(0);
 
-                            currentUser.setRemainingTime(podcast.getEpisodes().
+                            user.setRemainingTime(podcast.getEpisodes().
                                     get(lastEpisode).getDuration());
 
 //                               current type is Podcast
-                            currentUser.setCurrentType(currentUser.getPodcastsPlayed().get(lastPodcast));
+                            user.setCurrentType(user.getPodcastsPlayed().get(lastPodcast));
 
 //                               current type is Episode
-                            currentUser.setCurrentType(((Podcast) (currentUser.getCurrentType())).
+                            user.setCurrentType(((Podcast) (user.getCurrentType())).
                                     getEpisodes().get(0));
 
-                            currentUser.setCurrentPodcast(podcast);
+                            user.setCurrentPodcast(podcast);
                         }
-                        currentUser.setTypeLoaded(1);
+                        user.setTypeLoaded(1);
                         break;
                     }
                 }
-            } else if (currentUser.getTypeSelected() == 2) {
+            } else if (user.getTypeSelected() == 2) {
                 for (Playlist playlist : everyPlaylist) {
-                    if (playlist.getName().equals(currentUser.
+                    if (playlist.getName().equals(user.
                             getCurrentSelect().getSelectedName())) {
-                        currentUser.setTypeLoaded(2);
+                        user.setTypeLoaded(2);
 
-                        currentUser.setCurrentPlaylist(playlist);
-                        currentUser.setCurrentType(playlist.getSongList().get(0));
-                        currentUser.setRemainingTime(currentUser.getCurrentType().getDuration());
-                        currentUser.getCurrentType().setSecondsGone(0);
+                        user.setCurrentPlaylist(playlist);
+                        user.setCurrentType(playlist.getSongList().get(0));
+                        user.setRemainingTime(user.getCurrentType().getDuration());
+                        user.getCurrentType().setSecondsGone(0);
 
                         break;
                     }
@@ -135,11 +153,11 @@ public class Load implements Command {
     } else {
         this.message = "Please select a source before attempting to load.";
     }
-    if (currentUser.getCurrentType() != null) {
-        currentUser.setSelectedName((String) (currentUser.getCurrentType().getName()));
+    if (user.getCurrentType() != null) {
+        user.setSelectedName((String) (user.getCurrentType().getName()));
     }
 
-    currentUser.setCurrentSelect(null);
+    user.setCurrentSelect(null);
 }
 
     /**
@@ -185,13 +203,5 @@ public class Load implements Command {
      */
     public void setMessage(final String message) {
         this.message = message;
-    }
-
-    @Override
-    public void execute(final ArrayList<Command> commands, final SearchBar input,
-                        final User user, final ArrayList<Song> songs,
-                        final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts) {
-        this.setLoad(user, everyPlaylist, podcasts);
     }
 }

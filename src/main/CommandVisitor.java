@@ -1,10 +1,16 @@
 package main;
 
 import main.commands.pageSystem.ChangePage;
+import main.commands.pageSystem.PrintCurrentPage;
+import main.commands.player.admin.AddUser;
+import main.commands.player.admin.ShowAlbums;
+import main.commands.player.artist.AddAlbum;
+import main.commands.player.statistics.GetOnlineUsers;
+import main.commands.player.statistics.GetTop5Playlists;
+import main.commands.player.statistics.GetTop5Songs;
 import main.commands.searchBar.*;
 import main.commands.player.*;
-import main.commands.user.GetOnlineUsers;
-import main.commands.user.SwitchConnectionStatus;
+import main.commands.player.user.*;
 
 public interface CommandVisitor {
     void visit(Search search);
@@ -33,5 +39,9 @@ public interface CommandVisitor {
     void visit(ChangePage changePage);
     void visit(SwitchConnectionStatus switchConnectionStatus);
     void visit(GetOnlineUsers getOnlineUsers);
+    void visit(AddUser addUser);
 
+    void visit(AddAlbum addAlbum);
+    void visit(ShowAlbums showAlbums);
+    void visit(PrintCurrentPage printCurrentPage);
 }

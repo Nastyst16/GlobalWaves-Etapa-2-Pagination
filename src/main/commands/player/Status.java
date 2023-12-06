@@ -2,10 +2,7 @@ package main.commands.player;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.*;
-import main.commands.types.Playlist;
-import main.commands.types.Podcast;
-import main.commands.types.Song;
-import main.commands.types.Type;
+import main.commands.types.*;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -19,6 +16,28 @@ public class Status implements Command {
     private final Map<String, Object> stats;
     private int remainingTime;
 
+
+    /**
+     * Execute the command
+     */
+    @Override
+    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
+                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
+                        final ArrayList<Album> albums) {
+
+        if (user.getCurrentType() != null) {
+            this.settingStats(user);
+        } else {
+            this.settingNoType(user);
+        }
+
+        if (this.getRemainingTime() == 0
+                && user.getRepeatStatus() == 0) {
+            user.setPaused(true);
+            user.setCurrentType(null);
+        }
+    }
 
     @Override
     public void accept(CommandVisitor visitor) {
@@ -141,25 +160,5 @@ public class Status implements Command {
         this.remainingTime = remainingTime;
     }
 
-    /**
-     * Execute the command
-     */
-    @Override
-    public void execute(final ArrayList<Command> commands, final SearchBar input,
-                        final User user, final ArrayList<Song> songs,
-                        final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts) {
 
-        if (user.getCurrentType() != null) {
-            this.settingStats(user);
-        } else {
-            this.settingNoType(user);
-        }
-
-        if (this.getRemainingTime() == 0
-                && user.getRepeatStatus() == 0) {
-            user.setPaused(true);
-            user.setCurrentType(null);
-        }
-    }
 }
