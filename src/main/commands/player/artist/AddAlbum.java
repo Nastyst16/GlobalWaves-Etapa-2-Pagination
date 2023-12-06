@@ -6,6 +6,7 @@ import main.CommandVisitor;
 import main.SearchBar;
 import main.User;
 import main.commands.types.*;
+import main.users.Artist;
 
 import java.util.ArrayList;
 
@@ -36,28 +37,25 @@ public class AddAlbum implements Command {
         visitor.visit(this);
     }
 
-    @Override
-    public void execute(ArrayList<Command> commands, SearchBar input, User user, ArrayList<Song> songs,
-                        ArrayList<Playlist> everyPlaylist, ArrayList<Podcast> podcasts, ArrayList<User> users, ArrayList<Album> everyAlbum) {
 
-        this.addAlbum(user, songs, everyAlbum, users);
+    public void execute(Artist artist, ArrayList<Song> songs, ArrayList<User> users,
+                        ArrayList<Artist> artists, ArrayList<Album> everyAlbum) {
+
+        this.addAlbum(artist, songs, everyAlbum, artists, users);
     }
 
-    public void addAlbum(final User user, final ArrayList<Song> everySong,
-                         final ArrayList<Album> everyAlbum, final ArrayList<User> users) {
+    public void addAlbum(final Artist artist, final ArrayList<Song> everySong,
+                         final ArrayList<Album> everyAlbum, final ArrayList<Artist> artists,
+                         final ArrayList<User> users) {
 
 //        verifying if the user exists
         if (user == null) {
             this.message = "The username " + this.user + " doesn't exist.";
             return;
-//            verifying if the user is an artist
-        } else if (!user.getType().equals("artist")) {
-            this.message = this.user + " is not an artist.";
-            return;
         }
 
 //        verifying if the album already exists
-        for (Album album : user.getArtistAlbums()) {
+        for (Album album : artist.getArtistAlbums()) {
             if (album.getName().equals(this.name)) {
                 this.message = this.user + " has another album with the same name.";
                 return;
@@ -83,7 +81,7 @@ public class AddAlbum implements Command {
         }
 
         everyAlbum.add(new Album(this.user ,this.name, this.releaseYear, this.description, this.albumSongs));
-        user.getArtistAlbums().add(everyAlbum.get(everyAlbum.size() - 1));
+        artist.getArtistAlbums().add(everyAlbum.get(everyAlbum.size() - 1));
         this.message = this.user + " has added new album successfully.";
     }
 

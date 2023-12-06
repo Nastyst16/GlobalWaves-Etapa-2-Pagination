@@ -99,7 +99,7 @@
   "user" : "alice22",
   "command" : "printCurrentPage",
   "timestamp" : 480,
-  "message" : null
+  "message" : "Liked songs:\n\t[Melodic Mirage]\n\nFollowed playlists:\n\t[]"
 }, {
   "command" : "addAlbum",
   "user" : "melodymaster",

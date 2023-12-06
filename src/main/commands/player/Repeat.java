@@ -20,11 +20,7 @@ public class Repeat implements Command {
     /**
      * Executes the command
      */
-    @Override
-    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
-                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
-                        final ArrayList<Album> albums) {
+    public void execute(final ArrayList<Command> commands, final User user) {
 
         user.setRepeatStatus(((Repeat) (commands.getLast())).setRepeatMessage(user,
                 user.getRepeatStatus(), user.getTypeLoaded()));

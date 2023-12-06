@@ -10,6 +10,8 @@ import main.commands.types.Album;
 import main.commands.types.Playlist;
 import main.commands.types.Podcast;
 import main.commands.types.Song;
+import main.users.Artist;
+import main.users.Host;
 
 import java.util.ArrayList;
 
@@ -23,13 +25,11 @@ public class AddUser implements Command {
     private String message;
 
 
-    @Override
-    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
-                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
-                        final ArrayList<Album> albums) {
+    public void execute(final ArrayList<Song> songs, final ArrayList<Podcast> podcasts,
+                        final ArrayList<User> users, final ArrayList<Artist> artists,
+                        final ArrayList<Host> hosts) {
 
-        this.addUser(songs, podcasts, users);
+        this.addUser(songs, podcasts, users, artists, hosts);
     }
 
     public AddUser(SearchBar input) {
@@ -48,7 +48,8 @@ public class AddUser implements Command {
     }
 
     public void addUser(final ArrayList<Song> everySong, final ArrayList<Podcast> everyPodcast,
-                        final ArrayList<User> users) {
+                        final ArrayList<User> users, final ArrayList<Artist> artists,
+                        final ArrayList<Host> hosts) {
 
         for (User user : users) {
             if (user.getUsername().equals(this.user)) {
@@ -56,10 +57,33 @@ public class AddUser implements Command {
                 return;
             }
         }
+        for (Artist artist : artists) {
+            if (artist.getUsername().equals(this.user)) {
+                this.message = "The username " + this.user + " is already taken.";
+                return;
+            }
+        }
 
-        users.add(new User(user, age, city, everySong, everyPodcast));
-        users.get(users.size() - 1).setType(type); // set the user's type to the input type
-        this.message = "The username " + user + " has been added successfully.";
+//        todo add host
+//        for.......
+
+
+        if (this.type.equals("user")) {
+
+            users.add(new User(user, age, city, everySong, everyPodcast));
+            this.message = "The username " + user + " has been added successfully.";
+
+        } else if (this.type.equals("artist")) {
+
+            artists.add(new Artist(user, age, city));
+            this.message = "The username " + user + " has been added successfully.";
+
+        } else if (this.type.equals("host")) {
+
+        }
+
+
+
     }
 
 

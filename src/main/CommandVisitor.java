@@ -5,6 +5,7 @@ import main.commands.pageSystem.PrintCurrentPage;
 import main.commands.player.admin.AddUser;
 import main.commands.player.admin.ShowAlbums;
 import main.commands.player.artist.AddAlbum;
+import main.commands.player.artist.AddEvent;
 import main.commands.player.statistics.GetOnlineUsers;
 import main.commands.player.statistics.GetTop5Playlists;
 import main.commands.player.statistics.GetTop5Songs;
@@ -44,4 +45,5 @@ public interface CommandVisitor {
     void visit(AddAlbum addAlbum);
     void visit(ShowAlbums showAlbums);
     void visit(PrintCurrentPage printCurrentPage);
+    void visit(AddEvent addEvent);
 }

@@ -46,8 +46,6 @@ public class User {
 //    Stage 2 variables
     private String currentPage;
     private boolean online;
-    private String type;
-    private ArrayList<Album> artistAlbums;
 
 
 
@@ -99,10 +97,8 @@ public class User {
         }
 
 //        Stage 2:
-        currentPage = null;
+        currentPage = "Home";
         online = true;
-        type = null; // for the initial users
-        artistAlbums = new ArrayList<>();
     }
 
 
@@ -824,21 +820,5 @@ public class User {
 
     public void setOnline(boolean online) {
         this.online = online;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public ArrayList<Album> getArtistAlbums() {
-        return artistAlbums;
-    }
-
-    public void setArtistAlbums(ArrayList<Album> artistAlbums) {
-        this.artistAlbums = artistAlbums;
     }
 }

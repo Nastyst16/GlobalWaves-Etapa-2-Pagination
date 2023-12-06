@@ -8,6 +8,7 @@ import main.commands.types.Album;
 import main.commands.types.Playlist;
 import main.commands.types.Podcast;
 import main.commands.types.Song;
+import main.users.Artist;
 
 import java.util.ArrayList;
 
@@ -17,13 +18,9 @@ public class ShowAlbums implements Command {
     private final int timestamp;
     private ArrayList<Album> result;
 
-    @Override
-    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
-                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
-                        final ArrayList<Album> albums) {
 
-        this.setShowAlbums(user.getArtistAlbums());
+    public void execute(final Artist artist) {
+        this.setShowAlbums(artist.getArtistAlbums());
     }
 
     public void setShowAlbums(final ArrayList<Album> userAlbums) {

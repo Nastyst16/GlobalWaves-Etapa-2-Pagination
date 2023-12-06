@@ -11,6 +11,7 @@ import main.commands.pageSystem.*;
 import main.commands.player.admin.AddUser;
 import main.commands.player.admin.ShowAlbums;
 import main.commands.player.artist.AddAlbum;
+import main.commands.player.artist.AddEvent;
 import main.commands.player.statistics.GetOnlineUsers;
 import main.commands.player.statistics.GetTop5Playlists;
 import main.commands.player.statistics.GetTop5Songs;
@@ -18,10 +19,13 @@ import main.commands.searchBar.*;
 import main.commands.types.*;
 import main.commands.player.*;
 import main.commands.player.user.*;
+import main.users.Artist;
+import main.users.Host;
 
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -137,6 +141,10 @@ public final class Main {
         ArrayList<Playlist> everyPlaylist = new ArrayList<>();
 //        every album from every artist
         ArrayList<Album> everyAlbum = new ArrayList<>();
+//        every artist
+        ArrayList<Artist> everyArtist = new ArrayList<>();
+//        every host
+        ArrayList<Host> everyHost = new ArrayList<>();
 
 
 //        creationg the executor
@@ -175,14 +183,38 @@ public final class Main {
             int index = commands.size();
 
 
+
+            Artist artist = null;
+            if (user == null) {
+                for (Artist a : everyArtist) {
+                    if (a.getUsername().equals(input.getUsername())) {
+                        artist = a;
+                        break;
+                    }
+                }
+            }
+//            implementeaza mai tarziu!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            Host host = null;
+//            if (user == null && artist == null) {
+//                for (Host h : everyHost) {
+//                    if (h.getUsername().equals(input.getUsername())) {
+//                        host = h;
+//                        break;
+//                    }
+//                }
+//            }
+
+
+
+
 //            if for debugging
-            if (input.getTimestamp() == 395) {
+            if (input.getTimestamp() == 380) {
                 int x = 5;
             }
 
 //            creating the commands
-            executor.setExecutor(commands, input, user, songs,
-                    everyPlaylist, podcasts, users, everyAlbum);
+            executor.setExecutor(commands, input, user, songs, everyPlaylist,
+                    podcasts, users, everyAlbum, everyArtist, everyHost, artist, host);
 
             switch (command) {
                 case "search":              commands.add(new Search(input));                break;
@@ -214,6 +246,7 @@ public final class Main {
                 case "addAlbum":            commands.add(new AddAlbum(input));              break;
                 case "showAlbums":          commands.add(new ShowAlbums(input));            break;
                 case "printCurrentPage":    commands.add(new PrintCurrentPage(input));      break;
+                case "addEvent":            commands.add(new AddEvent(input));              break;
 
 
                 default: break;

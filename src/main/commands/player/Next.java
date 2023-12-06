@@ -18,11 +18,7 @@ public class Next implements Command {
     /**
      * execute the command
      */
-    @Override
-    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
-                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
-                        final ArrayList<Album> albums) {
+    public void execute(final User user) {
 
         user.setNext(true);
         this.setNext(user);

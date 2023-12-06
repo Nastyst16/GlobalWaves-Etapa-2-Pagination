@@ -18,12 +18,7 @@ public class PrintCurrentPage implements Command {
     private final int timestamp;
     private String message;
 
-    @Override
-    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
-                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
-                        final ArrayList<Album> albums) {
-
+    public void execute(final User user) {
         this.setPrintCurrPage(user);
     }
 
@@ -37,8 +32,19 @@ public class PrintCurrentPage implements Command {
 
 //        if the current page is Home
         if (user.getCurrentPage().equals("Home")) {
-            this.message = "Liked songs:\n\t" + user.getLikedSongs() + "\n\n"
-                    + "Followed playlists:\n\t" + user.getFollowedPlaylists();
+
+            ArrayList<String> likedSongs = new ArrayList<>();
+            ArrayList<String> followedPlaylists = new ArrayList<>();
+
+            for (Song song : user.getLikedSongs()) {
+                likedSongs.add(song.getName());
+            }
+            for (Playlist playlist : user.getFollowedPlaylists()) {
+                followedPlaylists.add(playlist.getName());
+            }
+
+            this.message = "Liked songs:\n\t" + likedSongs + "\n\n"
+                    + "Followed playlists:\n\t" + followedPlaylists;
 //          if the current page is LikedContent
         } else if (user.getCurrentPage().equals("LikedContent")) {
             this.message = "Liked songs:\n\t" + user.getLikedSongs() + "\n\n"

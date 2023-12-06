@@ -25,11 +25,7 @@ public class SwitchConnectionStatus implements Command {
         this.message = this.user + " has changed status successfully.";
     }
 
-    @Override
-    public void execute(final ArrayList<Command> commands, final SearchBar input, final User user,
-                        final ArrayList<Song> songs, final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts, final ArrayList<User> users,
-                        final ArrayList<Album> albums) {
+    public void execute(final User user) {
         if (user == null) {
             this.message = "The username " + this.user + " doesn't exist.";
             return;
