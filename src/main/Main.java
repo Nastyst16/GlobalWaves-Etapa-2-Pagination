@@ -9,10 +9,12 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import fileio.input.*;
 import main.commands.pageSystem.*;
 import main.commands.player.admin.AddUser;
+import main.commands.player.admin.DeleteUser;
 import main.commands.player.admin.ShowAlbums;
 import main.commands.player.artist.AddAlbum;
 import main.commands.player.artist.AddEvent;
 import main.commands.player.artist.AddMerch;
+import main.commands.player.statistics.GetAllUsers;
 import main.commands.player.statistics.GetOnlineUsers;
 import main.commands.player.statistics.GetTop5Playlists;
 import main.commands.player.statistics.GetTop5Songs;
@@ -163,27 +165,34 @@ public final class Main {
                 }
             }
 
-//            calculating how many seconds have gone sine the last command
-            if (user != null && user.getCurrentType() != null && !user.isPaused() && user.getOnline()) {
-                int newSecsGone = input.getTimestamp() - user.getPrevTimestamp();
-
-                Type currentType = user.getCurrentType();
-                user.getCurrentType().setSecondsGone(user.
-                        getCurrentType().getSecondsGone() + newSecsGone);
-
-                user.setRemainingTime(currentType.getDuration() - currentType.getSecondsGone());
-            }
-//            now that we know how much time has gone we can go to the next/s songs if its needed
-            if (user != null && user.getCurrentType() != null) {
-                user.treatingRepeatStatus(user);
+            if (input.getTimestamp() == 1380) {
+                int x = 5;
             }
 
-            if (user != null) {
-                user.setPrevTimestamp(input.getTimestamp());
+
+
+//            calculating how many seconds have gone sine the last command for every user
+            for (User u : users) {
+                if (u.getCurrentType() != null && !u.isPaused() && u.getOnline()) {
+                    int newSecsGone = input.getTimestamp() - u.getPrevTimestamp();
+
+                    Type currentType = u.getCurrentType();
+                    u.getCurrentType().setSecondsGone(u.
+                            getCurrentType().getSecondsGone() + newSecsGone);
+
+                    u.setRemainingTime(currentType.getDuration() - currentType.getSecondsGone());
+                }
+
+                if (u.getCurrentType() != null) {
+                    u.treatingRepeatStatus(u);
+                }
+
+
+                u.setPrevTimestamp(input.getTimestamp());
             }
+
+
             int index = commands.size();
-
-
 
             Artist artist = null;
             if (user == null) {
@@ -208,7 +217,7 @@ public final class Main {
 
 
 //            if for debugging
-            if (input.getTimestamp() == 380) {
+            if (input.getTimestamp() == 1159) {
                 int x = 5;
             }
 
@@ -248,6 +257,9 @@ public final class Main {
                 case "printCurrentPage":    commands.add(new PrintCurrentPage(input));      break;
                 case "addEvent":            commands.add(new AddEvent(input));              break;
                 case "addMerch":            commands.add(new AddMerch(input));              break;
+                case "getAllUsers":         commands.add(new GetAllUsers(input));           break;
+                case "deleteUser":          commands.add(new DeleteUser(input));            break;
+
 
                 default: break;
             }

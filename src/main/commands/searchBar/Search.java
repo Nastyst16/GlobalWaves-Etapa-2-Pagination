@@ -177,7 +177,24 @@ public class Search implements Command {
 
 
     public void searchingByAlbum(final ArrayList<Album> albums) {
+        String name = (String) (filters.get("name"));
+        String owner = (String) (filters.get("owner"));
+        String description = (String) (filters.get("description"));
 
+        for (Album album : albums) {
+            if ((name == null || album.getName().equals(name))
+                    && (owner == null || album.getUser().equals(owner))
+                    && (description == null || album.getDescription().equals(description))) {
+                results.add(album.getName());
+            }
+
+            if (results.size() == MAX_SIZE) {
+                break;
+            }
+        }
+
+        this.setResults(results);
+        this.setMessage("Search returned " + results.size() + " results");
     }
 
 
@@ -252,7 +269,7 @@ public class Search implements Command {
 
 //        if only type is album
         if (this.type.equals("album")) {
-//            this.searchingByAlbum();
+            this.searchingByAlbum(albums);
             user.setTypeFoundBySearch(3);
         }
 

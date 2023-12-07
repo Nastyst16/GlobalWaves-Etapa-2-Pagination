@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 
-public class Album {
+public class Album extends Playlist {
     private final String user;
     private final String name;
     private final int releaseYear;
@@ -15,6 +15,7 @@ public class Album {
 
     public Album(final String user, final String name, final int releaseYear,
                  final String description, final ArrayList<Song> albumSongs) {
+        super(user, name, albumSongs);
         this.user = user;
         this.name = name;
         this.releaseYear = releaseYear;
@@ -26,6 +27,8 @@ public class Album {
         for (Song song : albumSongs) {
             this.songs.add(song.getName());
         }
+
+
     }
 
 
@@ -34,6 +37,8 @@ public class Album {
     public String getUser() {
         return user;
     }
+
+
 
     public String getName() {
         return name;
@@ -57,4 +62,5 @@ public class Album {
     public ArrayList<String> getSongs() {
         return songs;
     }
+
 }

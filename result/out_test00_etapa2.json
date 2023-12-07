@@ -72,14 +72,14 @@
   "command" : "playPause",
   "user" : "alice22",
   "timestamp" : 3200,
-  "message" : "Playback paused successfully."
+  "message" : "Please load a source before attempting to pause or resume playback."
 }, {
   "command" : "status",
   "user" : "alice22",
   "timestamp" : 3201,
   "stats" : {
-    "name" : "The Science of Us",
-    "remainedTime" : 3081,
+    "name" : "",
+    "remainedTime" : 0,
     "repeat" : "No Repeat",
     "shuffle" : false,
     "paused" : true

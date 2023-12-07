@@ -3,10 +3,12 @@ package main;
 import main.commands.pageSystem.ChangePage;
 import main.commands.pageSystem.PrintCurrentPage;
 import main.commands.player.admin.AddUser;
+import main.commands.player.admin.DeleteUser;
 import main.commands.player.admin.ShowAlbums;
 import main.commands.player.artist.AddAlbum;
 import main.commands.player.artist.AddEvent;
 import main.commands.player.artist.AddMerch;
+import main.commands.player.statistics.GetAllUsers;
 import main.commands.player.statistics.GetOnlineUsers;
 import main.commands.player.statistics.GetTop5Playlists;
 import main.commands.player.statistics.GetTop5Songs;
@@ -48,4 +50,6 @@ public interface CommandVisitor {
     void visit(PrintCurrentPage printCurrentPage);
     void visit(AddEvent addEvent);
     void visit(AddMerch addMerch);
+    void visit(GetAllUsers getAllUsers);
+    void visit(DeleteUser deleteUser);
 }

@@ -16,8 +16,8 @@ public class Load implements Command {
 
 
     public void execute(final User user, final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts) {
-        this.setLoad(user, everyPlaylist, podcasts);
+                        final ArrayList<Podcast> podcasts, final ArrayList<Album> albums) {
+        this.setLoad(user, everyPlaylist, podcasts, albums);
     }
 
 
@@ -44,7 +44,7 @@ public class Load implements Command {
      * @param podcasts every podcast
      */
     public void setLoad(final User user, final ArrayList<Playlist> everyPlaylist,
-                    final ArrayList<Podcast> podcasts) {
+                    final ArrayList<Podcast> podcasts, final ArrayList<Album> everyAlbum) {
 
 //        if the user is offline
         if (user.getOnline() == false) {
@@ -141,7 +141,31 @@ public class Load implements Command {
                         break;
                     }
                 }
+            } else if (user.getTypeSelected() == 3) {
+//                albums
+                for(Album album : everyAlbum) {
+                    if (album.getName().equals(user.
+                            getCurrentSelect().getSelectedName())) {
+                        user.setTypeLoaded(2);
+
+                        user.setCurrentPlaylist(album);
+                        user.setCurrentType(album.getAlbumSongs().get(0));
+                        user.setRemainingTime(user.getCurrentType().getDuration());
+                        user.getCurrentType().setSecondsGone(0);
+
+                        break;
+                    }
+                }
+
+
+            } else if (user.getTypeSelected() == 4) {
+
+
+            } else if (user.getTypeSelected() == 5) {
+
             }
+
+
         } else {
             this.message = "Please select the song first.";
         }

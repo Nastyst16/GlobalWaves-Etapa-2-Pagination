@@ -10,7 +10,10 @@ public class Playlist {
     private final String user;
     private final ArrayList<Song> songList;
     private final ArrayList<String> songs;
+
+    @JsonIgnore
     private String visibility;
+    @JsonIgnore
     private int followers;
 
 
@@ -34,6 +37,23 @@ public class Playlist {
         songs = new ArrayList<>();
         visibility = "public";
         followers = 0;
+    }
+
+//    creating a playlist from an album because it behaves like a playlist
+    public Playlist(final String user, final String name, final ArrayList<Song> albumSongs) {
+        this.user = user;
+        this.name = name;
+        this.songList = albumSongs;
+        this.songs = new ArrayList<>();
+
+        for (Song song : albumSongs) {
+            this.songs.add(song.getName());
+        }
+
+        this.visibility = "public";
+        this.followers = 0;
+
+
     }
 
     /**

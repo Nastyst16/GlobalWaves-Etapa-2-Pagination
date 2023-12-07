@@ -29,5 +29,5 @@ public interface Type {
      * get name
      * @return
      */
-    Object getName();
+    String getName();
 }

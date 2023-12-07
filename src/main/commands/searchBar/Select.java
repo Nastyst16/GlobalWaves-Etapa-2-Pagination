@@ -90,6 +90,18 @@ public class Select implements Command {
                             break;
                         }
                     }
+
+//                    albums
+                } else if (user.getTypeFoundBySearch() == 3) {
+                    user.setTypeSelected(3);
+
+//                    artists
+                } else if (user.getTypeFoundBySearch() == 4) {
+                    user.setTypeSelected(4);
+
+//                    hosts
+                } else if (user.getTypeFoundBySearch() == 5) {
+                    user.setTypeSelected(5);
                 }
                 user.setCurrentSelect(this);
             }

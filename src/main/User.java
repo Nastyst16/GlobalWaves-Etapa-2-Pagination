@@ -172,7 +172,15 @@ public class User {
 //        if the type loaded is a song or a podcast
         if (user.getTypeLoaded() == 0 || user.getTypeLoaded() == 1) {
 
-            if (user.getRepeatStatus() == 1 && user.getRemainingTime() < 0) {
+            if (user.getRepeatStatus() == 0 && user.getRemainingTime() < 0) {
+
+                user.setCurrentType(null);
+                user.setTypeLoaded(-1);
+                user.setShuffle(false);
+                return;
+
+
+            } else if (user.getRepeatStatus() == 1 && user.getRemainingTime() < 0) {
                 user.setRepeatStatus(0);
                 user.setRepeatString("No Repeat");
 
@@ -232,6 +240,18 @@ public class User {
                 Playlist playlist = user.getCurrentPlaylist();
 
                 int index = user.getCurrentPlaylist().getSongList().size() - 1;
+
+//                if it is the last song in playlist
+                if (user.getCurrentPlaylist().getSongList().get(index).
+                        getName().equals(user.getCurrentType().getName())) {
+
+                    if (user.getRepeatStatus() == 0) {
+                        user.setCurrentType(null);
+                        user.setTypeLoaded(-1);
+                        user.setShuffle(false);
+                        return;
+                    }
+                }
 
                 if (user.getRepeatStatus() == 1 && user.getCurrentPlaylist().
                         getSongList().get(index).getName().equals(currentType.getName())) {
