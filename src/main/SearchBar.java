@@ -22,7 +22,7 @@ public class SearchBar {
     private String description;
     private String name;
     private String date;
-    private double price; // nu stiu daca trebuie double
+    private int price;
     private int age;
     private String city;
     private int releaseYear;
@@ -200,11 +200,11 @@ public class SearchBar {
         this.date = date;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

@@ -47,14 +47,14 @@ public class Select implements Command {
     /**
      * Sets select.
      *
-     * @param currentUser   the current user
+     * @param user   the current user
      * @param everyPlaylist the every playlist
      */
-    public void setSelect(final User currentUser, final ArrayList<Playlist> everyPlaylist) {
+    public void setSelect(final User user, final ArrayList<Playlist> everyPlaylist) {
 
 //                if the last command was search
-        if (currentUser.getCurrentSearch() != null) {
-            ArrayList<String> resultsPrevSearch = currentUser.getCurrentSearch().getResults();
+        if (user.getCurrentSearch() != null) {
+            ArrayList<String> resultsPrevSearch = user.getCurrentSearch().getResults();
 
 //                    getting index for setting the message
             int index = this.itemNumber;
@@ -62,33 +62,40 @@ public class Select implements Command {
 //                    make this be a method in select class
             if (index > resultsPrevSearch.size()) {
                 this.message = "The selected ID is too high.";
-                currentUser.setCurrentSelect(null);
-                currentUser.setCurrentType(null);
+                user.setCurrentSelect(null);
+                user.setCurrentType(null);
             } else {
                 String name = resultsPrevSearch.get(index - 1);
-                this.message = "Successfully selected " + name + ".";
-                currentUser.setSelectedName(name);
+
+                if (user.getTypeFoundBySearch() == 4) {
+                    user.setCurrentPage("Artist");
+                    this.setMessage("Successfully selected " + name + "'s page.");
+                } else {
+                    this.setMessage("Successfully selected " + name + ".");
+                }
+
+                user.setSelectedName(name);
                 this.setSelectedName(name);
 
-                if (currentUser.getTypeFoundBySearch() == 0) {
-                    currentUser.setTypeSelected(0);
-                } else if (currentUser.getTypeFoundBySearch() == 1) {
-                    currentUser.setTypeSelected(1);
-                } else if (currentUser.getTypeFoundBySearch() == 2) {
-                    currentUser.setTypeSelected(2);
+                if (user.getTypeFoundBySearch() == 0) {
+                    user.setTypeSelected(0);
+                } else if (user.getTypeFoundBySearch() == 1) {
+                    user.setTypeSelected(1);
+                } else if (user.getTypeFoundBySearch() == 2) {
+                    user.setTypeSelected(2);
 
                     for (Playlist playlist : everyPlaylist) {
                         if (playlist.getName().equals(name)) {
-                            currentUser.setSelectedPlaylist(playlist);
+                            user.setSelectedPlaylist(playlist);
                             break;
                         }
                     }
                 }
-                currentUser.setCurrentSelect(this);
+                user.setCurrentSelect(this);
             }
         }
-        currentUser.setCurrentSearch(null);
-        currentUser.setTypeFoundBySearch(-1);
+        user.setCurrentSearch(null);
+        user.setTypeFoundBySearch(-1);
     }
 
     /**

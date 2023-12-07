@@ -188,7 +188,7 @@ public class ConcreteCommandVisitor implements CommandVisitor {
 
     @Override
     public void visit(PrintCurrentPage printCurrentPage) {
-        printCurrentPage.execute(user);
+        printCurrentPage.execute(user, artists, hosts);
     }
 
     @Override
@@ -198,6 +198,6 @@ public class ConcreteCommandVisitor implements CommandVisitor {
 
     @Override
     public void visit(AddMerch addMerch) {
-//        addMerch.execute(host, users);
+        addMerch.execute(user, artist, host);
     }
 }

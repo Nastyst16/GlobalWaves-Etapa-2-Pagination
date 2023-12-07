@@ -3,6 +3,7 @@ package main.users;
 import main.User;
 import main.commands.types.Album;
 import main.commands.types.Event;
+import main.commands.types.Merch;
 
 import java.util.ArrayList;
 
@@ -14,7 +15,7 @@ public class Artist {
 
     private final ArrayList<Album> albums;
     private final ArrayList<Event> events;
-//    private ArrayList<Merch> merch;
+    private final ArrayList<Merch> merchandise;
 
     public Artist(String username, int age, String city) {
         this.username = username;
@@ -23,7 +24,7 @@ public class Artist {
 
         this.albums = new ArrayList<>();
         this.events = new ArrayList<>();
-//        this.merch = new ArrayList<>();
+        this.merchandise = new ArrayList<>();
     }
 
 
@@ -45,5 +46,9 @@ public class Artist {
 
     public ArrayList<Event> getEvents() {
         return events;
+    }
+
+    public ArrayList<Merch> getMerchandise() {
+        return merchandise;
     }
 }

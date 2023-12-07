@@ -177,7 +177,7 @@ public class Search implements Command {
 
 
     public void searchingByAlbum(final ArrayList<Album> albums) {
-        
+
     }
 
 
@@ -253,16 +253,19 @@ public class Search implements Command {
 //        if only type is album
         if (this.type.equals("album")) {
 //            this.searchingByAlbum();
+            user.setTypeFoundBySearch(3);
         }
 
 //        if only type is artist:
         if (this.type.equals("artist")) {
             this.searchingByArtist(artists);
+            user.setTypeFoundBySearch(4);
         }
 
 //        if only type is album
         if (this.type.equals("host")) {
 //            this.searchingByHost();
+            user.setTypeFoundBySearch(5);
         }
 
 
