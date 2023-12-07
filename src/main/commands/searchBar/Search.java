@@ -281,7 +281,7 @@ public class Search implements Command {
 
 //        if only type is album
         if (this.type.equals("host")) {
-//            this.searchingByHost();
+            this.searchingByHost(hosts);
             user.setTypeFoundBySearch(5);
         }
 

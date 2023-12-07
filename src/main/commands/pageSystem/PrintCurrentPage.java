@@ -95,6 +95,51 @@ public class PrintCurrentPage implements Command {
                     + "Merch:\n\t[" + merchByName + "]\n\n"
                     + "Events:\n\t[" + eventsBuilder.toString() + "]";
 //          if the current page is Host
+        } else if (user.getCurrentPage().equals("Host")) {
+            Host currentHost = null;
+            for (Host host : hosts) {
+                if (host.getUsername().equals(user.getSelectedName())) {
+                    currentHost = host;
+                    break;
+                }
+            }
+
+            StringBuilder podcastsByName = new StringBuilder();
+            StringBuilder announcementsByName = new StringBuilder();
+
+            for (Podcast podcast : currentHost.getHostPodcasts()) {
+                podcastsByName.append(podcast.getName())
+                        .append(":\n\t[");
+
+                for (Episode episode : podcast.getEpisodesList()) {
+                    podcastsByName.append(episode.getName())
+                            .append(" - ")
+                            .append(episode.getDescription());
+
+                    if (podcast.getEpisodesList().indexOf(episode) != podcast.getEpisodes().size() - 1) {
+                        podcastsByName.append(", ");
+                    }
+                }
+
+                if (currentHost.getHostPodcasts().indexOf(podcast) != currentHost.getHostPodcasts().size() - 1) {
+                    podcastsByName.append("]\n, ");
+                }
+            }
+            podcastsByName.append("]");
+
+            for (Announcement announcement : currentHost.getAnnouncements()) {
+                announcementsByName.append(announcement.getName())
+                        .append(":\n\t")
+                        .append(announcement.getDescription())
+                        .append("\n");
+
+                if (currentHost.getAnnouncements().indexOf(announcement) != currentHost.getAnnouncements().size() - 1) {
+                    announcementsByName.append(", ");
+                }
+            }
+
+            this.message = "Podcasts:\n\t[" + podcastsByName + "\n]\n\n"
+                    + "Announcements:\n\t[" + announcementsByName + "]";
         }
 
     }

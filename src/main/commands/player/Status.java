@@ -66,7 +66,7 @@ public class Status implements Command {
             int index = ((Podcast) currentType).getLastRemainingEpisode();
 
 //            currentType is the Episode now;
-            currentType = ((Podcast) currentType).getEpisodes().get(index);
+            currentType = ((Podcast) currentType).getEpisodesList().get(index);
         }
 
         currentUser.setRemainingTime(currentType.getDuration() - currentType.getSecondsGone());

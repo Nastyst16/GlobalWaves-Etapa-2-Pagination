@@ -225,7 +225,7 @@ public class User {
                         getCurrentPodcast().getLastRemainingEpisode() + 1);
                 int indexEpisode = user.getCurrentPodcast().getLastRemainingEpisode();
 
-                Episode newEpisode = user.getCurrentPodcast().getEpisodes().get(indexEpisode);
+                Episode newEpisode = user.getCurrentPodcast().getEpisodesList().get(indexEpisode);
 
                 currentType = newEpisode;
                 currentType.setSecondsGone(Math.abs(user.getRemainingTime()));

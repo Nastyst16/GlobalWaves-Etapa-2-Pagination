@@ -1,12 +1,20 @@
 package main.commands.types;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Podcast implements Type {
     private final String name;
+    @JsonIgnore
     private final String owner;
-    private final List<Episode> episodes;
+    @JsonIgnore
+    private final List<Episode> episodesList;
+    private final ArrayList<String> episodes;
+    @JsonIgnore
     private int lastRemainingEpisode;
+    @JsonIgnore
     private int secondsGone;
 
 
@@ -16,6 +24,7 @@ public class Podcast implements Type {
     public Podcast() {
         this.name = null;
         this.owner = null;
+        this.episodesList = null;
         this.episodes = null;
     }
 
@@ -23,12 +32,17 @@ public class Podcast implements Type {
      * constructor with parameters
      * @param name name of the podcast
      * @param owner owner of the podcast
-     * @param episodes list of episodes
+     * @param episodesList list of episodesList
      */
-    public Podcast(final String name, final String owner, final List<Episode> episodes) {
+    public Podcast(final String name, final String owner, final List<Episode> episodesList) {
         this.name = name;
         this.owner = owner;
-        this.episodes = episodes;
+        this.episodesList = episodesList;
+
+        this.episodes = new ArrayList<>();
+        for (Episode episode : episodesList) {
+            this.episodes.add(episode.getName());
+        }
     }
 
     /**
@@ -46,12 +60,13 @@ public class Podcast implements Type {
     }
 
     /**
-     * gets the list of episodes
+     * gets the list of episodesList
      */
-    public List<Episode> getEpisodes() {
-        return episodes;
+    public List<Episode> getEpisodesList() {
+        return episodesList;
     }
 
+    @JsonIgnore
     /**
      * gets the duration of the podcast
      */
@@ -94,5 +109,12 @@ public class Podcast implements Type {
     @Override
     public void execute() {
 
+    }
+
+    /**
+     * gets the list of episodesList names
+     */
+    public ArrayList<String> getEpisodes() {
+        return episodes;
     }
 }

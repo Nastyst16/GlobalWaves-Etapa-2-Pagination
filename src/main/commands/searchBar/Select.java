@@ -67,8 +67,19 @@ public class Select implements Command {
             } else {
                 String name = resultsPrevSearch.get(index - 1);
 
-                if (user.getTypeFoundBySearch() == 4) {
+
+                if (user.getTypeFoundBySearch() == 2) {
+                    user.setCurrentPage("Playlist");
+                    this.setMessage("Successfully selected " + name + ".");
+                } else if (user.getTypeFoundBySearch() == 3) {
+                    user.setCurrentPage("Album");
+                    this.setMessage("Successfully selected " + name + ".");
+                } else
+                    if (user.getTypeFoundBySearch() == 4) {
                     user.setCurrentPage("Artist");
+                    this.setMessage("Successfully selected " + name + "'s page.");
+                } else if (user.getTypeFoundBySearch() == 5) {
+                    user.setCurrentPage("Host");
                     this.setMessage("Successfully selected " + name + "'s page.");
                 } else {
                     this.setMessage("Successfully selected " + name + ".");

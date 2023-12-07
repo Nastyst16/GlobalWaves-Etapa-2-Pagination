@@ -219,7 +219,7 @@ public class ConcreteCommandVisitor implements CommandVisitor {
 
     @Override
     public void visit(AddPodcast addPodcast) {
-        addPodcast.execute(host, users, podcasts);
+        addPodcast.execute(host, users, podcasts, hosts);
     }
 
     @Override
@@ -236,5 +236,6 @@ public class ConcreteCommandVisitor implements CommandVisitor {
     public void visit(ShowPodcasts showPodcasts) {
         showPodcasts.execute(host);
     }
+
 
 }

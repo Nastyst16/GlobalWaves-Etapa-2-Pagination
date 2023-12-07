@@ -15,7 +15,7 @@ public class RemoveAnnouncement implements Command {
     private String message;
 
     public void execute(Host host) {
-
+        removeAnnouncement(host);
     }
 
 
@@ -31,7 +31,7 @@ public class RemoveAnnouncement implements Command {
         for (int i = 0; i < host.getAnnouncements().size(); i++) {
             if (host.getAnnouncements().get(i).getName().equals(this.name)) {
                 host.getAnnouncements().remove(i);
-                this.message = "The host " + this.user + " has removed the announcement successfully.";
+                this.message = this.user + " has successfully deleted the announcement.";
                 return;
             }
         }

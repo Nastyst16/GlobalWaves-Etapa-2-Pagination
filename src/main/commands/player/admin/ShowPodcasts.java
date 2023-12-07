@@ -12,7 +12,7 @@ public class ShowPodcasts implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
-    private final ArrayList<String> result;
+    private final ArrayList<Podcast> result;
 
 
     public void execute(Host host) {
@@ -22,7 +22,7 @@ public class ShowPodcasts implements Command {
     private void setHost(Host host) {
 
         for (Podcast podcast : host.getHostPodcasts()) {
-            this.result.add(podcast.getName());
+            this.result.add(podcast);
         }
 
     }
@@ -53,7 +53,7 @@ public class ShowPodcasts implements Command {
         return timestamp;
     }
 
-    public ArrayList<String> getResult() {
+    public ArrayList<Podcast> getResult() {
         return result;
     }
 }

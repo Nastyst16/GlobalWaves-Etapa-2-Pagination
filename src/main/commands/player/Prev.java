@@ -97,7 +97,7 @@ public class Prev implements Command {
                 currentType.setSecondsGone(0);
             } else {
                 int prevIndex = user.getCurrentPodcast().getLastRemainingEpisode() - 1;
-                currentType = user.getCurrentPodcast().getEpisodes().get(prevIndex);
+                currentType = user.getCurrentPodcast().getEpisodesList().get(prevIndex);
             }
         }
 

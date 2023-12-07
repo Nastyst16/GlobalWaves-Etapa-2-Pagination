@@ -25,8 +25,9 @@ public class AddPodcast implements Command {
     private String message;
 
 
-    public void execute(Host host, ArrayList<User> users, ArrayList<Podcast> everyPodcast) {
-        addPodcast(host, users, everyPodcast);
+    public void execute(Host host, ArrayList<User> users, ArrayList<Podcast> everyPodcast,
+                            ArrayList<Host> hosts) {
+        addPodcast(host, users, everyPodcast, hosts);
     }
 
     public AddPodcast(SearchBar input) {
@@ -37,7 +38,18 @@ public class AddPodcast implements Command {
         this.episodes = input.getEpisodes();
     }
 
-    public void addPodcast(Host host, ArrayList<User> users, ArrayList<Podcast> everyPodcast) {
+    public void addPodcast(Host host, ArrayList<User> users, ArrayList<Podcast> everyPodcast,
+                            ArrayList<Host> hosts) {
+
+
+//        verifying if the user is a host
+        for (Host h : hosts) {
+            if (h.getUsername().equals(this.user)) {
+                break;
+            }
+            this.setMessage(this.user + " is not a host.");
+            return;
+        }
 
 //        verifying if the host exists
         if (host == null) {
@@ -53,7 +65,10 @@ public class AddPodcast implements Command {
             }
         }
 
+
+
         everyPodcast.add(new Podcast(this.name, this.user, this.episodes));
+        host.getHostPodcasts().add(everyPodcast.get(everyPodcast.size() - 1));
 
 
         this.setMessage(this.user + " has added new podcast successfully.");

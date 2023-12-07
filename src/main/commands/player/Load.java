@@ -93,7 +93,7 @@ public class Load implements Command {
                             int indexEpisode = ((Podcast) (user.getCurrentType())).
                                     getLastRemainingEpisode();
                             user.setCurrentType(((Podcast) (user.
-                                    getCurrentType())).getEpisodes().get(indexEpisode));
+                                    getCurrentType())).getEpisodesList().get(indexEpisode));
 
                             user.setCurrentPodcast(podcast);
 
@@ -108,10 +108,10 @@ public class Load implements Command {
 //                              setting last episode watched to 0
                             user.getPodcastsPlayed().get(lastPodcast).setLastRemainingEpisode(0);
 //                              setting the remaining second;
-                            user.getPodcastsPlayed().get(lastPodcast).getEpisodes().
+                            user.getPodcastsPlayed().get(lastPodcast).getEpisodesList().
                                     get(lastEpisode).setSecondsGone(0);
 
-                            user.setRemainingTime(podcast.getEpisodes().
+                            user.setRemainingTime(podcast.getEpisodesList().
                                     get(lastEpisode).getDuration());
 
 //                               current type is Podcast
@@ -119,7 +119,7 @@ public class Load implements Command {
 
 //                               current type is Episode
                             user.setCurrentType(((Podcast) (user.getCurrentType())).
-                                    getEpisodes().get(0));
+                                    getEpisodesList().get(0));
 
                             user.setCurrentPodcast(podcast);
                         }
