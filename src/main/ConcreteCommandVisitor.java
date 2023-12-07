@@ -6,6 +6,7 @@ import main.commands.player.admin.AddUser;
 import main.commands.player.admin.ShowAlbums;
 import main.commands.player.artist.AddAlbum;
 import main.commands.player.artist.AddEvent;
+import main.commands.player.artist.AddMerch;
 import main.commands.player.statistics.GetOnlineUsers;
 import main.commands.player.statistics.GetTop5Playlists;
 import main.commands.player.statistics.GetTop5Songs;
@@ -57,7 +58,7 @@ public class ConcreteCommandVisitor implements CommandVisitor {
 
     @Override
     public void visit(Search search) {
-        search.execute(user, songs, everyPlaylist, podcasts);
+        search.execute(user, songs, everyPlaylist, podcasts, albums, artists, hosts);
     }
 
     @Override
@@ -192,6 +193,11 @@ public class ConcreteCommandVisitor implements CommandVisitor {
 
     @Override
     public void visit(AddEvent addEvent) {
-//        addEvent.execute(commands, input, user, songs, everyPlaylist, podcasts, users, albums);
+        addEvent.execute(user, artist, host);
+    }
+
+    @Override
+    public void visit(AddMerch addMerch) {
+//        addMerch.execute(host, users);
     }
 }

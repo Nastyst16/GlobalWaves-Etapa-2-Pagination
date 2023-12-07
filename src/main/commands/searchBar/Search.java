@@ -9,7 +9,10 @@ import main.commands.types.Album;
 import main.commands.types.Playlist;
 import main.commands.types.Podcast;
 import main.commands.types.Song;
+import main.users.Artist;
+import main.users.Host;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +27,25 @@ public class Search implements Command {
     private String message;
     private ArrayList<String> results;
     private static final int MAX_SIZE = 5;
+
+    /**
+     * This method is used to execute the command.
+     */
+    public void execute(final User user, final ArrayList<Song> songs,
+                        final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts,
+                        final ArrayList<Album> albums,
+                        final ArrayList<Artist> artists,
+                        final ArrayList<Host> hosts) {
+
+        if (user.getOnline() == false) {
+            this.setMessage(this.user + " is offline.");
+            return;
+        }
+
+        this.setSearch(user, songs, everyPlaylist, podcasts, albums, artists, hosts);
+    }
+
 
     @Override
     public void accept(final CommandVisitor visitor) {
@@ -41,7 +63,6 @@ public class Search implements Command {
         this.timestamp = input.getTimestamp();
         this.type = input.getType();
         this.filters = input.getFilters();
-        this.setMessage("Please conduct a search before making a selection");
 
 //        initialize the results array
         this.results = new ArrayList<>();
@@ -154,6 +175,49 @@ public class Search implements Command {
         this.setMessage("Search returned " + results.size() + " results");
     }
 
+
+    public void searchingByAlbum(final ArrayList<Album> albums) {
+        
+    }
+
+
+
+    public void searchingByArtist(final ArrayList<Artist> artists) {
+        String name = (String) (filters.get("name"));
+
+        for (Artist artist : artists) {
+            if (artist.getUsername().startsWith(name)) {
+                results.add(artist.getUsername());
+            }
+
+            if (results.size() == MAX_SIZE) {
+                break;
+            }
+        }
+
+        this.setResults(results);
+        this.setMessage("Search returned " + results.size() + " results");
+    }
+
+//    nu stiu daca e bine jos
+    public void searchingByHost(final ArrayList<Host> hosts) {
+        String name = (String) (filters.get("name"));
+
+        for (Host host : hosts) {
+            if (host.getUsername().startsWith(name)) {
+                results.add(host.getUsername());
+            }
+
+            if (results.size() == MAX_SIZE) {
+                break;
+            }
+        }
+
+        this.setResults(results);
+        this.setMessage("Search returned " + results.size() + " results");
+    }
+
+
     /**
      * This method is used to set the search.
      * @param user the current user
@@ -163,7 +227,10 @@ public class Search implements Command {
      */
     public void setSearch(final User user, final ArrayList<Song> songs,
                           final ArrayList<Playlist> everyPlaylist,
-                          final ArrayList<Podcast> podcasts) {
+                          final ArrayList<Podcast> podcasts,
+                          final ArrayList<Album> albums,
+                          final ArrayList<Artist> artists,
+                          final ArrayList<Host> hosts) {
 
 //                if only type is songs:
         if (this.type.equals("song")) {
@@ -183,6 +250,22 @@ public class Search implements Command {
             user.setTypeFoundBySearch(2);
         }
 
+//        if only type is album
+        if (this.type.equals("album")) {
+//            this.searchingByAlbum();
+        }
+
+//        if only type is artist:
+        if (this.type.equals("artist")) {
+            this.searchingByArtist(artists);
+        }
+
+//        if only type is album
+        if (this.type.equals("host")) {
+//            this.searchingByHost();
+        }
+
+
         user.setCurrentSearch(this);
         user.setTypeSelected(-1);
         user.setCurrentType(null);
@@ -190,20 +273,6 @@ public class Search implements Command {
         user.setRepeatString("No Repeat");
     }
 
-    /**
-     * This method is used to execute the command.
-     */
-    public void execute(final User user, final ArrayList<Song> songs,
-                        final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts) {
-
-        if (user.getOnline() == false) {
-            this.setMessage(this.user + " is offline.");
-            return;
-        }
-
-        this.setSearch(user, songs, everyPlaylist, podcasts);
-    }
 
     /**
      * This method is used to get the user of the command.

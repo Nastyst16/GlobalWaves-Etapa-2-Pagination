@@ -63,9 +63,12 @@ public class AddUser implements Command {
                 return;
             }
         }
-
-//        todo add host
-//        for.......
+        for (Host host : hosts) {
+            if (host.getUsername().equals(this.user)) {
+                this.message = "The username " + this.user + " is already taken.";
+                return;
+            }
+        }
 
 
         if (this.type.equals("user")) {

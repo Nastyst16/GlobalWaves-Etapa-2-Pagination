@@ -12,6 +12,7 @@ import main.commands.player.admin.AddUser;
 import main.commands.player.admin.ShowAlbums;
 import main.commands.player.artist.AddAlbum;
 import main.commands.player.artist.AddEvent;
+import main.commands.player.artist.AddMerch;
 import main.commands.player.statistics.GetOnlineUsers;
 import main.commands.player.statistics.GetTop5Playlists;
 import main.commands.player.statistics.GetTop5Songs;
@@ -193,16 +194,15 @@ public final class Main {
                     }
                 }
             }
-//            implementeaza mai tarziu!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             Host host = null;
-//            if (user == null && artist == null) {
-//                for (Host h : everyHost) {
-//                    if (h.getUsername().equals(input.getUsername())) {
-//                        host = h;
-//                        break;
-//                    }
-//                }
-//            }
+            if (user == null && artist == null) {
+                for (Host h : everyHost) {
+                    if (h.getUsername().equals(input.getUsername())) {
+                        host = h;
+                        break;
+                    }
+                }
+            }
 
 
 
@@ -247,7 +247,7 @@ public final class Main {
                 case "showAlbums":          commands.add(new ShowAlbums(input));            break;
                 case "printCurrentPage":    commands.add(new PrintCurrentPage(input));      break;
                 case "addEvent":            commands.add(new AddEvent(input));              break;
-
+                case "addMerch":            commands.add(new AddMerch(input));              break;
 
                 default: break;
             }

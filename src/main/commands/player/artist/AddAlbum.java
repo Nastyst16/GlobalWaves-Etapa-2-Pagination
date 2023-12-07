@@ -55,7 +55,7 @@ public class AddAlbum implements Command {
         }
 
 //        verifying if the album already exists
-        for (Album album : artist.getArtistAlbums()) {
+        for (Album album : artist.getAlbums()) {
             if (album.getName().equals(this.name)) {
                 this.message = this.user + " has another album with the same name.";
                 return;
@@ -81,7 +81,7 @@ public class AddAlbum implements Command {
         }
 
         everyAlbum.add(new Album(this.user ,this.name, this.releaseYear, this.description, this.albumSongs));
-        artist.getArtistAlbums().add(everyAlbum.get(everyAlbum.size() - 1));
+        artist.getAlbums().add(everyAlbum.get(everyAlbum.size() - 1));
         this.message = this.user + " has added new album successfully.";
     }
 

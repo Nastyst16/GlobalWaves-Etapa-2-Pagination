@@ -20,7 +20,7 @@ public class ShowAlbums implements Command {
 
 
     public void execute(final Artist artist) {
-        this.setShowAlbums(artist.getArtistAlbums());
+        this.setShowAlbums(artist.getAlbums());
     }
 
     public void setShowAlbums(final ArrayList<Album> userAlbums) {
