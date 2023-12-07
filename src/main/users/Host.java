@@ -1,8 +1,10 @@
 package main.users;
 
 import main.commands.types.Album;
+import main.commands.types.Announcement;
 import main.commands.types.Podcast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Host {
@@ -11,7 +13,8 @@ public class Host {
     private final int age;
     private final String city;
 
-    private ArrayList<Podcast> hostPodcasts;
+    private final ArrayList<Podcast> hostPodcasts;
+    private final ArrayList<Announcement> announcements;
 
 
     public Host(String username, int age, String city) {
@@ -20,6 +23,7 @@ public class Host {
         this.city = city;
 
         this.hostPodcasts = new ArrayList<>();
+        this.announcements = new ArrayList<>();
     }
 
 
@@ -39,7 +43,7 @@ public class Host {
         return hostPodcasts;
     }
 
-    public void setHostPodcasts(ArrayList<Podcast> hostPodcasts) {
-        this.hostPodcasts = hostPodcasts;
+    public ArrayList<Announcement> getAnnouncements() {
+        return announcements;
     }
 }

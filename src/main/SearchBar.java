@@ -1,5 +1,6 @@
 package main;
 
+import main.commands.types.Episode;
 import main.commands.types.Song;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class SearchBar {
     private String city;
     private int releaseYear;
     private ArrayList<Song> songs;
+    private ArrayList<Episode> episodes;
 
 
 
@@ -238,5 +240,13 @@ public class SearchBar {
 
     public void setSongs(ArrayList<Song> songs) {
         this.songs = songs;
+    }
+
+    public ArrayList<Episode> getEpisodes() {
+        return episodes;
+    }
+
+    public void setEpisodes(ArrayList<Episode> episodes) {
+        this.episodes = episodes;
     }
 }

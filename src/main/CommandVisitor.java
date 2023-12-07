@@ -5,9 +5,13 @@ import main.commands.pageSystem.PrintCurrentPage;
 import main.commands.player.admin.AddUser;
 import main.commands.player.admin.DeleteUser;
 import main.commands.player.admin.ShowAlbums;
+import main.commands.player.admin.ShowPodcasts;
 import main.commands.player.artist.AddAlbum;
 import main.commands.player.artist.AddEvent;
 import main.commands.player.artist.AddMerch;
+import main.commands.player.host.AddAnnouncement;
+import main.commands.player.host.AddPodcast;
+import main.commands.player.host.RemoveAnnouncement;
 import main.commands.player.statistics.GetAllUsers;
 import main.commands.player.statistics.GetOnlineUsers;
 import main.commands.player.statistics.GetTop5Playlists;
@@ -52,4 +56,8 @@ public interface CommandVisitor {
     void visit(AddMerch addMerch);
     void visit(GetAllUsers getAllUsers);
     void visit(DeleteUser deleteUser);
+    void visit(AddPodcast addPodcast);
+    void visit(AddAnnouncement addAnnouncement);
+    void visit(RemoveAnnouncement removeAnnouncement);
+    void visit(ShowPodcasts showPodcasts);
 }

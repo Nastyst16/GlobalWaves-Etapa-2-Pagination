@@ -5,8 +5,18 @@ import fileio.input.EpisodeInput;
 public class Episode implements Type {
     private final String name;
     private final int duration;
+    private final String description;
     private int secondsGone;
 
+    /**
+     * default constructor
+     * for json file
+     */
+    public Episode() {
+        this.name = null;
+        this.duration = 0;
+        this.description = null;
+    }
 
     /**
      * Constructor for Episode
@@ -15,6 +25,7 @@ public class Episode implements Type {
     public Episode(final EpisodeInput episodeInput) {
         this.name = episodeInput.getName();
         this.duration = episodeInput.getDuration();
+        this.description = episodeInput.getDescription();
     }
 
     /**
@@ -48,6 +59,15 @@ public class Episode implements Type {
     public void setSecondsGone(final int secondsGone) {
         this.secondsGone = secondsGone;
     }
+
+    /**
+     * Getter for description
+     * @return description
+     */
+    public String getDescription() {
+        return description;
+    }
+
 
     /**
      * execute

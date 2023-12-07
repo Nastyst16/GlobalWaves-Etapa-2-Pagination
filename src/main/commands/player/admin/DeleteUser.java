@@ -19,8 +19,9 @@ public class DeleteUser implements Command {
     private String message;
 
 
-    public void execute(ArrayList<User> users, ArrayList<Artist> artists, ArrayList<Host> hosts) {
-        this.setDeleteUser(users, artists, hosts);
+    public void execute(ArrayList<User> users, ArrayList<Artist> artists,
+                        ArrayList<Host> hosts, ArrayList<Song> songs) {
+        this.setDeleteUser(users, artists, hosts, songs);
     }
 
 
@@ -31,7 +32,8 @@ public class DeleteUser implements Command {
     }
 
 
-    public void setDeleteUser(ArrayList<User> users, ArrayList<Artist> artists, ArrayList<Host> hosts) {
+    public void setDeleteUser(ArrayList<User> users, ArrayList<Artist> artists,
+                              ArrayList<Host> hosts, ArrayList<Song> songs) {
 
 //        finding the user
         User user = findUser(users);
@@ -56,7 +58,7 @@ public class DeleteUser implements Command {
 //
 //        }
 
-        this.delArtist(artist, users);
+        this.delArtist(artist, users, songs);
 
 
 
@@ -107,7 +109,7 @@ public class DeleteUser implements Command {
 
     }
 
-    public void delArtist(Artist artist, ArrayList<User> users) {
+    public void delArtist(Artist artist, ArrayList<User> users, ArrayList<Song> everySong) {
 
         if (artist == null) {
             return;
@@ -131,6 +133,18 @@ public class DeleteUser implements Command {
                 }
             }
         }
+
+//        deleting everything related to the artist
+        for (Album a : artist.getAlbums()) {
+
+            everySong.removeAll(a.getAlbumSongs());
+            for (User u : users) {
+                u.setEverySong(everySong);
+                u.getLikedSongs().removeAll(a.getAlbumSongs());
+            }
+        }
+
+        this.setMessage(this.user + " was successfully deleted.");
     }
 
 

@@ -83,6 +83,8 @@ public class AddUser implements Command {
 
         } else if (this.type.equals("host")) {
 
+            hosts.add(new Host(user, age, city));
+            this.message = "The username " + user + " has been added successfully.";
         }
 
 

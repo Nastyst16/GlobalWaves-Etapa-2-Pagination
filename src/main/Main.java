@@ -11,9 +11,13 @@ import main.commands.pageSystem.*;
 import main.commands.player.admin.AddUser;
 import main.commands.player.admin.DeleteUser;
 import main.commands.player.admin.ShowAlbums;
+import main.commands.player.admin.ShowPodcasts;
 import main.commands.player.artist.AddAlbum;
 import main.commands.player.artist.AddEvent;
 import main.commands.player.artist.AddMerch;
+import main.commands.player.host.AddAnnouncement;
+import main.commands.player.host.AddPodcast;
+import main.commands.player.host.RemoveAnnouncement;
 import main.commands.player.statistics.GetAllUsers;
 import main.commands.player.statistics.GetOnlineUsers;
 import main.commands.player.statistics.GetTop5Playlists;
@@ -165,7 +169,7 @@ public final class Main {
                 }
             }
 
-            if (input.getTimestamp() == 1380) {
+            if (input.getTimestamp() == 85) {
                 int x = 5;
             }
 
@@ -217,7 +221,7 @@ public final class Main {
 
 
 //            if for debugging
-            if (input.getTimestamp() == 1159) {
+            if (input.getTimestamp() == 85) {
                 int x = 5;
             }
 
@@ -259,6 +263,10 @@ public final class Main {
                 case "addMerch":            commands.add(new AddMerch(input));              break;
                 case "getAllUsers":         commands.add(new GetAllUsers(input));           break;
                 case "deleteUser":          commands.add(new DeleteUser(input));            break;
+                case "addPodcast":          commands.add(new AddPodcast(input));            break;
+                case "addAnnouncement":     commands.add(new AddAnnouncement(input));       break;
+                case "removeAnnouncement":  commands.add(new RemoveAnnouncement(input));    break;
+                case "showPodcasts":        commands.add(new ShowPodcasts(input));          break;
 
 
                 default: break;
