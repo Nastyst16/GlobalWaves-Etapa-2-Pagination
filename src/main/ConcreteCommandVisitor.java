@@ -9,6 +9,7 @@ import main.commands.player.admin.ShowPodcasts;
 import main.commands.player.artist.AddAlbum;
 import main.commands.player.artist.AddEvent;
 import main.commands.player.artist.AddMerch;
+import main.commands.player.artist.RemoveAlbum;
 import main.commands.player.host.AddAnnouncement;
 import main.commands.player.host.AddPodcast;
 import main.commands.player.host.RemoveAnnouncement;
@@ -237,5 +238,9 @@ public class ConcreteCommandVisitor implements CommandVisitor {
         showPodcasts.execute(host);
     }
 
+    @Override
+    public void visit(RemoveAlbum removeAlbum) {
+        removeAlbum.execute(user, artist, host, users, songs, albums);
+    }
 
 }

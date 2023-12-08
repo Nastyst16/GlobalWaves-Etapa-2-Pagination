@@ -161,7 +161,7 @@ public class Search implements Command {
                 continue;
             }
             if ((owner == null || playlist.getUser().equals(owner))
-                && (name == null || playlist.getName().equals(name))) {
+                && (name == null || playlist.getName().startsWith(name))) {
                 results.add(playlist.getName());
             }
 

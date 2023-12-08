@@ -63,8 +63,7 @@ public class AddRemoveInPlaylist implements Command {
             return;
         }
 
-        if (user.getTypeLoaded() == 2
-                || user.getTypeLoaded() == 1) {
+        if (user.getTypeLoaded() == 1) {
             this.message = "The loaded source is not a song.";
             return;
         }

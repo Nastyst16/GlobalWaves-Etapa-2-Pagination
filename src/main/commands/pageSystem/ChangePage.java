@@ -1,5 +1,6 @@
 package main.commands.pageSystem;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
 import main.CommandVisitor;
 import main.SearchBar;
@@ -12,6 +13,7 @@ public class ChangePage implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
+    @JsonIgnore
     private final String nextPage;
     private String message;
 
@@ -40,7 +42,7 @@ public class ChangePage implements Command {
         if (this.getNextPage().equals("Home") || this.getNextPage().equals("LikedContent")) {
 
             user.setCurrentPage(this.getNextPage());
-            this.message = this.user + "accessed " + this.getNextPage() + " successfully.";
+            this.setMessage(this.user + " accessed " + this.getNextPage() + " successfully.");
 
         }
     }
@@ -70,5 +72,13 @@ public class ChangePage implements Command {
 
     public String getNextPage() {
         return nextPage;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

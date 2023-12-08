@@ -47,13 +47,26 @@ public class PrintCurrentPage implements Command {
                     + "Followed playlists:\n\t" + followedPlaylists;
 //          if the current page is LikedContent
         } else if (user.getCurrentPage().equals("LikedContent")) {
+
+            StringBuilder followedPlaylists = new StringBuilder();
+            for (Playlist playlist : user.getFollowedPlaylists()) {
+                followedPlaylists.append(playlist.getName())
+                        .append(" - ")
+                        .append(playlist.getUser());
+
+                if (user.getFollowedPlaylists().indexOf(playlist) != user.getFollowedPlaylists().size() - 1) {
+                    followedPlaylists.append(", ");
+                }
+            }
+
+
             this.message = "Liked songs:\n\t" + user.getLikedSongs() + "\n\n"
-                    + "Followed playlists:\n\t" + user.getFollowedPlaylists();
+                    + "Followed playlists:\n\t[" + followedPlaylists + "]";
 //          if the current page is Artist
         } else if (user.getCurrentPage().equals("Artist")) {
             Artist currentArtist = null;
             for (Artist artist : artists) {
-                if (artist.getUsername().equals(user.getSelectedName())) {
+                if (artist.getUsername().equals(user.getSelectedPageOwner())) {
                     currentArtist = artist;
                     break;
                 }
@@ -98,7 +111,7 @@ public class PrintCurrentPage implements Command {
         } else if (user.getCurrentPage().equals("Host")) {
             Host currentHost = null;
             for (Host host : hosts) {
-                if (host.getUsername().equals(user.getSelectedName())) {
+                if (host.getUsername().equals(user.getSelectedPageOwner())) {
                     currentHost = host;
                     break;
                 }

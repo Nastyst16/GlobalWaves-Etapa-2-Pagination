@@ -46,6 +46,7 @@ public class User {
 //    Stage 2 variables
     private String currentPage;
     private boolean online;
+    private String selectedPageOwner;
 
 
 
@@ -99,6 +100,7 @@ public class User {
 //        Stage 2:
         currentPage = "Home";
         online = true;
+        selectedPageOwner = null;
     }
 
 
@@ -163,7 +165,10 @@ public class User {
         if (user.getTypeLoaded() == 2 && user.getRepeatStatus() == 2
                 && user.getRemainingTime() <= 0) {
 
-            currentType.setSecondsGone(currentType.getSecondsGone() - currentType.getDuration());
+            while (currentType.getSecondsGone() >= currentType.getDuration()) {
+                currentType.setSecondsGone(currentType.getSecondsGone()
+                        - currentType.getDuration());
+            }
             user.setRemainingTime(currentType.getDuration());
             this.currentType = currentType;
             user.setCurrentType(currentType);
@@ -841,5 +846,13 @@ public class User {
 
     public void setOnline(boolean online) {
         this.online = online;
+    }
+
+    public String getSelectedPageOwner() {
+        return selectedPageOwner;
+    }
+
+    public void setSelectedPageOwner(String selectedPageOwner) {
+        this.selectedPageOwner = selectedPageOwner;
     }
 }
