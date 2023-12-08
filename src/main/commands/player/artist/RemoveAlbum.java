@@ -6,12 +6,14 @@ import main.CommandVisitor;
 import main.SearchBar;
 import main.User;
 import main.commands.types.Album;
+import main.commands.types.Playlist;
 import main.commands.types.Song;
 import main.users.Artist;
 import main.users.Host;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class RemoveAlbum implements Command {
     private final String command;
@@ -42,23 +44,25 @@ public class RemoveAlbum implements Command {
 
 
 //        verifying if the album exists
+        boolean exists = false;
         for (Album album : artist.getAlbums()) {
             if (album.getName().equals(this.name)) {
+                exists = true;
                 break;
             }
-            this.setMessage(this.name + " doesn't have an album with the given name.");
+        }
+        if (!exists) {
+            this.setMessage(this.user + " doesn't have an album with the given name.");
+            return;
         }
 
 
 //        verifying if a users currently listens to the album
         for (User currentUser : users) {
             if (currentUser.getCurrentType() != null) {
-                for (Album album : artist.getAlbums()) {
-                    for (Song song : album.getAlbumSongs()) {
-                        if (song.getName().equals(currentUser.getCurrentType().getName()));
-                        this.setMessage(this.user + " can't delete this album.");
-                        return;
-                    }
+                if (currentUser.getCurrentPlaylist().getName().equals(this.name)) {
+                    this.setMessage(this.user + " can't delete this album.");
+                    return;
                 }
             }
         }
@@ -74,13 +78,48 @@ public class RemoveAlbum implements Command {
                 songs.removeAll(album.getAlbumSongs());
                 for (User u : users) {
                     u.getLikedSongs().removeAll(album.getAlbumSongs());
+
+                    for (Playlist playlist : u.getPlayListList()) {
+
+                        Iterator<Song> iterator = playlist.getSongList().iterator();
+                        while (iterator.hasNext()) {
+                            Song song = iterator.next();
+                            for (Song albumSong : album.getAlbumSongs()) {
+                                if (song.getName().equals(albumSong.getName())) {
+                                    iterator.remove();
+                                    playlist.getSongs().remove(song.getName());
+
+
+//                                     if users listens to a playlist which contains the deleted song
+                                    for (User u1 : users) {
+                                        if (u.isShuffle()) {
+//                                            todo delete the index corresponding to the deletex song,
+//                                             and decrement the values
+
+                                        }
+                                    }
+
+
+//                                    if shuffle on
+
+
+
+//                                    u.getOriginalIndices().removeLast();
+//                                    u.getShuffledIndices().removeLast();
+                                    break;
+                                }
+                            }
+                        }
+
+                    }
+
                 }
 
                 break;
             }
         }
 
-        this.setMessage(this.name + " has been removed successfully.");
+        this.setMessage(this.user + " deleted the album successfully.");
 
 
     }

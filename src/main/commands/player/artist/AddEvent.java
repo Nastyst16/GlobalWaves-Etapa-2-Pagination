@@ -52,6 +52,24 @@ public class AddEvent implements Command {
             return;
         }
 
+//        the date format is dd-mm-yyyy verifying if dd is between 1 and 31 and month is between 1 and 12
+        String[] dateSplit = this.date.split("-");
+        int day = Integer.parseInt(dateSplit[0]);
+        int month = Integer.parseInt(dateSplit[1]);
+        int year = Integer.parseInt(dateSplit[2]);
+        if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1900 || year > 2023) {
+            this.message = "Event for " + this.user + " does not have a valid date.";
+            return;
+        }
+//        for february
+        if (month == 2 && day > 28) {
+            this.message = "Event for " + this.user + " does not have a valid date.";
+            return;
+        }
+
+
+
+
         artist.getEvents().add(new Event(this.user, this.timestamp, this.name, this.description, this.date));
         this.message = this.user + " has added new event successfully.";
     }

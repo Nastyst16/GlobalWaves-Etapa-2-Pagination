@@ -66,6 +66,10 @@ public class Shuffle implements Command {
                 this.message = "Shuffle function activated successfully.";
                 user.setShuffle(true);
 
+                user.getOriginalIndices().clear();
+                user.getShuffledIndices().clear();
+
+
                 for (int i = 0; i < user.getCurrentPlaylist().getSongList().size(); i++) {
                     user.getOriginalIndices().add(i);
                 }

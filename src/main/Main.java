@@ -12,10 +12,7 @@ import main.commands.player.admin.AddUser;
 import main.commands.player.admin.DeleteUser;
 import main.commands.player.admin.ShowAlbums;
 import main.commands.player.admin.ShowPodcasts;
-import main.commands.player.artist.AddAlbum;
-import main.commands.player.artist.AddEvent;
-import main.commands.player.artist.AddMerch;
-import main.commands.player.artist.RemoveAlbum;
+import main.commands.player.artist.*;
 import main.commands.player.host.AddAnnouncement;
 import main.commands.player.host.AddPodcast;
 import main.commands.player.host.RemoveAnnouncement;
@@ -171,7 +168,7 @@ public final class Main {
                 }
             }
 
-            if (input.getTimestamp() == 4500) {
+            if (input.getTimestamp() == 3000) {
                 int x = 5;
             }
 
@@ -223,7 +220,7 @@ public final class Main {
 
 
 //            if for debugging
-            if (input.getTimestamp() == 100000) {
+            if (input.getTimestamp() == 2850) {
                 int x = 5;
             }
 
@@ -281,6 +278,7 @@ public final class Main {
                 case "showPodcasts":        commands.add(new ShowPodcasts(input));          break;
                 case "removeAlbum":         commands.add(new RemoveAlbum(input));           break;
                 case "removePodcast":       commands.add(new RemovePodcast(input));         break;
+                case "removeEvent":         commands.add(new RemoveEvent(input));           break;
 
 
                 default: break;

@@ -69,7 +69,14 @@ public class Load implements Command {
                 for (Song song : user.getEverySong()) {
                     if (song.getName().equals(user.
                             getCurrentSelect().getSelectedName())) {
-                        user.setCurrentType(song);
+
+//                        deepCopy the song
+                        Song songCopy = new Song(song.getName(), song.getDuration(),
+                                song.getAlbum(), song.getTags(), song.getLyrics(),
+                                song.getGenre(), song.getReleaseYear(), song.getArtist());
+
+
+                        user.setCurrentType(songCopy);
 
                         user.getCurrentType().setSecondsGone(0);
 
@@ -147,6 +154,19 @@ public class Load implements Command {
                     if (playlist.getName().equals(user.
                             getCurrentSelect().getSelectedName())) {
                         user.setTypeLoaded(2);
+
+//                        deepcopy user.currentPlaylist
+                        ArrayList<Song> songsCopy = new ArrayList<>();
+                        for (Song song : playlist.getSongList()) {
+                            songsCopy.add(new Song(song.getName(), song.getDuration(),
+                                    song.getAlbum(), song.getTags(), song.getLyrics(),
+                                    song.getGenre(), song.getReleaseYear(), song.getArtist()));
+                        }
+                        Playlist playlistCopy = new Playlist(playlist.getUser(), playlist.getName(), songsCopy);
+                        for (Song song : playlistCopy.getSongList()) {
+                            song.setSecondsGone(0);
+                        }
+
 
                         user.setCurrentPlaylist(playlist);
                         user.setCurrentType(playlist.getSongList().get(0));
