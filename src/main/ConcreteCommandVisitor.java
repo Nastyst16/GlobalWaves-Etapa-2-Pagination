@@ -13,6 +13,7 @@ import main.commands.player.artist.RemoveAlbum;
 import main.commands.player.host.AddAnnouncement;
 import main.commands.player.host.AddPodcast;
 import main.commands.player.host.RemoveAnnouncement;
+import main.commands.player.host.RemovePodcast;
 import main.commands.player.statistics.GetAllUsers;
 import main.commands.player.statistics.GetOnlineUsers;
 import main.commands.player.statistics.GetTop5Playlists;
@@ -215,7 +216,7 @@ public class ConcreteCommandVisitor implements CommandVisitor {
 
     @Override
     public void visit(DeleteUser deleteUser) {
-        deleteUser.execute(users, artists, hosts, songs);
+        deleteUser.execute(users, artists, hosts, songs, albums);
     }
 
     @Override
@@ -225,7 +226,7 @@ public class ConcreteCommandVisitor implements CommandVisitor {
 
     @Override
     public void visit(AddAnnouncement addAnnouncement) {
-        addAnnouncement.execute(host);
+        addAnnouncement.execute(user, artist, host);
     }
 
     @Override
@@ -241,6 +242,11 @@ public class ConcreteCommandVisitor implements CommandVisitor {
     @Override
     public void visit(RemoveAlbum removeAlbum) {
         removeAlbum.execute(user, artist, host, users, songs, albums);
+    }
+
+    @Override
+    public void visit(RemovePodcast removePodcast) {
+        removePodcast.execute(user, artist, host, users, songs, podcasts);
     }
 
 }

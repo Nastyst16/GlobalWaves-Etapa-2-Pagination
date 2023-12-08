@@ -19,6 +19,7 @@ import main.commands.player.artist.RemoveAlbum;
 import main.commands.player.host.AddAnnouncement;
 import main.commands.player.host.AddPodcast;
 import main.commands.player.host.RemoveAnnouncement;
+import main.commands.player.host.RemovePodcast;
 import main.commands.player.statistics.GetAllUsers;
 import main.commands.player.statistics.GetOnlineUsers;
 import main.commands.player.statistics.GetTop5Playlists;
@@ -222,7 +223,7 @@ public final class Main {
 
 
 //            if for debugging
-            if (input.getTimestamp() == 2338) {
+            if (input.getTimestamp() == 3233) {
                 int x = 5;
             }
 
@@ -269,6 +270,7 @@ public final class Main {
                 case "removeAnnouncement":  commands.add(new RemoveAnnouncement(input));    break;
                 case "showPodcasts":        commands.add(new ShowPodcasts(input));          break;
                 case "removeAlbum":         commands.add(new RemoveAlbum(input));           break;
+                case "removePodcast":       commands.add(new RemovePodcast(input));         break;
 
 
                 default: break;

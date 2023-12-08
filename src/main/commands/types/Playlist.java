@@ -11,9 +11,7 @@ public class Playlist {
     private final ArrayList<Song> songList;
     private final ArrayList<String> songs;
 
-    @JsonIgnore
     private String visibility;
-    @JsonIgnore
     private int followers;
 
 

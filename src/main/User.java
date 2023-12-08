@@ -226,9 +226,25 @@ public class User {
             while (user.getRemainingTime() <= 0) {
                 Podcast podcast = user.getCurrentPodcast();
 
+
                 user.getCurrentPodcast().setLastRemainingEpisode(user.
                         getCurrentPodcast().getLastRemainingEpisode() + 1);
                 int indexEpisode = user.getCurrentPodcast().getLastRemainingEpisode();
+
+
+
+//                if it is the last episode in podcast
+                if (user.getCurrentPodcast().getEpisodesList().size() - 1 == indexEpisode) {
+
+                    user.setCurrentType(null);
+                    user.setTypeLoaded(-1);
+                    user.setShuffle(false);
+                    return;
+                }
+
+
+
+
 
                 Episode newEpisode = user.getCurrentPodcast().getEpisodesList().get(indexEpisode);
 
@@ -236,6 +252,7 @@ public class User {
                 currentType.setSecondsGone(Math.abs(user.getRemainingTime()));
 
                 user.setRemainingTime(currentType.getDuration() - currentType.getSecondsGone());
+
             }
         }
 

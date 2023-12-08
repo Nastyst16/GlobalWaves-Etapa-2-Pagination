@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
 import main.CommandVisitor;
 import main.SearchBar;
+import main.User;
 import main.commands.types.Announcement;
+import main.users.Artist;
 import main.users.Host;
 
 public class AddAnnouncement implements Command {
@@ -18,8 +20,8 @@ public class AddAnnouncement implements Command {
     private String message;
 
 
-    public void execute(Host host) {
-        addAnnouncement(host);
+    public void execute(User user, Artist artist, Host host) {
+        addAnnouncement(user, artist, host);
     }
 
 
@@ -32,10 +34,13 @@ public class AddAnnouncement implements Command {
     }
 
 
-    public void addAnnouncement(Host host) {
+    public void addAnnouncement(User user, Artist artist, Host host) {
 
-//        verifying if the host exists
-        if (host == null) {
+
+        if (user != null || artist != null) {
+            this.message = this.user + " is not a host.";
+            return;
+        } else if (host == null) {
             this.message = "The username " + this.user + " doesn't exist.";
             return;
         }

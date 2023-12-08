@@ -13,6 +13,7 @@ import main.commands.player.artist.RemoveAlbum;
 import main.commands.player.host.AddAnnouncement;
 import main.commands.player.host.AddPodcast;
 import main.commands.player.host.RemoveAnnouncement;
+import main.commands.player.host.RemovePodcast;
 import main.commands.player.statistics.GetAllUsers;
 import main.commands.player.statistics.GetOnlineUsers;
 import main.commands.player.statistics.GetTop5Playlists;
@@ -62,4 +63,5 @@ public interface CommandVisitor {
     void visit(RemoveAnnouncement removeAnnouncement);
     void visit(ShowPodcasts showPodcasts);
     void visit(RemoveAlbum removeAlbum);
+    void visit(RemovePodcast removePodcast);
 }

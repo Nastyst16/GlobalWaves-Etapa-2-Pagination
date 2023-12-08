@@ -48,6 +48,18 @@ public class PrintCurrentPage implements Command {
 //          if the current page is LikedContent
         } else if (user.getCurrentPage().equals("LikedContent")) {
 
+            StringBuilder likedSongs = new StringBuilder();
+            for (Song song : user.getLikedSongs()) {
+                likedSongs.append(song.getName())
+                        .append(" - ")
+                        .append(song.getArtist());
+
+                if (user.getLikedSongs().indexOf(song) != user.getLikedSongs().size() - 1) {
+                    likedSongs.append(", ");
+                }
+            }
+
+
             StringBuilder followedPlaylists = new StringBuilder();
             for (Playlist playlist : user.getFollowedPlaylists()) {
                 followedPlaylists.append(playlist.getName())
@@ -60,7 +72,7 @@ public class PrintCurrentPage implements Command {
             }
 
 
-            this.message = "Liked songs:\n\t" + user.getLikedSongs() + "\n\n"
+            this.message = "Liked songs:\n\t[" + likedSongs + "]\n\n"
                     + "Followed playlists:\n\t[" + followedPlaylists + "]";
 //          if the current page is Artist
         } else if (user.getCurrentPage().equals("Artist")) {

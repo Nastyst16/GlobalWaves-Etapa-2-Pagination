@@ -11,6 +11,10 @@ public class Album extends Playlist {
     private final String description;
     private final ArrayList<Song> albumSongs;
     private final ArrayList<String> songs;
+    @JsonIgnore
+    private String visibility;
+    @JsonIgnore
+    private int followers;
 
 
     public Album(final String user, final String name, final int releaseYear,
@@ -63,4 +67,24 @@ public class Album extends Playlist {
         return songs;
     }
 
+
+    @Override
+    public String getVisibility() {
+        return visibility;
+    }
+
+    @Override
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
+    }
+
+    @Override
+    public int getFollowers() {
+        return followers;
+    }
+
+    @Override
+    public void setFollowers(int followers) {
+        this.followers = followers;
+    }
 }

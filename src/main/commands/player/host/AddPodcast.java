@@ -69,6 +69,9 @@ public class AddPodcast implements Command {
 
         everyPodcast.add(new Podcast(this.name, this.user, this.episodes));
         host.getHostPodcasts().add(everyPodcast.get(everyPodcast.size() - 1));
+        for (User u : users) {
+            u.setEveryPodcast(everyPodcast);
+        }
 
 
         this.setMessage(this.user + " has added new podcast successfully.");
