@@ -3,9 +3,9 @@ package main.commands.types;
 import fileio.input.EpisodeInput;
 
 public class Episode implements Type {
-    private final String name;
-    private final int duration;
-    private final String description;
+    private String name;
+    private int duration;
+    private String description;
     private int secondsGone;
 
     /**
@@ -74,6 +74,18 @@ public class Episode implements Type {
         return description;
     }
 
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     /**
      * execute

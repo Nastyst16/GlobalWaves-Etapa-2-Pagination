@@ -1,10 +1,7 @@
 package main.commands.player;
 
 import main.*;
-import main.commands.types.Album;
-import main.commands.types.Playlist;
-import main.commands.types.Podcast;
-import main.commands.types.Song;
+import main.commands.types.*;
 
 import java.util.ArrayList;
 
@@ -99,7 +96,25 @@ public class Load implements Command {
 
                         } else {
 //                              adding to the user the loaded podcast
-                            user.addPodcastPlayed(podcast);
+
+//                            finding the podcast in the user's podcasts
+                            Podcast p = null;
+                            for (Podcast podcast1 : user.getEveryPodcast()) {
+                                if (podcast1.getName().equals(podcast.getName())) {
+                                    p = podcast1;
+                                    break;
+                                }
+                            }
+
+                            ArrayList<String> episodesNames = new ArrayList<>();
+                            for (Episode e : p.getEpisodesList()) {
+                                episodesNames.add(e.getName());
+                            }
+                            p.setEpisodes(episodesNames);
+
+                            user.addPodcastPlayed(p);
+
+
 
                             int lastPodcast = user.getPodcastsPlayed().size() - 1;
                             int lastEpisode = user.getPodcastsPlayed().

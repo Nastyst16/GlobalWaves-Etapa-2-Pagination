@@ -223,9 +223,19 @@ public final class Main {
 
 
 //            if for debugging
-            if (input.getTimestamp() == 3267) {
+            if (input.getTimestamp() == 100000) {
                 int x = 5;
             }
+
+            if (input.getTimestamp() == 85) {
+                int x = 5;
+            }
+
+            if (input.getTimestamp() == 86) {
+                int x = 5;
+            }
+
+
 
 //            creating the commands
             executor.setExecutor(commands, input, user, songs, everyPlaylist,

@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Podcast implements Type {
-    private final String name;
+    private String name;
     @JsonIgnore
-    private final String owner;
+    private String owner;
     @JsonIgnore
-    private final List<Episode> episodesList;
-    private final ArrayList<String> episodes;
+    private List<Episode> episodesList;
+    private ArrayList<String> episodes;
     @JsonIgnore
     private int lastRemainingEpisode;
     @JsonIgnore
@@ -116,5 +116,21 @@ public class Podcast implements Type {
      */
     public ArrayList<String> getEpisodes() {
         return episodes;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public void setEpisodesList(List<Episode> episodesList) {
+        this.episodesList = episodesList;
+    }
+
+    public void setEpisodes(ArrayList<String> episodes) {
+        this.episodes = episodes;
     }
 }

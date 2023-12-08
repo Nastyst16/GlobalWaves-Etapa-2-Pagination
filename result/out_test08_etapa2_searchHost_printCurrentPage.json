@@ -353,8 +353,8 @@
   "user" : "carol19",
   "timestamp" : 4500,
   "stats" : {
-    "name" : "The Future of Music Technology",
-    "remainedTime" : 1735,
+    "name" : "Exploring Sonic Landscapes",
+    "remainedTime" : 1650,
     "repeat" : "No Repeat",
     "shuffle" : false,
     "paused" : false
@@ -363,5 +363,5 @@
   "command" : "deleteUser",
   "user" : "soundseeker",
   "timestamp" : 100000,
-  "message" : null
+  "message" : "soundseeker can't be deleted."
 } ]

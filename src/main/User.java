@@ -77,7 +77,24 @@ public class User {
         followedPlaylists = new ArrayList<>();
 
 
-        this.everyPodcast = everyPodcast;
+//        copy the podcasts
+        this.everyPodcast = new ArrayList<>();
+        for (Podcast podcast : everyPodcast) {
+            Podcast copyPodcast = new Podcast();
+            copyPodcast.setName(podcast.getName());
+            copyPodcast.setOwner(podcast.getOwner());
+            ArrayList<Episode> episodes = new ArrayList<>();
+            for (Episode episode : podcast.getEpisodesList()) {
+                Episode copyEpisode = new Episode();
+                copyEpisode.setName(episode.getName());
+                copyEpisode.setDuration(episode.getDuration());
+                copyEpisode.setDescription(episode.getDescription());
+                episodes.add(copyEpisode);
+            }
+            copyPodcast.setEpisodesList(episodes);
+
+            this.everyPodcast.add(copyPodcast);
+        }
 
 //        copy the songs
         this.everySong = new ArrayList<>();

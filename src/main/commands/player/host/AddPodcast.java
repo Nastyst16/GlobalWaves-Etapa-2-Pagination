@@ -65,26 +65,27 @@ public class AddPodcast implements Command {
             }
         }
 
-
+//        adding the podcast
 
         everyPodcast.add(new Podcast(this.name, this.user, this.episodes));
-        host.getHostPodcasts().add(everyPodcast.get(everyPodcast.size() - 1));
+        host.getHostPodcasts().add(new Podcast(this.name, this.user, this.episodes));
+
         for (User u : users) {
-//            u.setEveryPodcast(everyPodcast);
 
-//            deepcopy
-            ArrayList<Podcast> userPodcasts = new ArrayList<>();
-            for (Podcast podcast : everyPodcast) {
-
-//                deepcopy episodes
-                ArrayList<Episode> episodesCopy = new ArrayList<>();
-                for (Episode episode : podcast.getEpisodesList()) {
-                    episodesCopy.add(new Episode(episode.getName(), episode.getDuration(), episode.getDescription()));
-                }
-                userPodcasts.add(new Podcast(podcast.getName(), this.user, episodesCopy));
+            ArrayList<Episode> episodesCopy = new ArrayList<>();
+            for (Episode e : this.episodes) {
+                episodesCopy.add(new Episode(e.getName(), e.getDuration(), e.getDescription()));
             }
-            u.setEveryPodcast(userPodcasts);
+
+            u.getEveryPodcast().add(new Podcast(this.name, this.user, episodesCopy));
+            ArrayList<String> episodesNames = new ArrayList<>();
+            for (Episode e : episodesCopy) {
+                episodesNames.add(e.getName());
+            }
+
         }
+
+
 
 
         this.setMessage(this.user + " has added new podcast successfully.");

@@ -191,7 +191,7 @@ public class DeleteUser implements Command {
 
 //        verifying if a user is listening to one of host podcast
         for (User currentUser : users) {
-            if (currentUser.getCurrentType() != null) {
+            if (currentUser.getCurrentPodcast() != null) {
                 for (Podcast podcast : host.getHostPodcasts()) {
                     if (podcast.getName().equals(currentUser.getCurrentPodcast().getName()));
                     this.setMessage(this.user + " can't be deleted.");
