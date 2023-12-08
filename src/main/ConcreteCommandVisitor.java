@@ -216,7 +216,7 @@ public class ConcreteCommandVisitor implements CommandVisitor {
 
     @Override
     public void visit(DeleteUser deleteUser) {
-        deleteUser.execute(users, artists, hosts, songs, albums);
+        deleteUser.execute(users, artists, hosts, songs, everyPlaylist, albums, podcasts);
     }
 
     @Override

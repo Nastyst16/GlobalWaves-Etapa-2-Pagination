@@ -18,6 +18,12 @@ public class Episode implements Type {
         this.description = null;
     }
 
+    public Episode(final String name, final int duration, final String description) {
+        this.name = name;
+        this.duration = duration;
+        this.description = description;
+    }
+
     /**
      * Constructor for Episode
      * @param episodeInput

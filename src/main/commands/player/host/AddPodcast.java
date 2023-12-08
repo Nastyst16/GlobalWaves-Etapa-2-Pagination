@@ -70,7 +70,20 @@ public class AddPodcast implements Command {
         everyPodcast.add(new Podcast(this.name, this.user, this.episodes));
         host.getHostPodcasts().add(everyPodcast.get(everyPodcast.size() - 1));
         for (User u : users) {
-            u.setEveryPodcast(everyPodcast);
+//            u.setEveryPodcast(everyPodcast);
+
+//            deepcopy
+            ArrayList<Podcast> userPodcasts = new ArrayList<>();
+            for (Podcast podcast : everyPodcast) {
+
+//                deepcopy episodes
+                ArrayList<Episode> episodesCopy = new ArrayList<>();
+                for (Episode episode : podcast.getEpisodesList()) {
+                    episodesCopy.add(new Episode(episode.getName(), episode.getDuration(), episode.getDescription()));
+                }
+                userPodcasts.add(new Podcast(podcast.getName(), this.user, episodesCopy));
+            }
+            u.setEveryPodcast(userPodcasts);
         }
 
 

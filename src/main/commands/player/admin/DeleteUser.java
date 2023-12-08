@@ -6,6 +6,7 @@ import main.SearchBar;
 import main.User;
 import main.commands.types.Album;
 import main.commands.types.Playlist;
+import main.commands.types.Podcast;
 import main.commands.types.Song;
 import main.users.Artist;
 import main.users.Host;
@@ -22,8 +23,10 @@ public class DeleteUser implements Command {
 
     public void execute(ArrayList<User> users, ArrayList<Artist> artists,
                         ArrayList<Host> hosts, ArrayList<Song> songs,
-                        ArrayList<Album> albums) {
-        this.setDeleteUser(users, artists, hosts, songs, albums);
+                        ArrayList<Playlist> everyPlaylist,
+                        ArrayList<Album> albums,
+                        ArrayList<Podcast> podcasts) {
+        this.setDeleteUser(users, artists, hosts, songs, everyPlaylist, albums, podcasts);
     }
 
 
@@ -36,7 +39,9 @@ public class DeleteUser implements Command {
 
     public void setDeleteUser(ArrayList<User> users, ArrayList<Artist> artists,
                               ArrayList<Host> hosts, ArrayList<Song> songs,
-                              ArrayList<Album> albums) {
+                              ArrayList<Playlist> everyPlaylist,
+                              ArrayList<Album> albums,
+                              ArrayList<Podcast> podcasts) {
 
 //        finding the user
         User user = findUser(users);
@@ -49,16 +54,14 @@ public class DeleteUser implements Command {
             return;
         }
 
-        for (Playlist followedPlaylist : user.getFollowedPlaylists()) {
-//            followedPlaylist.getFollowers()
-//            remove the follower... todo
+
+        if (user != null) {
+            this.delUser(user, users, everyPlaylist);
+        } else if (artist != null) {
+            this.delArtist(artist, users, songs, albums);
+        } else if (host != null) {
+            this.delHost(host, users, podcasts);
         }
-
-        this.delUser(user, users);
-        this.delArtist(artist, users, songs, albums);
-
-
-
     }
 
     public User findUser(ArrayList<User> users) {
@@ -97,12 +100,23 @@ public class DeleteUser implements Command {
     }
 
 
-    public void delUser(User user, ArrayList<User> users) {
+    public void delUser(User user, ArrayList<User> users, ArrayList<Playlist> everyPlaylist) {
 
         if (user == null) {
             this.setMessage(this.user + " doesn't exist.");
             return;
         }
+
+        for (Playlist followedPlaylist : user.getFollowedPlaylists()) {
+//            remove the follower
+            for (Playlist p : everyPlaylist) {
+                if (p.getName().equals(followedPlaylist.getName())) {
+                    p.setFollowers(p.getFollowers() - 1);
+                }
+            }
+
+        }
+
 
         users.remove(user);
 
@@ -118,6 +132,7 @@ public class DeleteUser implements Command {
                           ArrayList<Album> albums) {
 
         if (artist == null) {
+            this.setMessage(this.user + " doesn't exist.");
             return;
         }
 
@@ -164,6 +179,31 @@ public class DeleteUser implements Command {
 
 
         this.setMessage(this.user + " was successfully deleted.");
+    }
+
+
+    public void delHost(Host host, ArrayList<User> users, ArrayList<Podcast> podcasts) {
+
+        if (host == null) {
+            this.setMessage(this.user + " doesn't exist.");
+            return;
+        }
+
+//        verifying if a user is listening to one of host podcast
+        for (User currentUser : users) {
+            if (currentUser.getCurrentType() != null) {
+                for (Podcast podcast : host.getHostPodcasts()) {
+                    if (podcast.getName().equals(currentUser.getCurrentPodcast().getName()));
+                    this.setMessage(this.user + " can't be deleted.");
+                    return;
+                }
+            }
+        }
+
+//        for (Podcast hostPodcast : host.getHostPodcasts()) {
+//
+//        }
+
     }
 
 

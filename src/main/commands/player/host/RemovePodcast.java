@@ -40,12 +40,18 @@ public class RemovePodcast implements Command {
         }
 
 //        verifying if the podcast exists
+        boolean exists = false;
+
         for (Podcast podcast : host.getHostPodcasts()) {
             if (podcast.getName().equals(this.name)) {
+                exists = true;
                 break;
             }
+        }
 
-            this.setMessage(this.name + " doesn't have a podcast with the given name.");
+        if (!exists) {
+            this.setMessage(this.user + " doesn't have a podcast with the given name.");
+            return;
         }
 
 
@@ -70,7 +76,15 @@ public class RemovePodcast implements Command {
 //                deleting also every user listened podcasts
                 for (Podcast podcastToRemove : u.getPodcastsPlayed()) {
                     if (podcastToRemove.getName().equals(p.getName())) {
-                        u.getPodcastsPlayed().remove(podcastToRemove);
+
+//                        removing the podcast from the user's listened podcasts
+                        for (Podcast podcast : u.getPodcastsPlayed()) {
+                            if (podcast.getName().equals(podcastToRemove.getName())) {
+                                u.getPodcastsPlayed().remove(podcast);
+                                break;
+                            }
+                        }
+
                         break;
                     }
                 }
