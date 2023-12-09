@@ -102,7 +102,7 @@ public class Load implements Command {
                             user.setCurrentPodcast(podcast);
 
                         } else {
-//                              adding to the user the loaded podcast
+//                            adding to the user the loaded podcast
 
 //                            finding the podcast in the user's podcasts
                             Podcast p = null;
@@ -168,8 +168,8 @@ public class Load implements Command {
                         }
 
 
-                        user.setCurrentPlaylist(playlist);
-                        user.setCurrentType(playlist.getSongList().get(0));
+                        user.setCurrentPlaylist(playlistCopy);
+                        user.setCurrentType(playlistCopy.getSongList().get(0));
                         user.setRemainingTime(user.getCurrentType().getDuration());
                         user.getCurrentType().setSecondsGone(0);
 

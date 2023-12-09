@@ -117,7 +117,7 @@ public class User {
 //        Stage 2:
         currentPage = "Home";
         online = true;
-        selectedPageOwner = null;
+        selectedPageOwner = "";
     }
 
 
@@ -212,6 +212,9 @@ public class User {
         if (user.getTypeLoaded() == 0 && user.getRepeatStatus() == 0 && user.getRemainingTime() < 0) {
 
             user.setCurrentType(null);
+            user.setCurrentPodcast(null);
+            user.setCurrentPlaylist(null);
+
             user.setTypeLoaded(-1);
             user.setShuffle(false);
             return;
@@ -272,6 +275,9 @@ public class User {
                 if (user.getCurrentPodcast().getEpisodesList().size() - 1 == indexEpisode) {
 
                     user.setCurrentType(null);
+                    user.setCurrentPodcast(null);
+                    user.setCurrentPlaylist(null);
+
                     user.setTypeLoaded(-1);
                     user.setShuffle(false);
                     return;
@@ -305,6 +311,10 @@ public class User {
 
                     if (user.getRepeatStatus() == 0) {
                         user.setCurrentType(null);
+                        user.setCurrentPodcast(null);
+                        user.setCurrentPlaylist(null);
+
+
                         user.setTypeLoaded(-1);
                         user.setShuffle(false);
                         return;
@@ -344,6 +354,9 @@ public class User {
                     } else if (nextShuffledIndex == user.getShuffledIndices().size()) {
 //                        end of playlist;
                         user.setCurrentType(null);
+                        user.setCurrentPodcast(null);
+                        user.setCurrentPlaylist(null);
+
                         user.setTypeLoaded(-1);
                         user.setShuffle(false);
                         return;

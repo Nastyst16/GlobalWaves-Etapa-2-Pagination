@@ -165,7 +165,7 @@ public final class Main {
                 }
             }
 
-            if (input.getTimestamp() == 290) {
+            if (input.getTimestamp() == 7855) {
                 int x = 5;
             }
 
@@ -217,11 +217,11 @@ public final class Main {
 
 
 //            if for debugging
-            if (input.getTimestamp() == 805) {
+            if (input.getTimestamp() == 6900) {
                 int x = 5;
             }
 
-            if (input.getTimestamp() == 85) {
+            if (input.getTimestamp() == 740) {
                 int x = 5;
             }
 

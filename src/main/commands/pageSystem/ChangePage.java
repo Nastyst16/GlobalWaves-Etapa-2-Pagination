@@ -42,6 +42,7 @@ public class ChangePage implements Command {
         if (this.getNextPage().equals("Home") || this.getNextPage().equals("LikedContent")) {
 
             user.setCurrentPage(this.getNextPage());
+            user.setSelectedPageOwner("");
             this.setMessage(this.user + " accessed " + this.getNextPage() + " successfully.");
 
         }

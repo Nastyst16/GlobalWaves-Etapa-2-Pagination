@@ -13,6 +13,7 @@ import main.users.Host;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class DeleteUser implements Command {
     private final String command;
@@ -107,6 +108,20 @@ public class DeleteUser implements Command {
             return;
         }
 
+
+//        verifying if a user is listening to one of the user playlists
+        for (User currentUser : users) {
+            for (Playlist playlist : user.getPlayListList()) {
+                if (currentUser.getCurrentPlaylist() != null
+                        && currentUser.getCurrentPlaylist().getName().equals(playlist.getName())) {
+                    this.setMessage(this.user + " can't be deleted.");
+                    return;
+                }
+            }
+        }
+
+
+
         for (Playlist followedPlaylist : user.getFollowedPlaylists()) {
 //            remove the follower
             for (Playlist p : everyPlaylist) {
@@ -137,6 +152,14 @@ public class DeleteUser implements Command {
         }
 
         for (User u : users) {
+
+//            if the user selected the artist page
+            if (u.getSelectedPageOwner().equals(this.user)) {
+                this.setMessage(this.user + " can't be deleted.");
+                return;
+            }
+
+
 
             String currentlyPlaying = null;
             if (u.getCurrentType() != null) {
@@ -191,18 +214,47 @@ public class DeleteUser implements Command {
 
 //        verifying if a user is listening to one of host podcast
         for (User currentUser : users) {
-            if (currentUser.getCurrentPodcast() != null) {
+
+//            if the user selected the host page
+            if (currentUser.getSelectedPageOwner().equals(this.user)) {
+                this.setMessage(this.user + " can't be deleted.");
+                return;
+            }
+
+//            if the user is listening to a podcast related to the host
+            if (currentUser.getCurrentType() != null) {
                 for (Podcast podcast : host.getHostPodcasts()) {
-                    if (podcast.getName().equals(currentUser.getCurrentPodcast().getName()));
-                    this.setMessage(this.user + " can't be deleted.");
-                    return;
+
+                    if (currentUser.getCurrentPodcast() == null) {
+                        continue;
+                    }
+
+                    if (podcast.getName().equals(currentUser.getCurrentPodcast().getName())) {
+                        this.setMessage(this.user + " can't be deleted.");
+                        return;
+                    }
                 }
             }
         }
 
-//        for (Podcast hostPodcast : host.getHostPodcasts()) {
-//
-//        }
+//        deleting everything related to the host
+        Iterator<Podcast> iterator = podcasts.iterator();
+        while (iterator.hasNext()) {
+            Podcast podcast = iterator.next();
+
+            for (Podcast podcastToRemove : host.getHostPodcasts()) {
+
+                if (podcast.getName().equals(podcastToRemove.getName())) {
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
+        for (User u : users) {
+            u.setEveryPodcast(podcasts);
+        }
+
+        this.setMessage(this.user + " was successfully deleted.");
 
     }
 
