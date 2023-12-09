@@ -89,7 +89,7 @@ public class Shuffle implements Command {
             user.setShuffleSeed(this.seed);
 
         } else if (currentType != null && user.getTypeLoaded() != 2) {
-            this.message = "The loaded source is not a playlist.";
+            this.message = "The loaded source is not a playlist or an album.";
         } else if (currentType == null) {
             this.message = "Please load a source before using the shuffle function.";
         }

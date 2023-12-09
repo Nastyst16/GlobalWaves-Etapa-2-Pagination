@@ -17,10 +17,7 @@ import main.commands.player.host.AddAnnouncement;
 import main.commands.player.host.AddPodcast;
 import main.commands.player.host.RemoveAnnouncement;
 import main.commands.player.host.RemovePodcast;
-import main.commands.player.statistics.GetAllUsers;
-import main.commands.player.statistics.GetOnlineUsers;
-import main.commands.player.statistics.GetTop5Playlists;
-import main.commands.player.statistics.GetTop5Songs;
+import main.commands.player.statistics.*;
 import main.commands.searchBar.*;
 import main.commands.types.*;
 import main.commands.player.*;
@@ -168,7 +165,7 @@ public final class Main {
                 }
             }
 
-            if (input.getTimestamp() == 3000) {
+            if (input.getTimestamp() == 290) {
                 int x = 5;
             }
 
@@ -220,7 +217,7 @@ public final class Main {
 
 
 //            if for debugging
-            if (input.getTimestamp() == 2850) {
+            if (input.getTimestamp() == 805) {
                 int x = 5;
             }
 
@@ -279,6 +276,7 @@ public final class Main {
                 case "removeAlbum":         commands.add(new RemoveAlbum(input));           break;
                 case "removePodcast":       commands.add(new RemovePodcast(input));         break;
                 case "removeEvent":         commands.add(new RemoveEvent(input));           break;
+                case "getTop5Albums":       commands.add(new GetTop5Albums(input));         break;
 
 
                 default: break;

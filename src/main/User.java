@@ -128,8 +128,26 @@ public class User {
      * @return
      */
     public boolean setLikedSongs(final Song song, final ArrayList<Song> songs) {
-        if (this.likedSongs.contains(song)) {
-            this.likedSongs.remove(song);
+
+        boolean exists = false;
+        for (Song tmp : likedSongs) {
+            if (tmp.getName().equals(song.getName())) {
+                exists = true;
+                break;
+            }
+        }
+
+
+        if (exists) {
+
+//            removing the song from the likedSongs
+            for (Song tmp : likedSongs) {
+                if (tmp.getName().equals(song.getName())) {
+                    likedSongs.remove(tmp);
+                    break;
+                }
+            }
+
             song.setNumberOfLikes(song.getNumberOfLikes() - 1);
 
             for (Song tmp : songs) {
@@ -280,10 +298,10 @@ public class User {
                 Playlist playlist = user.getCurrentPlaylist();
 
                 int index = user.getCurrentPlaylist().getSongList().size() - 1;
+                Song lastSong = user.getCurrentPlaylist().getSongList().get(index);
 
 //                if it is the last song in playlist
-                if (user.getCurrentPlaylist().getSongList().get(index).
-                        getName().equals(user.getCurrentType().getName())) {
+                if (lastSong.getName().equals(currentType.getName())) {
 
                     if (user.getRepeatStatus() == 0) {
                         user.setCurrentType(null);

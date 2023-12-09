@@ -11,10 +11,7 @@ import main.commands.player.host.AddAnnouncement;
 import main.commands.player.host.AddPodcast;
 import main.commands.player.host.RemoveAnnouncement;
 import main.commands.player.host.RemovePodcast;
-import main.commands.player.statistics.GetAllUsers;
-import main.commands.player.statistics.GetOnlineUsers;
-import main.commands.player.statistics.GetTop5Playlists;
-import main.commands.player.statistics.GetTop5Songs;
+import main.commands.player.statistics.*;
 import main.commands.searchBar.*;
 import main.commands.player.*;
 import main.commands.player.user.*;
@@ -62,4 +59,5 @@ public interface CommandVisitor {
     void visit(RemoveAlbum removeAlbum);
     void visit(RemovePodcast removePodcast);
     void visit(RemoveEvent removeEvent);
+    void visit(GetTop5Albums getTop5Albums);
 }

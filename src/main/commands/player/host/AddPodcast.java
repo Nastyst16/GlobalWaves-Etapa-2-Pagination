@@ -8,6 +8,7 @@ import main.User;
 import main.commands.searchBar.Search;
 import main.commands.types.Episode;
 import main.commands.types.Podcast;
+import main.users.Artist;
 import main.users.Host;
 
 import java.lang.reflect.Array;
@@ -25,9 +26,9 @@ public class AddPodcast implements Command {
     private String message;
 
 
-    public void execute(Host host, ArrayList<User> users, ArrayList<Podcast> everyPodcast,
+    public void execute(User user, Artist artist, Host host, ArrayList<User> users, ArrayList<Podcast> everyPodcast,
                             ArrayList<Host> hosts) {
-        addPodcast(host, users, everyPodcast, hosts);
+        addPodcast(user, artist, host, users, everyPodcast, hosts);
     }
 
     public AddPodcast(SearchBar input) {
@@ -38,24 +39,17 @@ public class AddPodcast implements Command {
         this.episodes = input.getEpisodes();
     }
 
-    public void addPodcast(Host host, ArrayList<User> users, ArrayList<Podcast> everyPodcast,
-                            ArrayList<Host> hosts) {
+    public void addPodcast(User user, Artist artist, Host host, ArrayList<User> users, ArrayList<Podcast> everyPodcast,
+                           ArrayList<Host> hosts) {
 
-
-//        verifying if the user is a host
-        for (Host h : hosts) {
-            if (h.getUsername().equals(this.user)) {
-                break;
-            }
-            this.setMessage(this.user + " is not a host.");
+        if (user != null || artist != null) {
+            this.message = this.user + " is not a host.";
             return;
-        }
-
-//        verifying if the host exists
-        if (host == null) {
+        } else if (host == null) {
             this.message = "The username " + this.user + " doesn't exist.";
             return;
         }
+
 
 //        verifying if the podcast already exists
         for (Podcast podcast : everyPodcast) {

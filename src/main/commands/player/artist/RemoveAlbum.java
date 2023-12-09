@@ -44,9 +44,11 @@ public class RemoveAlbum implements Command {
 
 
 //        verifying if the album exists
+        Album albumToRemove = null;
         boolean exists = false;
         for (Album album : artist.getAlbums()) {
             if (album.getName().equals(this.name)) {
+                albumToRemove = album;
                 exists = true;
                 break;
             }
@@ -63,6 +65,17 @@ public class RemoveAlbum implements Command {
                 if (currentUser.getCurrentPlaylist().getName().equals(this.name)) {
                     this.setMessage(this.user + " can't delete this album.");
                     return;
+                }
+
+//                if the current playlist contains some of the songs we want to delete
+                for (Song s : currentUser.getCurrentPlaylist().getSongList()) {
+
+                    for (Song albumSong : albumToRemove.getAlbumSongs()) {
+                        if (s.getName().equals(albumSong.getName())) {
+                            this.setMessage(this.user + " can't delete this album.");
+                            return;
+                        }
+                    }
                 }
             }
         }
@@ -89,23 +102,6 @@ public class RemoveAlbum implements Command {
                                     iterator.remove();
                                     playlist.getSongs().remove(song.getName());
 
-
-//                                     if users listens to a playlist which contains the deleted song
-                                    for (User u1 : users) {
-                                        if (u.isShuffle()) {
-//                                            todo delete the index corresponding to the deletex song,
-//                                             and decrement the values
-
-                                        }
-                                    }
-
-
-//                                    if shuffle on
-
-
-
-//                                    u.getOriginalIndices().removeLast();
-//                                    u.getShuffledIndices().removeLast();
                                     break;
                                 }
                             }
