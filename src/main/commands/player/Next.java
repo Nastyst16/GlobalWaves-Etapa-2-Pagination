@@ -2,13 +2,11 @@ package main.commands.player;
 
 import main.Command;
 import main.CommandVisitor;
-import main.commands.types.*;
+import main.commands.types.Type;
 import main.SearchBar;
-import main.User;
+import main.users.User;
 
-import java.util.ArrayList;
-
-public class Next implements Command {
+public final class Next implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
@@ -16,18 +14,22 @@ public class Next implements Command {
 
 
     /**
-     * execute the command
+     * execute method for the next command
+     * @param currUser the current user
      */
-    public void execute(final User user) {
+    public void execute(final User currUser) {
 
-        user.setNext(true);
-        this.setNext(user);
-        user.setNext(false);
+        currUser.setNext(true);
+        this.setNext(currUser);
+        currUser.setNext(false);
     }
 
-
+    /**
+     * accept method for the next command
+     * @param visitor the visitor
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
@@ -43,43 +45,43 @@ public class Next implements Command {
 
     /** next command method-helper
      *
-     * @param user the current user
+     * @param currUser the current currUser
      */
-    public void setNext(final User user) {
+    public void setNext(final User currUser) {
 
-//        if the user is offline
-        if (user.getOnline() == false) {
+//        if the currUser is offline
+        if (!currUser.getOnline()) {
             this.message = this.user + " is offline.";
             return;
         }
 
-        if (user.getTypeLoaded() == 2 && user.getRepeatStatus() == 0) {
-            int index = user.getCurrentPlaylist().
-                    getSongList().indexOf(user.getCurrentType());
-            if (user.getCurrentPlaylist().getSongList().size() == index + 1
-                    && user.getCurrentPlaylist().getSongList().size() == 1) {
+        if (currUser.getTypeLoaded() == 2 && currUser.getRepeatStatus() == 0) {
+            int index = currUser.getCurrentPlaylist().
+                    getSongList().indexOf(currUser.getCurrentType());
+            if (currUser.getCurrentPlaylist().getSongList().size() == index + 1
+                    && currUser.getCurrentPlaylist().getSongList().size() == 1) {
 
-                user.setCurrentType(null);
+                currUser.setCurrentType(null);
             }
         }
-        if (user.getCurrentType() == null || user.getTypeLoaded() == -1) {
+        if (currUser.getCurrentType() == null || currUser.getTypeLoaded() == -1) {
             this.message = "Please load a source before skipping to the next track.";
             return;
         }
-        user.setNext(true);
+        currUser.setNext(true);
 
-        Type currentType = user.getCurrentType();
+        Type currentType = currUser.getCurrentType();
 
         currentType.setSecondsGone(currentType.getDuration());
 
-        user.treatingRepeatStatus(user);
-        user.setPaused(false);
+        currUser.treatingRepeatStatus(currUser);
+        currUser.setPaused(false);
 
-        user.setNext(false);
+        currUser.setNext(false);
 
-        if (user.getCurrentType() != null) {
+        if (currUser.getCurrentType() != null) {
             this.message = "Skipped to next track successfully. The current track is "
-                    + user.getCurrentType().getName() + ".";
+                    + currUser.getCurrentType().getName() + ".";
         } else {
             this.message = "Please load a source before skipping to the next track.";
         }

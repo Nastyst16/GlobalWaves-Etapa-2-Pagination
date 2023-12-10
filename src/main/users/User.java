@@ -1,9 +1,14 @@
-package main;
+package main.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import main.commands.searchBar.*;
-import main.commands.types.*;
+import main.commands.searchBar.Search;
+import main.commands.searchBar.Select;
+import main.commands.types.Episode;
+import main.commands.types.Podcast;
+import main.commands.types.Song;
+import main.commands.types.Playlist;
+import main.commands.types.Type;
 
 import java.util.ArrayList;
 
@@ -27,7 +32,7 @@ public class User {
     private ArrayList<Song> everySong;
     private ArrayList<Podcast> everyPodcast;
 
-    private Type currentType;
+    private Type currType;
     private int prevTimestamp;
     private Podcast currentPodcast;
     private Playlist currentPlaylist;
@@ -64,7 +69,7 @@ public class User {
         typeSelected = -1;
         typeLoaded = -1;
         shuffle = false;
-        currentType = null;
+        currType = null;
 
         currentSelect = null;
         currentSearch = null;
@@ -142,7 +147,8 @@ public class User {
 
 //            removing the song from the likedSongs
             for (Song tmp : likedSongs) {
-                if (tmp.getName().equals(song.getName()) && tmp.getAlbum().equals(song.getAlbum())) {
+                if (tmp.getName().equals(song.getName())
+                        && tmp.getAlbum().equals(song.getAlbum())) {
                     likedSongs.remove(tmp);
                     break;
                 }
@@ -151,7 +157,8 @@ public class User {
             song.setNumberOfLikes(song.getNumberOfLikes() - 1);
 
             for (Song tmp : songs) {
-                if (tmp.getName().equals(song.getName()) && tmp.getAlbum().equals(song.getAlbum())) {
+                if (tmp.getName().equals(song.getName())
+                        && tmp.getAlbum().equals(song.getAlbum())) {
                     tmp.setNumberOfLikes(tmp.getNumberOfLikes() - 1);
                     break;
                 }
@@ -165,7 +172,8 @@ public class User {
 //            song.setNumberOfLikes(song.getNumberOfLikes() + 1);
 
             for (Song tmp : songs) {
-                if (tmp.getName().equals(song.getName()) && tmp.getAlbum().equals(song.getAlbum())) {
+                if (tmp.getName().equals(song.getName())
+                        && tmp.getAlbum().equals(song.getAlbum())) {
                     this.likedSongs.add(tmp);
                     tmp.setNumberOfLikes(tmp.getNumberOfLikes() + 1);
                     break;
@@ -208,21 +216,16 @@ public class User {
                         - currentType.getDuration());
             }
             user.setRemainingTime(currentType.getDuration());
-            this.currentType = currentType;
+            this.currType = currentType;
             user.setCurrentType(currentType);
         }
 
-        if (user.getTypeLoaded() == 0 && user.getRepeatStatus() == 0 && user.getRemainingTime() < 0) {
+        if (user.getTypeLoaded() == 0 && user.getRepeatStatus() == 0
+                && user.getRemainingTime() < 0) {
 
-            user.setCurrentType(null);
-            user.setCurrentPodcast(null);
-            user.setCurrentPlaylist(null);
-
-            user.setTypeLoaded(-1);
-            user.setShuffle(false);
+            this.setNull(user);
             return;
         }
-
 
 //        if the type loaded is a song or a podcast
         if (user.getTypeLoaded() == 0 || user.getTypeLoaded() == 1) {
@@ -256,38 +259,27 @@ public class User {
                 if (user.getCurrentPlaylist().getSongList().get(index).
                         getName().equals(user.getSelectedName())) {
                     currentType = user.getCurrentPlaylist().getSongList().get(0);
-                    currentType.setSecondsGone(currentType.getDuration() + currentType.getSecondsGone());
+                    currentType.setSecondsGone(currentType.getDuration()
+                            + currentType.getSecondsGone());
                 }
             }
         }
-
 
         if (user.getTypeLoaded() == 1) {
 //            comutam in episodul urmator pana cand este nevoie
             while (user.getRemainingTime() <= 0) {
                 Podcast podcast = user.getCurrentPodcast();
 
-
                 user.getCurrentPodcast().setLastRemainingEpisode(user.
                         getCurrentPodcast().getLastRemainingEpisode() + 1);
                 int indexEpisode = user.getCurrentPodcast().getLastRemainingEpisode();
 
-
 //                if it is the last episode in podcast
                 if (user.getCurrentPodcast().getEpisodesList().size() == indexEpisode) {
 
-                    user.setCurrentType(null);
-                    user.setCurrentPodcast(null);
-                    user.setCurrentPlaylist(null);
-
-                    user.setTypeLoaded(-1);
-                    user.setShuffle(false);
+                    this.setNull(user);
                     return;
                 }
-
-
-
-
 
                 Episode newEpisode = user.getCurrentPodcast().getEpisodesList().get(indexEpisode);
 
@@ -312,13 +304,7 @@ public class User {
                 if (lastSong.getName().equals(currentType.getName()) && !user.isShuffle()) {
 
                     if (user.getRepeatStatus() == 0) {
-                        user.setCurrentType(null);
-                        user.setCurrentPodcast(null);
-                        user.setCurrentPlaylist(null);
-
-
-                        user.setTypeLoaded(-1);
-                        user.setShuffle(false);
+                        this.setNull(user);
                         return;
                     }
                 }
@@ -355,12 +341,7 @@ public class User {
 
                     } else if (nextShuffledIndex == user.getShuffledIndices().size()) {
 //                        end of playlist;
-                        user.setCurrentType(null);
-                        user.setCurrentPodcast(null);
-                        user.setCurrentPlaylist(null);
-
-                        user.setTypeLoaded(-1);
-                        user.setShuffle(false);
+                        this.setNull(user);
                         return;
                     }
 //
@@ -370,7 +351,7 @@ public class User {
 
                     currentType = newSong;
 
-//                if repeat current song we wont change the currentType
+//                if repeat current song we won't change the currentType
                 } else if (user.getRepeatStatus() != 2) {
                     if (playlist.getSongList().size() - 1 > indexSong) {
 
@@ -388,21 +369,24 @@ public class User {
                 user.setRemainingTime(currentType.getDuration() - currentType.getSecondsGone());
 
                 if (user.isNext()) {
-                    this.currentType = currentType;
+                    this.currType = currentType;
                     user.setCurrentType(currentType);
                     return;
                 }
             }
         }
-        this.currentType = currentType;
+        this.currType = currentType;
         user.setCurrentType(currentType);
     }
 
+    private void setNull(final User user) {
+        user.setCurrentType(null);
+        user.setCurrentPodcast(null);
+        user.setCurrentPlaylist(null);
 
-//    Stage 2 methods:
-
-
-
+        user.setTypeLoaded(-1);
+        user.setShuffle(false);
+    }
 
     /**
      * get the age
@@ -662,7 +646,7 @@ public class User {
      * @return the currentType
      */
     public Type getCurrentType() {
-        return currentType;
+        return currType;
     }
 
     /**
@@ -670,7 +654,7 @@ public class User {
      * @param currentType the currentType
      */
     public void setCurrentType(final Type currentType) {
-        this.currentType = currentType;
+        this.currType = currentType;
     }
 
     /**
@@ -900,27 +884,51 @@ public class User {
 
 //    Stage 2 getter and setters:
 
+    /**
+     * get the current page
+     * @return the current page
+     */
     public String getCurrentPage() {
         return currentPage;
     }
 
-    public void setCurrentPage(String currentPage) {
+    /**
+     * set the current page
+     * @param currentPage the current page
+     */
+    public void setCurrentPage(final String currentPage) {
         this.currentPage = currentPage;
     }
 
+    /**
+     * get the online status
+     * @return the online status
+     */
     public boolean getOnline() {
         return online;
     }
 
-    public void setOnline(boolean online) {
+    /**
+     * set the online status
+     * @param online the online status
+     */
+    public void setOnline(final boolean online) {
         this.online = online;
     }
 
+    /**
+     * get the selected page owner
+     * @return the selected page owner
+     */
     public String getSelectedPageOwner() {
         return selectedPageOwner;
     }
 
-    public void setSelectedPageOwner(String selectedPageOwner) {
+    /**
+     * set the selected page owner
+     * @param selectedPageOwner the selected page owner
+     */
+    public void setSelectedPageOwner(final String selectedPageOwner) {
         this.selectedPageOwner = selectedPageOwner;
     }
 }

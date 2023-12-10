@@ -4,14 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
 import main.CommandVisitor;
 import main.SearchBar;
-import main.User;
+import main.users.User;
 import main.commands.types.Album;
 import main.commands.types.Playlist;
 import main.commands.types.Song;
 import main.users.Artist;
 import main.users.Host;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 

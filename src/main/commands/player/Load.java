@@ -1,25 +1,47 @@
 package main.commands.player;
 
-import main.*;
-import main.commands.types.*;
+import main.CommandVisitor;
+import main.Command;
+import main.SearchBar;
+import main.commands.types.Playlist;
+import main.commands.types.Podcast;
+import main.commands.types.Song;
+import main.commands.types.Album;
+import main.commands.types.Episode;
+
+import main.users.User;
 
 import java.util.ArrayList;
 
-public class Load implements Command {
+public final class Load implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
     private String message;
 
+    private static final int SONG = 0;
+    private static final int PODCAST = 1;
+    private static final int PLAYLIST = 2;
+    private static final int ALBUM = 3;
 
-    public void execute(final User user, final ArrayList<Playlist> everyPlaylist,
+    /**
+     * execute method for load
+     * @param currUser the current user
+     * @param everyPlaylist every playlist
+     * @param podcasts every podcast
+     * @param albums every album
+     */
+    public void execute(final User currUser, final ArrayList<Playlist> everyPlaylist,
                         final ArrayList<Podcast> podcasts, final ArrayList<Album> albums) {
-        this.setLoad(user, everyPlaylist, podcasts, albums);
+        this.setLoad(currUser, everyPlaylist, podcasts, albums);
     }
 
-
+    /**
+     * accept method for visitor
+     * @param visitor the visitor
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
@@ -27,7 +49,7 @@ public class Load implements Command {
      * Constructor
      * @param input the input
      */
-    public Load(SearchBar input) {
+    public Load(final SearchBar input) {
         this.command = input.getCommand();
         this.user = input.getUsername();
         this.timestamp = input.getTimestamp();
@@ -36,186 +58,43 @@ public class Load implements Command {
 
     /** load command method
      *
-     * @param user current user
+     * @param currUser current user
      * @param everyPlaylist every playlist
      * @param podcasts every podcast
      */
-    public void setLoad(final User user, final ArrayList<Playlist> everyPlaylist,
-                    final ArrayList<Podcast> podcasts, final ArrayList<Album> everyAlbum) {
+    public void setLoad(final User currUser, final ArrayList<Playlist> everyPlaylist,
+                        final ArrayList<Podcast> podcasts, final ArrayList<Album> everyAlbum) {
 
-//        if the user is offline
-        if (user.getOnline() == false) {
+//        if the currUser is offline
+        if (!currUser.getOnline()) {
             this.message = this.user + " is offline.";
             return;
         }
 
 //          if the last command was select
-        if (user.getCurrentSelect() != null) {
-//          if the last selection was succesfully we can do the load
+        if (currUser.getCurrentSelect() != null) {
+//          if the last selection was sucesfull we can do the load
 //          boolean selectSuccessful = currentSelect.getMessage().contains("Successfully");
-        boolean selectSuccessful = user.getCurrentSelect().
+        boolean selectSuccessful = currUser.getCurrentSelect().
                 getMessage().contains("Successfully");
 
         if (selectSuccessful) {
             this.message = "Playback loaded successfully.";
 
-            user.setLoadMade(1);
-            user.setPaused(false);
-            user.setRepeatStatus(0);
-            user.setRepeatString("No Repeat");
-            user.setSecondsGone(0);
+            preparingStats(currUser);
 
-            if (user.getTypeSelected() == 0) {
-                for (Song song : user.getEverySong()) {
-                    if (song.getName().equals(user.
-                            getCurrentSelect().getSelectedName())) {
+            if (currUser.getTypeSelected() == SONG) {
+                loadSong(currUser);
 
-//                        deepCopy the song
-                        Song songCopy = new Song(song.getName(), song.getDuration(),
-                                song.getAlbum(), song.getTags(), song.getLyrics(),
-                                song.getGenre(), song.getReleaseYear(), song.getArtist());
+            } else if (currUser.getTypeSelected() == PODCAST) {
+                loadPodcast(currUser, podcasts);
 
+            } else if (currUser.getTypeSelected() == PLAYLIST) {
+                loadPlaylist(currUser, everyPlaylist);
 
-                        user.setCurrentType(songCopy);
-
-                        user.getCurrentType().setSecondsGone(0);
-
-                        user.setTypeLoaded(0);
-                        break;
-                    }
-                }
-            } else if (user.getTypeSelected() == 1) {
-                for (Podcast podcast : podcasts) {
-                    if (podcast.getName().equals(user.
-                            getCurrentSelect().getSelectedName())) {
-
-                        if (user.getPodcastsPlayed().contains(podcast)) {
-                            int indexPodcast = user.getPodcastsPlayed().indexOf(podcast);
-
-                            user.setCurrentType(user.getPodcastsPlayed().
-                                    get(indexPodcast));
-                            int indexEpisode = ((Podcast) (user.getCurrentType())).
-                                    getLastRemainingEpisode();
-                            user.setCurrentType(((Podcast) (user.
-                                    getCurrentType())).getEpisodesList().get(indexEpisode));
-
-                            user.setCurrentPodcast(podcast);
-
-                        } else {
-//                            adding to the user the loaded podcast
-
-//                            finding the podcast in the user's podcasts
-                            Podcast p = null;
-                            for (Podcast podcast1 : user.getEveryPodcast()) {
-                                if (podcast1.getName().equals(podcast.getName())) {
-                                    p = podcast1;
-                                    break;
-                                }
-                            }
-
-                            ArrayList<String> episodesNames = new ArrayList<>();
-                            for (Episode e : p.getEpisodesList()) {
-                                episodesNames.add(e.getName());
-                            }
-                            p.setEpisodes(episodesNames);
-
-                            user.addPodcastPlayed(p);
-
-
-
-                            int lastPodcast = user.getPodcastsPlayed().size() - 1;
-                            int lastEpisode = user.getPodcastsPlayed().
-                                    get(lastPodcast).getEpisodes().size() - 1;
-
-//                              setting last episode watched to 0
-                            user.getPodcastsPlayed().get(lastPodcast).setLastRemainingEpisode(0);
-//                              setting the remaining second;
-                            user.getPodcastsPlayed().get(lastPodcast).getEpisodesList().
-                                    get(lastEpisode).setSecondsGone(0);
-
-                            user.setRemainingTime(podcast.getEpisodesList().
-                                    get(lastEpisode).getDuration());
-
-//                               current type is Podcast
-                            user.setCurrentType(user.getPodcastsPlayed().get(lastPodcast));
-
-//                               current type is Episode
-                            user.setCurrentType(((Podcast) (user.getCurrentType())).
-                                    getEpisodesList().get(0));
-
-                            user.setCurrentPodcast(podcast);
-                        }
-                        user.setTypeLoaded(1);
-                        break;
-                    }
-                }
-            } else if (user.getTypeSelected() == 2) {
-                for (Playlist playlist : everyPlaylist) {
-                    if (playlist.getName().equals(user.
-                            getCurrentSelect().getSelectedName())) {
-                        user.setTypeLoaded(2);
-
-//                        deepcopy user.currentPlaylist
-                        ArrayList<Song> songsCopy = new ArrayList<>();
-                        for (Song song : playlist.getSongList()) {
-                            songsCopy.add(new Song(song.getName(), song.getDuration(),
-                                    song.getAlbum(), song.getTags(), song.getLyrics(),
-                                    song.getGenre(), song.getReleaseYear(), song.getArtist()));
-                        }
-                        Playlist playlistCopy = new Playlist(playlist.getUser(), playlist.getName(), songsCopy);
-                        for (Song song : playlistCopy.getSongList()) {
-                            song.setSecondsGone(0);
-                        }
-
-
-                        user.setCurrentPlaylist(playlistCopy);
-                        user.setCurrentType(playlistCopy.getSongList().get(0));
-                        user.setRemainingTime(user.getCurrentType().getDuration());
-                        user.getCurrentType().setSecondsGone(0);
-
-                        break;
-                    }
-                }
-            } else if (user.getTypeSelected() == 3) {
-//                albums
-                for(Album album : everyAlbum) {
-                    if (album.getName().equals(user.
-                            getCurrentSelect().getSelectedName())) {
-                        user.setTypeLoaded(2);
-
-
-//                        deepcopy album
-                        ArrayList<Song> songsCopy = new ArrayList<>();
-                        for (Song song : album.getAlbumSongs()) {
-                            songsCopy.add(new Song(song.getName(), song.getDuration(),
-                                    song.getAlbum(), song.getTags(), song.getLyrics(),
-                                    song.getGenre(), song.getReleaseYear(), song.getArtist()));
-                        }
-                        Album albumCopy = new Album(album.getUser(), album.getName(), album.getReleaseYear(),
-                                album.getDescription(), songsCopy);
-                        for (Song song : albumCopy.getAlbumSongs()) {
-                            song.setSecondsGone(0);
-                        }
-
-
-
-                        user.setCurrentPlaylist(albumCopy);
-                        user.setCurrentType(albumCopy.getAlbumSongs().get(0));
-                        user.setRemainingTime(user.getCurrentType().getDuration());
-                        user.getCurrentType().setSecondsGone(0);
-
-                        break;
-                    }
-                }
-
-
-            } else if (user.getTypeSelected() == 4) {
-
-
-            } else if (user.getTypeSelected() == 5) {
-
+            } else if (currUser.getTypeSelected() == ALBUM) {
+                loadAlbum(currUser, everyAlbum);
             }
-
 
         } else {
             this.message = "Please select the song first.";
@@ -223,12 +102,172 @@ public class Load implements Command {
     } else {
         this.message = "Please select a source before attempting to load.";
     }
-    if (user.getCurrentType() != null) {
-        user.setSelectedName((String) (user.getCurrentType().getName()));
+    if (currUser.getCurrentType() != null) {
+        currUser.setSelectedName((String) (currUser.getCurrentType().getName()));
     }
 
-    user.setCurrentSelect(null);
+    currUser.setCurrentSelect(null);
 }
+
+
+    public void loadPlaylist(final User currUser, final ArrayList<Playlist> everyPlaylist) {
+        for (Playlist playlist : everyPlaylist) {
+            if (playlist.getName().equals(currUser.
+                    getCurrentSelect().getSelectedName())) {
+                currUser.setTypeLoaded(2);
+
+//                        deepcopy currUser.currentPlaylist
+                ArrayList<Song> songsCopy = new ArrayList<>();
+                for (Song song : playlist.getSongList()) {
+                    songsCopy.add(new Song(song.getName(), song.getDuration(),
+                            song.getAlbum(), song.getTags(), song.getLyrics(),
+                            song.getGenre(), song.getReleaseYear(), song.getArtist()));
+                }
+                Playlist playlistCopy = new Playlist(playlist.getUser(),
+                        playlist.getName(), songsCopy);
+
+                for (Song song : playlistCopy.getSongList()) {
+                    song.setSecondsGone(0);
+                }
+
+                currUser.setCurrentPlaylist(playlistCopy);
+                currUser.setCurrentType(playlistCopy.getSongList().get(0));
+                currUser.setRemainingTime(currUser.getCurrentType().getDuration());
+                currUser.getCurrentType().setSecondsGone(0);
+
+                break;
+            }
+        }
+    }
+
+
+    public void loadAlbum(final User currUser, final ArrayList<Album> everyAlbum) {
+//         albums
+        for (Album album : everyAlbum) {
+            if (album.getName().equals(currUser.
+                    getCurrentSelect().getSelectedName())) {
+                currUser.setTypeLoaded(PLAYLIST);
+
+//                        deepcopy album
+                ArrayList<Song> songsCopy = new ArrayList<>();
+                for (Song song : album.getAlbumSongs()) {
+                    songsCopy.add(new Song(song.getName(), song.getDuration(),
+                            song.getAlbum(), song.getTags(), song.getLyrics(),
+                            song.getGenre(), song.getReleaseYear(), song.getArtist()));
+                }
+                Album albumCopy = new Album(album.getUser(), album.getName(),
+                        album.getReleaseYear(), album.getDescription(), songsCopy);
+                for (Song song : albumCopy.getAlbumSongs()) {
+                    song.setSecondsGone(0);
+                }
+
+                currUser.setCurrentPlaylist(albumCopy);
+                currUser.setCurrentType(albumCopy.getAlbumSongs().get(0));
+                currUser.setRemainingTime(currUser.getCurrentType().getDuration());
+                currUser.getCurrentType().setSecondsGone(0);
+
+                break;
+            }
+        }
+    }
+
+    public void loadSong(final User currUser) {
+        for (Song song : currUser.getEverySong()) {
+            if (song.getName().equals(currUser.
+                    getCurrentSelect().getSelectedName())) {
+
+//                        deepCopy the song
+                Song songCopy = new Song(song.getName(), song.getDuration(),
+                        song.getAlbum(), song.getTags(), song.getLyrics(),
+                        song.getGenre(), song.getReleaseYear(), song.getArtist());
+
+                currUser.setCurrentType(songCopy);
+                currUser.getCurrentType().setSecondsGone(0);
+                currUser.setTypeLoaded(0);
+                break;
+            }
+        }
+    }
+
+
+    public void loadPodcast(final User currUser, final ArrayList<Podcast> podcasts) {
+
+        for (Podcast podcast : podcasts) {
+            if (podcast.getName().equals(currUser.
+                    getCurrentSelect().getSelectedName())) {
+
+                if (currUser.getPodcastsPlayed().contains(podcast)) {
+                    int indexPodcast = currUser.getPodcastsPlayed().indexOf(podcast);
+
+                    currUser.setCurrentType(currUser.getPodcastsPlayed().
+                            get(indexPodcast));
+                    int indexEpisode = ((Podcast) (currUser.getCurrentType())).
+                            getLastRemainingEpisode();
+                    currUser.setCurrentType(((Podcast) (currUser.
+                            getCurrentType())).getEpisodesList().get(indexEpisode));
+
+                    currUser.setCurrentPodcast(podcast);
+
+                } else {
+//                            adding to the currUser the loaded podcast
+//                            finding the podcast in the currUser's podcasts
+                    Podcast p = null;
+                    for (Podcast podcast1 : currUser.getEveryPodcast()) {
+                        if (podcast1.getName().equals(podcast.getName())) {
+                            p = podcast1;
+                            break;
+                        }
+                    }
+
+                    ArrayList<String> episodesNames = new ArrayList<>();
+                    for (Episode e : p.getEpisodesList()) {
+                        episodesNames.add(e.getName());
+                    }
+                    p.setEpisodes(episodesNames);
+
+                    currUser.addPodcastPlayed(p);
+
+                    int lastPodcast = currUser.getPodcastsPlayed().size() - 1;
+                    int lastEpisode = currUser.getPodcastsPlayed().
+                            get(lastPodcast).getEpisodes().size() - 1;
+
+//                              setting last episode watched to 0
+                    currUser.getPodcastsPlayed().get(lastPodcast).
+                            setLastRemainingEpisode(0);
+
+//                              setting the remaining second;
+                    currUser.getPodcastsPlayed().get(lastPodcast).getEpisodesList().
+                            get(lastEpisode).setSecondsGone(0);
+
+                    currUser.setRemainingTime(podcast.getEpisodesList().
+                            get(lastEpisode).getDuration());
+
+//                               current type is Podcast
+                    currUser.setCurrentType(currUser.getPodcastsPlayed().get(lastPodcast));
+
+//                               current type is Episode
+                    currUser.setCurrentType(((Podcast) (currUser.getCurrentType())).
+                            getEpisodesList().get(0));
+
+                    currUser.setCurrentPodcast(podcast);
+                }
+                currUser.setTypeLoaded(1);
+                break;
+            }
+        }
+    }
+
+    /**
+     * preparing stats for load
+     * @param currUser the current user
+     */
+    public void preparingStats(final User currUser) {
+        currUser.setLoadMade(1);
+        currUser.setPaused(false);
+        currUser.setRepeatStatus(0);
+        currUser.setRepeatString("No Repeat");
+        currUser.setSecondsGone(0);
+    }
 
     /**
      * gets the command

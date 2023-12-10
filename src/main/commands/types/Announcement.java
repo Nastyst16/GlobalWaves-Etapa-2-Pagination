@@ -11,15 +11,26 @@ public class Announcement {
         this.owner = owner;
     }
 
-
+    /**
+     * Getter for name
+     * @return name of announcement
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Getter for description
+     * @return description of announcement
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Getter for owner
+     * @return owner of announcement
+     */
     public String getOwner() {
         return owner;
     }

@@ -2,16 +2,13 @@ package main.commands.player;
 
 import main.Command;
 import main.CommandVisitor;
-import main.commands.types.Album;
-import main.commands.types.Playlist;
-import main.commands.types.Podcast;
 import main.commands.types.Song;
 import main.SearchBar;
-import main.User;
+import main.users.User;
 
 import java.util.ArrayList;
 
-public class ShowPreferredSongs implements Command {
+public final class ShowPreferredSongs implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
@@ -19,16 +16,19 @@ public class ShowPreferredSongs implements Command {
 
 
     /**
-     * Execute.
+     * Execute method for visitor pattern
+     * @param currUser the current user
      */
-    public void execute(final User user) {
-
-        this.setResult(user);
+    public void execute(final User currUser) {
+        this.setResult(currUser);
     }
 
-
+    /**
+     * Accept method for visitor pattern
+     * @param visitor the visitor
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
@@ -46,11 +46,11 @@ public class ShowPreferredSongs implements Command {
     /**
      * Sets result.
      *
-     * @param user the user
+     * @param currUser the user
      */
-    public void setResult(final User user) {
-        if (!user.getLikedSongs().isEmpty()) {
-            for (Song song : user.getLikedSongs()) {
+    public void setResult(final User currUser) {
+        if (!currUser.getLikedSongs().isEmpty()) {
+            for (Song song : currUser.getLikedSongs()) {
                 this.result.add(song.getName());
             }
         }

@@ -5,25 +5,29 @@ import main.CommandVisitor;
 import main.SearchBar;
 import main.commands.types.Album;
 
-import java.util.Collections;
-import java.util.Comparator;
-
 import java.util.ArrayList;
 
-public class GetTop5Albums implements Command {
+public final class GetTop5Albums implements Command {
     private final String command;
     private final int timestamp;
     private final ArrayList<String> result;
     private static final int TOP_NR = 5;
 
 
-
-    public void execute(ArrayList<Album> everyAlbums) {
+    /**
+     * Method that executes the command
+     * @param everyAlbums the list of all the albums
+     */
+    public void execute(final ArrayList<Album> everyAlbums) {
         this.searchTop5Albums(everyAlbums);
     }
 
 
-    public void searchTop5Albums(ArrayList<Album> everyAlbums) {
+    /**
+     * Method that searches for the top 5 albums
+     * @param everyAlbums the list of all the albums
+     */
+    public void searchTop5Albums(final ArrayList<Album> everyAlbums) {
 
 //        calculating the number of likes of every album
         ArrayList<Integer> numberOfLikes = new ArrayList<>();
@@ -47,7 +51,8 @@ public class GetTop5Albums implements Command {
                     numberOfLikes.set(i, numberOfLikes.get(j));
                     numberOfLikes.set(j, aux2);
                 } else if (numberOfLikes.get(i).equals(numberOfLikes.get(j))) {
-                    if (sortedAlbums.get(i).getName().compareTo(sortedAlbums.get(j).getName()) > 0) {
+                    if (sortedAlbums.get(i).getName().
+                            compareTo(sortedAlbums.get(j).getName()) > 0) {
                         Album aux = sortedAlbums.get(i);
                         sortedAlbums.set(i, sortedAlbums.get(j));
                         sortedAlbums.set(j, aux);
@@ -60,10 +65,6 @@ public class GetTop5Albums implements Command {
                 }
             }
         }
-
-
-
-
         int i = 0;
         while (i < TOP_NR && i < sortedAlbums.size()) {
             result.add(sortedAlbums.get(i).getName());
@@ -72,16 +73,22 @@ public class GetTop5Albums implements Command {
 
     }
 
-
-
-    public GetTop5Albums(SearchBar input) {
+    /**
+     * Constructor that creates a new GetTop5Albums command
+     * @param input the input command
+     */
+    public GetTop5Albums(final SearchBar input) {
         this.command = input.getCommand();
         this.timestamp = input.getTimestamp();
         result = new ArrayList<>();
     }
 
+    /**
+     * Method that accepts the visitor
+     * @param visitor the visitor
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 

@@ -2,16 +2,13 @@ package main.commands.player;
 
 import main.Command;
 import main.CommandVisitor;
-import main.commands.types.Album;
 import main.commands.types.Playlist;
-import main.commands.types.Podcast;
-import main.commands.types.Song;
 import main.SearchBar;
-import main.User;
+import main.users.User;
 
 import java.util.ArrayList;
 
-public class ShowPlaylists implements Command {
+public final class ShowPlaylists implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
@@ -20,18 +17,18 @@ public class ShowPlaylists implements Command {
     /**
      * Execute the command.
      */
-    public void execute(final User user) {
+    public void execute(final User currUser) {
 
 //                copying the playlists
         ArrayList<Playlist> copyList = new ArrayList<>();
-        this.copyPlaylists(user, copyList);
+        this.copyPlaylists(currUser, copyList);
 
         this.setResult(copyList);
     }
 
 
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 

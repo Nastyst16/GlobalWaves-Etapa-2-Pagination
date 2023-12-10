@@ -4,14 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
 import main.CommandVisitor;
 import main.SearchBar;
-import main.User;
+import main.users.User;
 import main.commands.types.*;
 import main.users.Artist;
 import main.users.Host;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class AddEvent implements Command {

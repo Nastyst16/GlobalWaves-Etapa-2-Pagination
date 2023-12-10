@@ -2,16 +2,12 @@ package main.commands.player;
 
 import main.Command;
 import main.CommandVisitor;
-import main.commands.types.Album;
-import main.commands.types.Playlist;
-import main.commands.types.Podcast;
-import main.commands.types.Song;
 import main.SearchBar;
-import main.User;
+import main.users.User;
 
 import java.util.ArrayList;
 
-public class Repeat implements Command {
+public final class Repeat implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
@@ -20,15 +16,18 @@ public class Repeat implements Command {
     /**
      * Executes the command
      */
-    public void execute(final ArrayList<Command> commands, final User user) {
+    public void execute(final ArrayList<Command> commands, final User currUser) {
 
-        user.setRepeatStatus(((Repeat) (commands.getLast())).setRepeatMessage(user,
-                user.getRepeatStatus(), user.getTypeLoaded()));
+        currUser.setRepeatStatus(((Repeat) (commands.getLast())).setRepeatMessage(currUser,
+                currUser.getRepeatStatus(), currUser.getTypeLoaded()));
     }
 
-
+    /**
+     * Constructor for repeat
+     * @param visitor the visitor
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
@@ -36,7 +35,7 @@ public class Repeat implements Command {
      * Repeat constructor
      * @param input the input
      */
-    public Repeat(SearchBar input) {
+    public Repeat(final SearchBar input) {
         this.command = input.getCommand();
         this.user = input.getUsername();
         this.timestamp = input.getTimestamp();
@@ -44,20 +43,20 @@ public class Repeat implements Command {
 
     /**
      * Sets the repeat status of the current user
-     * @param user the current user
+     * @param currUser the current user
      * @param repeatStatus the current repeat status
      * @param typeLoaded the type of source loaded
      * @return the new repeat status
      */
-    public int setRepeatMessage(final User user, int repeatStatus, final int typeLoaded) {
+    public int setRepeatMessage(final User currUser, int repeatStatus, final int typeLoaded) {
 
-//        if the user is offline
-        if (user.getOnline() == false) {
+//        if the currUser is offline
+        if (!currUser.getOnline()) {
             this.message = this.user + " is offline.";
             return -1;
         }
 
-        if (user.getCurrentType() == null) {
+        if (currUser.getCurrentType() == null) {
             this.message = "Please load a source before setting the repeat status.";
             return -1;
         }
@@ -66,29 +65,29 @@ public class Repeat implements Command {
             if (repeatStatus == 0) {
                 this.message = "Repeat mode changed to repeat once.";
                 repeatStatus = 1;
-                user.setRepeatString("Repeat Once");
+                currUser.setRepeatString("Repeat Once");
             } else if (repeatStatus == 1) {
                 this.message = "Repeat mode changed to repeat infinite.";
                 repeatStatus = 2;
-                user.setRepeatString("Repeat Infinite");
+                currUser.setRepeatString("Repeat Infinite");
             } else if (repeatStatus == 2) {
                 this.message = "Repeat mode changed to no repeat.";
                 repeatStatus = 0;
-                user.setRepeatString("No Repeat");
+                currUser.setRepeatString("No Repeat");
             }
         } else {
             if (repeatStatus == 0) {
                 this.message = "Repeat mode changed to repeat all.";
                 repeatStatus = 1;
-                user.setRepeatString("Repeat All");
+                currUser.setRepeatString("Repeat All");
             } else if (repeatStatus == 1) {
                 this.message = "Repeat mode changed to repeat current song.";
                 repeatStatus = 2;
-                user.setRepeatString("Repeat Current Song");
+                currUser.setRepeatString("Repeat Current Song");
             } else if (repeatStatus == 2) {
                 this.message = "Repeat mode changed to no repeat.";
                 repeatStatus = 0;
-                user.setRepeatString("No Repeat");
+                currUser.setRepeatString("No Repeat");
             }
         }
 

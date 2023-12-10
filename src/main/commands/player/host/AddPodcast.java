@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
 import main.CommandVisitor;
 import main.SearchBar;
-import main.User;
-import main.commands.searchBar.Search;
+import main.users.User;
 import main.commands.types.Episode;
 import main.commands.types.Podcast;
 import main.users.Artist;
 import main.users.Host;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class AddPodcast implements Command {

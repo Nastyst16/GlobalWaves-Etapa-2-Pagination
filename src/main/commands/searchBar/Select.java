@@ -3,12 +3,9 @@ package main.commands.searchBar;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
 import main.CommandVisitor;
-import main.commands.types.Album;
 import main.commands.types.Playlist;
-import main.commands.types.Podcast;
-import main.commands.types.Song;
 import main.SearchBar;
-import main.User;
+import main.users.User;
 
 import java.util.ArrayList;
 
@@ -20,15 +17,27 @@ public class Select implements Command {
     private String selectedName;
     private String message;
 
+//    creating macros for the selected type
+    private static final int SONG = 0;
+    private static final int PODCAST = 1;
+    private static final int PLAYLIST = 2;
+    private static final int ALBUM = 3;
+    private static final int ARTIST = 4;
+    private static final int HOST = 5;
+
     /**
      * Execute.
      */
-    public void execute(final User user, final ArrayList<Playlist> everyPlaylist) {
-        this.setSelect(user, everyPlaylist);
+    public void execute(final User currUser, final ArrayList<Playlist> everyPlaylist) {
+        this.setSelect(currUser, everyPlaylist);
     }
 
+    /**
+     * Accept command
+     * @param visitor the visitor
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
@@ -36,7 +45,7 @@ public class Select implements Command {
      * Constructor for Select command.
      * @param input the input
      */
-    public Select(SearchBar input) {
+    public Select(final SearchBar input) {
         this.command = input.getCommand();
         this.user = input.getUsername();
         this.timestamp = input.getTimestamp();
@@ -47,14 +56,14 @@ public class Select implements Command {
     /**
      * Sets select.
      *
-     * @param user   the current user
+     * @param currUser   the current user
      * @param everyPlaylist the every playlist
      */
-    public void setSelect(final User user, final ArrayList<Playlist> everyPlaylist) {
+    public void setSelect(final User currUser, final ArrayList<Playlist> everyPlaylist) {
 
 //                if the last command was search
-        if (user.getCurrentSearch() != null) {
-            ArrayList<String> resultsPrevSearch = user.getCurrentSearch().getResults();
+        if (currUser.getCurrentSearch() != null) {
+            ArrayList<String> resultsPrevSearch = currUser.getCurrentSearch().getResults();
 
 //                    getting index for setting the message
             int index = this.itemNumber;
@@ -62,58 +71,58 @@ public class Select implements Command {
 //                    make this be a method in select class
             if (index > resultsPrevSearch.size()) {
                 this.message = "The selected ID is too high.";
-                user.setCurrentSelect(null);
-                user.setCurrentType(null);
+                currUser.setCurrentSelect(null);
+                currUser.setCurrentType(null);
             } else {
                 String name = resultsPrevSearch.get(index - 1);
 
 
-                if (user.getTypeFoundBySearch() == 4) {
-                    user.setCurrentPage("Artist");
-                    user.setSelectedPageOwner(name);
+                if (currUser.getTypeFoundBySearch() == ARTIST) {
+                    currUser.setCurrentPage("Artist");
+                    currUser.setSelectedPageOwner(name);
                     this.setMessage("Successfully selected " + name + "'s page.");
-                } else if (user.getTypeFoundBySearch() == 5) {
-                    user.setCurrentPage("Host");
-                    user.setSelectedPageOwner(name);
+                } else if (currUser.getTypeFoundBySearch() == HOST) {
+                    currUser.setCurrentPage("Host");
+                    currUser.setSelectedPageOwner(name);
                     this.setMessage("Successfully selected " + name + "'s page.");
                 } else {
                     this.setMessage("Successfully selected " + name + ".");
                 }
 
-                user.setSelectedName(name);
+                currUser.setSelectedName(name);
                 this.setSelectedName(name);
 
-                if (user.getTypeFoundBySearch() == 0) {
-                    user.setTypeSelected(0);
-                } else if (user.getTypeFoundBySearch() == 1) {
-                    user.setTypeSelected(1);
-                } else if (user.getTypeFoundBySearch() == 2) {
-                    user.setTypeSelected(2);
+                if (currUser.getTypeFoundBySearch() == SONG) {
+                    currUser.setTypeSelected(SONG);
+                } else if (currUser.getTypeFoundBySearch() == PODCAST) {
+                    currUser.setTypeSelected(PODCAST);
+                } else if (currUser.getTypeFoundBySearch() == PLAYLIST) {
+                    currUser.setTypeSelected(PLAYLIST);
 
                     for (Playlist playlist : everyPlaylist) {
                         if (playlist.getName().equals(name)) {
-                            user.setSelectedPlaylist(playlist);
+                            currUser.setSelectedPlaylist(playlist);
                             break;
                         }
                     }
 
 //                    albums
-                } else if (user.getTypeFoundBySearch() == 3) {
-                    user.setTypeSelected(3);
+                } else if (currUser.getTypeFoundBySearch() == ALBUM) {
+                    currUser.setTypeSelected(ALBUM);
 
 //                    artists
-                } else if (user.getTypeFoundBySearch() == 4) {
-                    user.setTypeSelected(4);
+                } else if (currUser.getTypeFoundBySearch() == ARTIST) {
+                    currUser.setTypeSelected(ARTIST);
 
 //                    hosts
-                } else if (user.getTypeFoundBySearch() == 5) {
-                    user.setTypeSelected(5);
+                } else if (currUser.getTypeFoundBySearch() == HOST) {
+                    currUser.setTypeSelected(HOST);
                 }
-                user.setCurrentSelect(this);
+                currUser.setCurrentSelect(this);
             }
         }
-        user.setCurrentSearch(null);
-        user.setTypeFoundBySearch(-1);
+        currUser.setCurrentSearch(null);
+        currUser.setTypeFoundBySearch(-1);
     }
 
     /**

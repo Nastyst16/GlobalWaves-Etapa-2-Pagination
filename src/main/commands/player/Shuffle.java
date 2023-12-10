@@ -3,11 +3,10 @@ package main.commands.player;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
 import main.CommandVisitor;
-import main.commands.types.*;
+import main.commands.types.Type;
 import main.SearchBar;
-import main.User;
+import main.users.User;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
@@ -22,16 +21,20 @@ public class Shuffle implements Command {
     /**
      * Execute the command.
      */
-    public void execute(final SearchBar input, final User user) {
+    public void execute(final SearchBar input, final User currUser) {
 
-        user.setShuffleSeed(input.getSeed());
+        currUser.setShuffleSeed(input.getSeed());
 
-        this.settingShuffle(user);
+        this.settingShuffle(currUser);
     }
 
 
+    /**
+     * Accept method for visitor pattern.
+     * @param visitor the visitor
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
@@ -48,47 +51,47 @@ public class Shuffle implements Command {
 
     /**
      * settingShuffle
-     * @param user the current user
+     * @param currUser the current user
      */
-    public void settingShuffle(final User user) {
+    public void settingShuffle(final User currUser) {
 
-//        if the user is offline
-        if (user.getOnline() == false) {
+//        if the currUser is offline
+        if (!currUser.getOnline()) {
             this.message = this.user + " is offline.";
             return;
         }
 
-        Type currentType = user.getCurrentType();
+        Type currentType = currUser.getCurrentType();
 
-        if (currentType != null && user.getTypeLoaded() == 2) {
+        if (currentType != null && currUser.getTypeLoaded() == 2) {
 
-            if (!user.isShuffle()) {
+            if (!currUser.isShuffle()) {
                 this.message = "Shuffle function activated successfully.";
-                user.setShuffle(true);
+                currUser.setShuffle(true);
 
-                user.getOriginalIndices().clear();
-                user.getShuffledIndices().clear();
+                currUser.getOriginalIndices().clear();
+                currUser.getShuffledIndices().clear();
 
 
-                for (int i = 0; i < user.getCurrentPlaylist().getSongList().size(); i++) {
-                    user.getOriginalIndices().add(i);
+                for (int i = 0; i < currUser.getCurrentPlaylist().getSongList().size(); i++) {
+                    currUser.getOriginalIndices().add(i);
                 }
-                user.getShuffledIndices().addAll(user.getOriginalIndices());
+                currUser.getShuffledIndices().addAll(currUser.getOriginalIndices());
 
                 Random rand = new Random(this.seed);
-                Collections.shuffle(user.getShuffledIndices(), rand);
+                Collections.shuffle(currUser.getShuffledIndices(), rand);
 
             } else {
                 this.message = "Shuffle function deactivated successfully.";
-                user.setShuffle(false);
+                currUser.setShuffle(false);
 
-                user.getOriginalIndices().clear();
-                user.getShuffledIndices().clear();
+                currUser.getOriginalIndices().clear();
+                currUser.getShuffledIndices().clear();
 
             }
-            user.setShuffleSeed(this.seed);
+            currUser.setShuffleSeed(this.seed);
 
-        } else if (currentType != null && user.getTypeLoaded() != 2) {
+        } else if (currentType != null && currUser.getTypeLoaded() != 2) {
             this.message = "The loaded source is not a playlist or an album.";
         } else if (currentType == null) {
             this.message = "Please load a source before using the shuffle function.";

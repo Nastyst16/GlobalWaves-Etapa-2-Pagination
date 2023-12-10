@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
 import main.CommandVisitor;
 import main.SearchBar;
-import main.User;
+import main.users.User;
 import main.commands.types.Album;
 import main.commands.types.Playlist;
 import main.commands.types.Podcast;
@@ -12,7 +12,6 @@ import main.commands.types.Song;
 import main.users.Artist;
 import main.users.Host;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,26 +26,34 @@ public class Search implements Command {
     private String message;
     private ArrayList<String> results;
     private static final int MAX_SIZE = 5;
+    private static final int PODCAST = 1;
+    private static final int PLAYLIST = 2;
+    private static final int ALBUM = 3;
+    private static final int ARTIST = 4;
+    private static final int HOST = 5;
 
     /**
      * This method is used to execute the command.
      */
-    public void execute(final User user, final ArrayList<Song> songs,
-                        final ArrayList<Playlist> everyPlaylist,
+    public void execute(final User currUser, final ArrayList<Playlist> everyPlaylist,
                         final ArrayList<Podcast> podcasts,
                         final ArrayList<Album> albums,
                         final ArrayList<Artist> artists,
                         final ArrayList<Host> hosts) {
 
-        if (user.getOnline() == false) {
+        if (!currUser.getOnline()) {
             this.setMessage(this.user + " is offline.");
             return;
         }
 
-        this.setSearch(user, songs, everyPlaylist, podcasts, albums, artists, hosts);
+        this.setSearch(currUser, everyPlaylist, podcasts, albums, artists, hosts);
     }
 
 
+    /**
+     * This method is used to accept the visitor.
+     * @param visitor the visitor
+     */
     @Override
     public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
@@ -96,7 +103,7 @@ public class Search implements Command {
 
         String artist = (String) (filters.get("artist"));
 
-        ArrayList<String> results = new ArrayList<>();
+        ArrayList<String> result = new ArrayList<>();
 
         for (Song song : songs) {
             String songLyrics = song.getLyrics().toLowerCase();
@@ -111,17 +118,17 @@ public class Search implements Command {
                     && song.getReleaseYear() < targetYear)
                     || (operator.equals(">") && song.getReleaseYear() > targetYear)
                     || (operator.equals("=") && song.getReleaseYear() == targetYear))) {
-                results.add(song.getName());
+                result.add(song.getName());
             }
 
 //            maximum size of 5
-            if (results.size() == MAX_SIZE) {
+            if (result.size() == MAX_SIZE) {
                 break;
             }
         }
 
-        this.setResults(results);
-        this.setMessage("Search returned " + results.size() + " results");
+        this.setResults(result);
+        this.setMessage("Search returned " + result.size() + " results");
     }
 
     /**
@@ -175,7 +182,10 @@ public class Search implements Command {
         this.setMessage("Search returned " + results.size() + " results");
     }
 
-
+    /**
+     * searching by album type
+     * @param albums every album
+     */
     public void searchingByAlbum(final ArrayList<Album> albums) {
         String name = (String) (filters.get("name"));
         String owner = (String) (filters.get("owner"));
@@ -198,7 +208,10 @@ public class Search implements Command {
     }
 
 
-
+    /**
+     * searching by artist type
+     * @param artists every artist
+     */
     public void searchingByArtist(final ArrayList<Artist> artists) {
         String name = (String) (filters.get("name"));
 
@@ -216,7 +229,10 @@ public class Search implements Command {
         this.setMessage("Search returned " + results.size() + " results");
     }
 
-//    nu stiu daca e bine jos
+    /**
+     * searching by host type
+     * @param hosts every host
+     */
     public void searchingByHost(final ArrayList<Host> hosts) {
         String name = (String) (filters.get("name"));
 
@@ -237,13 +253,11 @@ public class Search implements Command {
 
     /**
      * This method is used to set the search.
-     * @param user the current user
-     * @param songs every song
+     * @param currUser the current user
      * @param everyPlaylist every playlist
      * @param podcasts every podcast
      */
-    public void setSearch(final User user, final ArrayList<Song> songs,
-                          final ArrayList<Playlist> everyPlaylist,
+    public void setSearch(final User currUser, final ArrayList<Playlist> everyPlaylist,
                           final ArrayList<Podcast> podcasts,
                           final ArrayList<Album> albums,
                           final ArrayList<Artist> artists,
@@ -251,53 +265,53 @@ public class Search implements Command {
 
 //                if only type is songs:
         if (this.type.equals("song")) {
-            this.searchingBySongType(user.getEverySong());
-            user.setTypeFoundBySearch(0);
+            this.searchingBySongType(currUser.getEverySong());
+            currUser.setTypeFoundBySearch(0);
         }
 
 //                if only type is podcasts:
         if (this.type.equals("podcast")) {
             this.searchingByPodcastType(podcasts);
-            user.setTypeFoundBySearch(1);
+            currUser.setTypeFoundBySearch(PODCAST);
         }
 
 //                if only type is playlist:
         if (this.type.equals("playlist")) {
             this.searchingByPlaylistType(everyPlaylist);
-            user.setTypeFoundBySearch(2);
+            currUser.setTypeFoundBySearch(PLAYLIST);
         }
 
 //        if only type is album
         if (this.type.equals("album")) {
             this.searchingByAlbum(albums);
-            user.setTypeFoundBySearch(3);
+            currUser.setTypeFoundBySearch(ALBUM);
         }
 
 //        if only type is artist:
         if (this.type.equals("artist")) {
             this.searchingByArtist(artists);
-            user.setTypeFoundBySearch(4);
+            currUser.setTypeFoundBySearch(ARTIST);
         }
 
 //        if only type is album
         if (this.type.equals("host")) {
             this.searchingByHost(hosts);
-            user.setTypeFoundBySearch(5);
+            currUser.setTypeFoundBySearch(HOST);
         }
 
 
-        user.setCurrentSearch(this);
-        user.setTypeSelected(-1);
-        user.setCurrentType(null);
-        user.setCurrentPodcast(null);
-        user.setCurrentPlaylist(null);
+        currUser.setCurrentSearch(this);
+        currUser.setTypeSelected(-1);
+        currUser.setCurrentType(null);
+        currUser.setCurrentPodcast(null);
+        currUser.setCurrentPlaylist(null);
 
-        user.setTypeLoaded(-1);
-        user.setShuffle(false);
+        currUser.setTypeLoaded(-1);
+        currUser.setShuffle(false);
 
 
-        user.setTypeLoaded(-1);
-        user.setRepeatString("No Repeat");
+        currUser.setTypeLoaded(-1);
+        currUser.setRepeatString("No Repeat");
     }
 
 

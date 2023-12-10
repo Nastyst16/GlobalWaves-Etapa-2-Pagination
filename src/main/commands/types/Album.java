@@ -31,60 +31,100 @@ public class Album extends Playlist {
         for (Song song : albumSongs) {
             this.songs.add(song.getName());
         }
-
-
     }
 
 
 
+
+    /**
+     * getter for the user that created the album
+     * @return the user that created the album
+     */
     @JsonIgnore
     public String getUser() {
         return user;
     }
 
 
-
+    /**
+     * getter for the name of the album
+     * @return the name of the album
+     */
     public String getName() {
         return name;
     }
 
+
+    /**
+     * getter for the release year of the album
+     * @return the release year of the album
+     */
     @JsonIgnore
     public int getReleaseYear() {
         return releaseYear;
     }
 
+
+    /**
+     * getter for the description of the album
+     * @return the description of the album
+     */
     @JsonIgnore
     public String getDescription() {
         return description;
     }
 
+
+    /**
+     * getter for the songs of the album
+     * @return the songs of the album
+     */
     @JsonIgnore
     public ArrayList<Song> getAlbumSongs() {
         return albumSongs;
     }
 
+    /**
+     * getter for the songs of the album
+     * @return the songs of the album
+     */
     public ArrayList<String> getSongs() {
         return songs;
     }
 
-
+    /**
+     * getter for the visibility of the album
+     * @return the visibility of the album
+     */
     @Override
     public String getVisibility() {
         return visibility;
     }
 
+    /**
+     * setter for the visibility of the album
+     * @param visibility the visibility of the album
+     */
     @Override
-    public void setVisibility(String visibility) {
+    public void setVisibility(final String visibility) {
         this.visibility = visibility;
     }
 
+    /**
+     * getter for the followers of the album
+     * @return the followers of the album
+     */
     @Override
     public int getFollowers() {
         return followers;
     }
 
+    /**
+     * setter for the followers of the album
+     * @param followers the followers of the album
+     */
     @Override
-    public void setFollowers(int followers) {
+    public void setFollowers(final int followers) {
         this.followers = followers;
     }
 }

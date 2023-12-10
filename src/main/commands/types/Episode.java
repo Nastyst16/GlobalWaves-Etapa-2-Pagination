@@ -60,7 +60,7 @@ public class Episode implements Type {
 
     /**
      * Setter for secondsGone
-     * @param secondsGone
+     * @param secondsGone secondsGone of the episode
      */
     public void setSecondsGone(final int secondsGone) {
         this.secondsGone = secondsGone;
@@ -75,15 +75,27 @@ public class Episode implements Type {
     }
 
 
-    public void setName(String name) {
+    /**
+     * Setter for name
+     * @param name name of the episode
+     */
+    public void setName(final String name) {
         this.name = name;
     }
 
-    public void setDuration(int duration) {
+    /**
+     * Setter for duration
+     * @param duration duration of the episode
+     */
+    public void setDuration(final int duration) {
         this.duration = duration;
     }
 
-    public void setDescription(String description) {
+    /**
+     * Setter for description
+     * @param description description of the episode
+     */
+    public void setDescription(final String description) {
         this.description = description;
     }
 

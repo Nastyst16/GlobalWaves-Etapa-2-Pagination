@@ -166,87 +166,155 @@ public class SearchBar {
 //    etapa 2
 
 
-    public void setSeed(int seed) {
+    /**
+     * sets seed
+     * @param seed
+     */
+    public void setSeed(final int seed) {
         this.seed = seed;
     }
 
+    /**
+     * gets next page
+     * @return next page
+     */
     public String getNextPage() {
         return nextPage;
     }
 
-    public void setNextPage(String nextPage) {
+    /**
+     * sets next page
+     * @param nextPage
+     */
+    public void setNextPage(final String nextPage) {
         this.nextPage = nextPage;
     }
 
+    /**
+     * gets description
+     * @return description
+     */
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    /**
+     * sets description
+     * @param description
+     */
+    public void setDescription(final String description) {
         this.description = description;
     }
 
+    /**
+     * gets name
+     * @return name
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    /**
+     * sets name
+     * @param name name
+     */
+    public void setName(final String name) {
         this.name = name;
     }
 
+    /**
+     * gets date
+     * @return date
+     */
     public String getDate() {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
+    /**
+     * gets price
+     * @return price
+     */
     public int getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
+    /**
+     * gets age
+     * @return
+     */
     public int getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    /**
+     * sets age
+     * @param age
+     */
+    public void setAge(final int age) {
         this.age = age;
     }
 
+    /**
+     * gets city
+     * @return
+     */
     public String getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    /**
+     * sets city
+     * @param city
+     */
+    public void setCity(final String city) {
         this.city = city;
     }
 
+    /**
+     * gets release year
+     * @return
+     */
     public int getReleaseYear() {
         return releaseYear;
     }
 
-    public void setReleaseYear(int releaseYear) {
+    /**
+     * sets release year
+     * @param releaseYear
+     */
+    public void setReleaseYear(final int releaseYear) {
         this.releaseYear = releaseYear;
     }
 
+    /**
+     * gets songs
+     * @return
+     */
     public ArrayList<Song> getSongs() {
         return songs;
     }
 
-    public void setSongs(ArrayList<Song> songs) {
+    /**
+     * sets songs
+     * @param songs
+     */
+    public void setSongs(final ArrayList<Song> songs) {
         this.songs = songs;
     }
 
+    /**
+     * gets episodes
+     * @return
+     */
     public ArrayList<Episode> getEpisodes() {
         return episodes;
     }
 
-    public void setEpisodes(ArrayList<Episode> episodes) {
+    /**
+     * sets episodes
+     * @param episodes
+     */
+    public void setEpisodes(final ArrayList<Episode> episodes) {
         this.episodes = episodes;
     }
 }

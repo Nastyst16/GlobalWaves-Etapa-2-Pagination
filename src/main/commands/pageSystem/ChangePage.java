@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.Command;
 import main.CommandVisitor;
 import main.SearchBar;
-import main.User;
-import main.commands.types.*;
-
-import java.util.ArrayList;
+import main.users.User;
 
 public class ChangePage implements Command {
     private final String command;

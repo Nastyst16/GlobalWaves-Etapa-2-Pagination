@@ -3,12 +3,11 @@ package main.commands.pageSystem;
 import main.Command;
 import main.CommandVisitor;
 import main.SearchBar;
-import main.User;
+import main.users.User;
 import main.commands.types.*;
 import main.users.Artist;
 import main.users.Host;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Comparator;
 

@@ -2,13 +2,11 @@ package main.commands.player;
 
 import main.Command;
 import main.CommandVisitor;
-import main.commands.types.*;
+import main.commands.types.Type;
 import main.SearchBar;
-import main.User;
+import main.users.User;
 
-import java.util.ArrayList;
-
-public class Prev implements Command {
+public final class Prev implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
@@ -17,13 +15,17 @@ public class Prev implements Command {
     /**
      * Executes the command
      */
-    public void execute(final User user) {
+    public void execute(final User currUser) {
 
-        this.setPrev(user);
+        this.setPrev(currUser);
     }
 
+    /**
+     * Accepts the visitor for the command
+     * @param visitor the visitor
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
@@ -40,76 +42,75 @@ public class Prev implements Command {
     /**
      * Returns to the previous track
      *
-     * @param user the user that called the command
+     * @param currUser the user that called the command
      */
-    public void setPrev(final User user) {
+    public void setPrev(final User currUser) {
 
 //        if the user is offline
-        if (user.getOnline() == false) {
+        if (!currUser.getOnline()) {
             this.message = this.user + " is offline.";
             return;
         }
 
-        Type currentType = user.getCurrentType();
-
-        if (user.getCurrentType() == null) {
+        Type currentType = currUser.getCurrentType();
+        if (currUser.getCurrentType() == null) {
             this.message = "Please load a source before returning to the previous track.";
             return;
         }
 
 //        if it's a song
-        if (user.getTypeLoaded() == 0) {
+        if (currUser.getTypeLoaded() == 0) {
             currentType.setSecondsGone(0);
-        } else if (user.getTypeLoaded() == 2) {
+        } else if (currUser.getTypeLoaded() == 2) {
 //            prev for playlists
 
             if (currentType.getSecondsGone() > 0) {
                 currentType.setSecondsGone(0);
             } else if (currentType.getSecondsGone() == 0) {
-                if (user.isShuffle()) {
+                if (currUser.isShuffle()) {
 
-                    int prevIndex = user.getCurrentPlaylist().
+                    int prevIndex = currUser.getCurrentPlaylist().
                             getSongList().indexOf(currentType);
-                    prevIndex = user.getShuffledIndices().indexOf(prevIndex) - 1;
+                    prevIndex = currUser.getShuffledIndices().indexOf(prevIndex) - 1;
 
                     if (prevIndex == -1) {
                         currentType.setSecondsGone(0);
                     } else {
-                        prevIndex = user.getShuffledIndices().get(prevIndex);
-                        currentType = user.getCurrentPlaylist().getSongList().get(prevIndex);
+                        prevIndex = currUser.getShuffledIndices().get(prevIndex);
+                        currentType = currUser.getCurrentPlaylist().getSongList().get(prevIndex);
                         currentType.setSecondsGone(0);
                     }
 
                 } else {
 //                    if it's the first song of the playlist
-                    if (user.getCurrentPlaylist().getSongList().indexOf(currentType) == 0) {
+                    if (currUser.getCurrentPlaylist().getSongList().indexOf(currentType) == 0) {
                         currentType.setSecondsGone(0);
                     } else {
-                        int prevIndex = user.getCurrentPlaylist().
+                        int prevIndex = currUser.getCurrentPlaylist().
                                 getSongList().indexOf(currentType) - 1;
-                        currentType = user.getCurrentPlaylist().getSongList().get(prevIndex);
+                        currentType = currUser.getCurrentPlaylist().getSongList().get(prevIndex);
                         currentType.setSecondsGone(0);
                     }
                 }
             }
-        } else if (user.getTypeLoaded() == 1) {
-            if (user.getCurrentPodcast().getLastRemainingEpisode() == 0) {
+        } else if (currUser.getTypeLoaded() == 1) {
+            if (currUser.getCurrentPodcast().getLastRemainingEpisode() == 0) {
                 currentType.setSecondsGone(0);
             } else {
-                int prevIndex = user.getCurrentPodcast().getLastRemainingEpisode() - 1;
-                currentType = user.getCurrentPodcast().getEpisodesList().get(prevIndex);
+                int prevIndex = currUser.getCurrentPodcast().getLastRemainingEpisode() - 1;
+                currentType = currUser.getCurrentPodcast().getEpisodesList().get(prevIndex);
             }
         }
 
-        user.setCurrentType(currentType);
-        user.setPaused(false);
+        currUser.setCurrentType(currentType);
+        currUser.setPaused(false);
 
-        if (user.getCurrentType() != null) {
+        if (currUser.getCurrentType() != null) {
             this.message = "Returned to previous track successfully. The current track is "
                     + currentType.getName() + ".";
         }
 
-        user.setCurrentType(currentType);
+        currUser.setCurrentType(currentType);
     }
 
     /**

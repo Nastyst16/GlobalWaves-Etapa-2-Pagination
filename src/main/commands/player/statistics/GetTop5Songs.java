@@ -2,18 +2,14 @@ package main.commands.player.statistics;
 
 import main.Command;
 import main.CommandVisitor;
-import main.commands.types.Album;
-import main.commands.types.Playlist;
-import main.commands.types.Podcast;
 import main.commands.types.Song;
 import main.SearchBar;
-import main.User;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class GetTop5Songs implements Command {
+public final class GetTop5Songs implements Command {
     private final String command;
     private final int timestamp;
     private final ArrayList<String> result;
@@ -29,7 +25,7 @@ public class GetTop5Songs implements Command {
     }
 
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 

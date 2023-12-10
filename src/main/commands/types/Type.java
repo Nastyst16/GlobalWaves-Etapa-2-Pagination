@@ -6,18 +6,18 @@ public interface Type {
      * get name
      * @return
      */
-    public int getSecondsGone();
+    int getSecondsGone();
 
     /**
      * set seconds gone
      * @param secondsGone
      */
-    public void setSecondsGone(int secondsGone);
+    void setSecondsGone(int secondsGone);
 
     /**
      * execute
      */
-    public void execute();
+    void execute();
 
     /**
      * get duration

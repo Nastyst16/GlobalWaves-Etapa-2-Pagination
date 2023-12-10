@@ -3,19 +3,25 @@ package main.commands.player.statistics;
 import main.Command;
 import main.CommandVisitor;
 import main.SearchBar;
-import main.User;
+import main.users.User;
 import main.users.Artist;
 import main.users.Host;
 
 import java.util.ArrayList;
 
-public class GetAllUsers implements Command {
+public final class GetAllUsers implements Command {
     private final String command;
     private final int timestamp;
     private final ArrayList<String> result;
 
-
-    public void execute(ArrayList<User> users, ArrayList<Artist> artists, ArrayList<Host> hosts) {
+    /**
+     * Method that executes the command
+     * @param users the list of all the users
+     * @param artists the list of all the artists
+     * @param hosts the list of all the hosts
+     */
+    public void execute(final ArrayList<User> users, final ArrayList<Artist> artists,
+                        final ArrayList<Host> hosts) {
 
         for (User user : users) {
             this.result.add(user.getUsername());
@@ -29,25 +35,45 @@ public class GetAllUsers implements Command {
 
     }
 
-    public GetAllUsers(SearchBar input) {
+    /**
+     * Constructor of the class, it sets the command and the timestamp
+     * @param input the input command
+     */
+    public GetAllUsers(final SearchBar input) {
         this.command = input.getCommand();
         this.timestamp = input.getTimestamp();
 
         this.result = new ArrayList<>();
     }
 
+    /**
+     * Method that accepts the visitor
+     * @param visitor the visitor
+     */
     public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
+    /**
+     * Getter for the command
+     * @return the command
+     */
     public String getCommand() {
         return command;
     }
 
+    /**
+     * Getter for the timestamp
+     * @return the timestamp
+     */
     public int getTimestamp() {
         return timestamp;
     }
 
+    /**
+     * Getter for the result
+     * @return the result
+     */
     public ArrayList<String> getResult() {
         return result;
     }

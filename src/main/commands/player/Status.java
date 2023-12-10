@@ -1,15 +1,19 @@
 package main.commands.player;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import main.*;
-import main.commands.types.*;
+import main.Command;
+import main.CommandVisitor;
+import main.SearchBar;
+import main.users.User;
+import main.commands.types.Song;
+import main.commands.types.Type;
+import main.commands.types.Podcast;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 
-public class Status implements Command {
+public final class Status implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
@@ -20,23 +24,23 @@ public class Status implements Command {
     /**
      * Execute the command
      */
-    public void execute(final User user) {
+    public void execute(final User currUser) {
 
-        if (user.getCurrentType() != null) {
-            this.settingStats(user);
+        if (currUser.getCurrentType() != null) {
+            this.settingStats(currUser);
         } else {
-            this.settingNoType(user);
+            this.settingNoType(currUser);
         }
 
         if (this.getRemainingTime() == 0
-                && user.getRepeatStatus() == 0) {
-            user.setPaused(true);
-            user.setCurrentType(null);
+                && currUser.getRepeatStatus() == 0) {
+            currUser.setPaused(true);
+            currUser.setCurrentType(null);
         }
     }
 
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 

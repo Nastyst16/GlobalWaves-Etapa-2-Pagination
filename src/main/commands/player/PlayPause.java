@@ -2,16 +2,10 @@ package main.commands.player;
 
 import main.Command;
 import main.CommandVisitor;
-import main.commands.types.Album;
-import main.commands.types.Playlist;
-import main.commands.types.Podcast;
-import main.commands.types.Song;
 import main.SearchBar;
-import main.User;
+import main.users.User;
 
-import java.util.ArrayList;
-
-public class PlayPause implements Command {
+public final class PlayPause implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
@@ -21,13 +15,16 @@ public class PlayPause implements Command {
     /**
      * Executes the command
      */
-    public void execute(final User user) {
-        this.setPlayPause(user);
+    public void execute(final User currUser) {
+        this.setPlayPause(currUser);
     }
 
-
+    /**
+     * Accepts the visitor for the command
+     * @param visitor the visitor
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
@@ -35,7 +32,7 @@ public class PlayPause implements Command {
      * Constructor
      * @param input the input
      */
-    public PlayPause(SearchBar input) {
+    public PlayPause(final SearchBar input) {
         this.command = input.getCommand();
         this.user = input.getUsername();
         this.timestamp = input.getTimestamp();
@@ -45,25 +42,25 @@ public class PlayPause implements Command {
     /**
      * Pauses or resumes playback
      *
-     * @param user the user that called the command
+     * @param currUser the user that called the command
      */
-    public void setPlayPause(final User user) {
+    public void setPlayPause(final User currUser) {
 
-//        if the user is offline
-        if (user.getOnline() == false) {
+//        if the currUser is offline
+        if (!currUser.getOnline()) {
             this.message = this.user + " is offline.";
             return;
         }
 
-        if (!user.isPaused() && user.getTypeLoaded() != -1) {
+        if (!currUser.isPaused() && currUser.getTypeLoaded() != -1) {
             this.message = "Playback paused successfully.";
 
-            user.setPaused(true);
+            currUser.setPaused(true);
 
-        } else if (user.isPaused() && user.getTypeLoaded() != -1) {
+        } else if (currUser.isPaused() && currUser.getTypeLoaded() != -1) {
             this.message = "Playback resumed successfully.";
 
-            user.setPaused(false);
+            currUser.setPaused(false);
         }
     }
 

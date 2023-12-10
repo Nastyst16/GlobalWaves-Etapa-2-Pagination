@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Podcast implements Type {
+public final class Podcast implements Type {
     private String name;
     @JsonIgnore
     private String owner;
@@ -71,7 +71,7 @@ public class Podcast implements Type {
      * gets the duration of the podcast
      */
     public int getDuration() {
-//        i wrote this because podcast implements type
+//        I wrote this because podcast implements type
         return 0;
     }
 
@@ -84,6 +84,7 @@ public class Podcast implements Type {
 
     /**
      * sets the last remaining episode
+     * @param lastRemainingEpisode last remaining episode
      */
     public void setLastRemainingEpisode(final int lastRemainingEpisode) {
         this.lastRemainingEpisode = lastRemainingEpisode;
@@ -98,6 +99,7 @@ public class Podcast implements Type {
 
     /**
      * sets the duration of the podcast
+     * @param secondsGone duration of the podcast
      */
     public void setSecondsGone(final int secondsGone) {
         this.secondsGone = secondsGone;
@@ -118,19 +120,34 @@ public class Podcast implements Type {
         return episodes;
     }
 
-    public void setName(String name) {
+    /**
+     * sets the name of the podcast
+     * @param name name of the podcast
+     */
+    public void setName(final String name) {
         this.name = name;
     }
 
-    public void setOwner(String owner) {
+    /**
+     * sets the owner of the podcast
+     */
+    public void setOwner(final String owner) {
         this.owner = owner;
     }
 
-    public void setEpisodesList(List<Episode> episodesList) {
+    /**
+     * sets the list of episodesList
+     * @param episodesList list of episodesList
+     */
+    public void setEpisodesList(final List<Episode> episodesList) {
         this.episodesList = episodesList;
     }
 
-    public void setEpisodes(ArrayList<String> episodes) {
+    /**
+     * sets the list of episodesList names
+     * @param episodes list of episodesList names
+     */
+    public void setEpisodes(final ArrayList<String> episodes) {
         this.episodes = episodes;
     }
 }

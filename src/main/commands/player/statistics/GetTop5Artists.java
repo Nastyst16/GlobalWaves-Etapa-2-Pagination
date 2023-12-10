@@ -3,27 +3,32 @@ package main.commands.player.statistics;
 import main.Command;
 import main.CommandVisitor;
 import main.SearchBar;
-import main.commands.searchBar.Search;
 import main.commands.types.Album;
 import main.commands.types.Song;
 import main.users.Artist;
 
 import java.util.ArrayList;
 
-public class GetTop5Artists implements Command {
+public final class GetTop5Artists implements Command {
     private final String command;
     private final int timestamp;
     private final ArrayList<String> result;
     private static final int TOP_NR = 5;
 
-
-
-    public void execute(ArrayList<Artist> everyArtist) {
+    /**
+     * Execute method for the GetTop5Artists command
+     * @param everyArtist the list of all the artists
+     */
+    public void execute(final ArrayList<Artist> everyArtist) {
         this.searchTop5Artists(everyArtist);
     }
 
 
-    private void searchTop5Artists(ArrayList<Artist> everyArtist) {
+    /**
+     * Method that searches for the top 5 artists
+     * @param everyArtist the list of all the artists
+     */
+    private void searchTop5Artists(final ArrayList<Artist> everyArtist) {
 
 //        the artist with the most liked songs
         ArrayList<Integer> numberOfLikes = new ArrayList<>();
@@ -52,7 +57,8 @@ public class GetTop5Artists implements Command {
                 }
 
                 if (numberOfLikes.get(i).equals(numberOfLikes.get(j))) {
-                    if (sortedArtists.get(i).getUsername().compareTo(sortedArtists.get(j).getUsername()) > 0) {
+                    if (sortedArtists.get(i).getUsername().
+                            compareTo(sortedArtists.get(j).getUsername()) > 0) {
                         Artist aux = sortedArtists.get(i);
                         sortedArtists.set(i, sortedArtists.get(j));
                         sortedArtists.set(j, aux);
@@ -76,16 +82,24 @@ public class GetTop5Artists implements Command {
         }
     }
 
-    public GetTop5Artists(SearchBar input) {
+    /**
+     * Constructor for the GetTop5Artists command
+     *
+     * @param input the input command
+     */
+    public GetTop5Artists(final SearchBar input) {
         this.command = input.getCommand();
         this.timestamp = input.getTimestamp();
         result = new ArrayList<>();
     }
 
 
-
+    /**
+     * Accept method for the visitor
+     * @param visitor the visitor
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
