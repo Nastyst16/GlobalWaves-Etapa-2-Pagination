@@ -6,13 +6,12 @@ import main.CommandVisitor;
 import main.SearchBar;
 import main.users.User;
 import main.commands.types.Podcast;
-import main.commands.types.Song;
 import main.users.Artist;
 import main.users.Host;
 
 import java.util.ArrayList;
 
-public class RemovePodcast implements Command {
+public final class RemovePodcast implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
@@ -20,21 +19,35 @@ public class RemovePodcast implements Command {
     private final String name;
     private String message;
 
-
-    public void execute(User user, Artist artist, Host host, ArrayList<User> users,
-                        ArrayList<Song> songs, ArrayList<Podcast> podcasts) {
-        this.setRemovePodcast(user, artist, host, users, songs, podcasts);
+    /**
+     * execute method for visitor pattern
+     * @param currUser the current user
+     * @param artist the artist
+     * @param host the host
+     * @param users the users
+     * @param podcasts the podcasts
+     */
+    public void execute(final User currUser, final Artist artist, final Host host,
+                        final ArrayList<User> users, final ArrayList<Podcast> podcasts) {
+        this.setRemovePodcast(currUser, artist, host, users, podcasts);
     }
 
+    /**
+     * method that removes a podcast
+     * @param currUser the current user
+     * @param artist the artist
+     * @param host the host
+     * @param users the users
+     * @param podcasts the podcasts
+     */
+    public void setRemovePodcast(final User currUser, final Artist artist, final Host host,
+                                 final ArrayList<User> users, final ArrayList<Podcast> podcasts) {
 
-    public void setRemovePodcast(User user, Artist artist, Host host, ArrayList<User> users,
-                                 ArrayList<Song> songs, ArrayList<Podcast> podcasts) {
-
-        if (user != null || artist != null) {
-            this.message = this.user + " is not an host.";
+        if (currUser != null || artist != null) {
+            this.setMessage(this.user + " is not an host.");
             return;
         } else if (host == null) {
-            this.message = "The username " + this.user + " doesn't exist.";
+            this.setMessage("The username " + this.user + " doesn't exist.");
             return;
         }
 
@@ -53,23 +66,20 @@ public class RemovePodcast implements Command {
             return;
         }
 
-
 //        verifying if a users currently listens to the podcast
         for (User currentUser : users) {
             if (currentUser.getCurrentType() != null) {
                 for (Podcast podcast : host.getHostPodcasts()) {
-                    if (podcast.getName().equals(currentUser.getCurrentType().getName()));
                     this.setMessage(this.user + " can't delete this podcast.");
                     return;
                 }
             }
         }
 
-
 //        deleting everything related to the podcast
         for (Podcast p : host.getHostPodcasts()) {
 
-            for(User u : users) {
+            for (User u : users) {
 
                 u.setEveryPodcast(podcasts);
 //                deleting also every user listened podcasts
@@ -90,7 +100,6 @@ public class RemovePodcast implements Command {
             }
         }
 
-
 //        removing the podcast
         for (Podcast podcast : host.getHostPodcasts()) {
             if (podcast.getName().equals(this.name)) {
@@ -104,39 +113,70 @@ public class RemovePodcast implements Command {
         this.setMessage(this.user + " deleted the podcast successfully.");
     }
 
-
-    public RemovePodcast(SearchBar input) {
+    /**
+     * constructor for the RemovePodcast class
+     * @param input the input
+     */
+    public RemovePodcast(final SearchBar input) {
         this.command = input.getCommand();
         this.user = input.getUsername();
         this.timestamp = input.getTimestamp();
         this.name = input.getName();
     }
 
-    public void accept(CommandVisitor visitor) {
+    /**
+     * accept method for visitor pattern
+     * @param visitor the visitor
+     */
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
+    /**
+     * getter for the command
+     * @return the command
+     */
     public String getCommand() {
         return command;
     }
 
+    /**
+     * getter for the user
+     * @return the user
+     */
     public String getUser() {
         return user;
     }
 
+    /**
+     * getter for the timestamp
+     * @return the timestamp
+     */
     public int getTimestamp() {
         return timestamp;
     }
 
+    /**
+     * getter for the name
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * getter for the message
+     * @return the message
+     */
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    /**
+     * setter for the message
+     * @param message the message
+     */
+    public void setMessage(final String message) {
         this.message = message;
     }
 }

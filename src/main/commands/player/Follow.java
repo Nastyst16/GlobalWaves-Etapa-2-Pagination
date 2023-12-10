@@ -7,19 +7,27 @@ import main.SearchBar;
 import main.users.User;
 import java.util.ArrayList;
 
-public class Follow implements Command {
+public final class Follow implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
     private String message;
 
-
-    public void execute(final User user, final ArrayList<Playlist> everyPlaylist) {
-        this.setFollow(user, everyPlaylist);
+    /**
+     * Executes the command to follow or unfollow a playlist
+     * @param currUser the current user
+     * @param everyPlaylist the list of all playlists
+     */
+    public void execute(final User currUser, final ArrayList<Playlist> everyPlaylist) {
+        this.setFollow(currUser, everyPlaylist);
     }
 
+    /**
+     * Accept method for the visitor
+     * @param visitor the visitor
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
@@ -35,42 +43,42 @@ public class Follow implements Command {
 
     /**
      * Follows or unfollows a playlist
-     * @param user the current user
+     * @param currUser the current user
      * @param everyPlaylist the list of all playlists
      */
-    public void setFollow(final User user, final ArrayList<Playlist> everyPlaylist) {
+    public void setFollow(final User currUser, final ArrayList<Playlist> everyPlaylist) {
 
-//        if the user is offline
-        if (!user.getOnline()) {
-            this.message = this.user + " is offline.";
+//        if the currUser is offline
+        if (!currUser.getOnline()) {
+            this.setMessage(this.user + " is offline.");
             return;
         }
 
-        if (user.getCurrentSelect() == null) {
-            this.message = "Please select a source before following or unfollowing.";
+        if (currUser.getCurrentSelect() == null) {
+            this.setMessage("Please select a source before following or unfollowing.");
             return;
         }
-        if (user.getTypeSelected() != 2) {
-            this.message = "The selected source is not a playlist.";
+        if (currUser.getTypeSelected() != 2) {
+            this.setMessage("The selected source is not a playlist.");
             return;
         }
-        if (user.getUsername().equals(user.getSelectedPlaylist().getUser())) {
-            this.message = "You cannot follow or unfollow your own playlist.";
+        if (currUser.getUsername().equals(currUser.getSelectedPlaylist().getUser())) {
+            this.setMessage("You cannot follow or unfollow your own playlist.");
             return;
         }
 
-        int indexPlaylist = everyPlaylist.indexOf(user.getSelectedPlaylist());
+        int indexPlaylist = everyPlaylist.indexOf(currUser.getSelectedPlaylist());
 
-        if (user.getFollowedPlaylists().contains(user.getSelectedPlaylist())) {
+        if (currUser.getFollowedPlaylists().contains(currUser.getSelectedPlaylist())) {
 
             everyPlaylist.get(indexPlaylist).decrementFollowers();
-            user.getFollowedPlaylists().remove(user.getSelectedPlaylist());
-            this.message = "Playlist unfollowed successfully.";
+            currUser.getFollowedPlaylists().remove(currUser.getSelectedPlaylist());
+            this.setMessage("Playlist unfollowed successfully.");
 
         } else {
             everyPlaylist.get(indexPlaylist).incrementFollowers();
-            user.getFollowedPlaylists().add(user.getSelectedPlaylist());
-            this.message = "Playlist followed successfully.";
+            currUser.getFollowedPlaylists().add(currUser.getSelectedPlaylist());
+            this.setMessage("Playlist followed successfully.");
         }
     }
 

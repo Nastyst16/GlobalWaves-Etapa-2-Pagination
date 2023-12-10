@@ -8,7 +8,7 @@ import main.users.User;
 
 import java.util.ArrayList;
 
-public class Like implements Command {
+public final class Like implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
@@ -18,12 +18,16 @@ public class Like implements Command {
     /**
      * executes the command
      */
-    public void execute(final User user, final ArrayList<Song> songs) {
-        this.likeHelper(user, songs);
+    public void execute(final User currUser, final ArrayList<Song> songs) {
+        this.likeHelper(currUser, songs);
     }
 
+    /**
+     * accepts the visitor to perform the command
+     * @param visitor the visitor
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
@@ -53,23 +57,23 @@ public class Like implements Command {
     /**
      * evaluates the command
      *
-     * @param user the user that called the command
+     * @param currUser the user that called the command
      * @param songs       the list of songs
      */
-    public void likeHelper(final User user, final ArrayList<Song> songs) {
+    public void likeHelper(final User currUser, final ArrayList<Song> songs) {
 
-        if (user.getOnline() == false) {
+        if (!currUser.getOnline()) {
             this.message = this.user + " is offline.";
             return;
         }
 
-        if (user.getCurrentType() != null) {
+        if (currUser.getCurrentType() != null) {
 //                    if we have loaded a song
-            boolean like = user.setLikedSongs((Song) user.getCurrentType(), songs);
+            boolean like = currUser.setLikedSongs((Song) currUser.getCurrentType(), songs);
             this.setMessageIfLiked(like);
-        } else if (user.getTypeLoaded() == 2) {
+        } else if (currUser.getTypeLoaded() == 2) {
 //                    if we have loaded a playlist
-            boolean like = user.setLikedPlaylist();
+            boolean like = currUser.setLikedPlaylist();
             this.setMessageIfLiked(like);
         } else {
             this.message = "Please load a source before liking or unliking.";

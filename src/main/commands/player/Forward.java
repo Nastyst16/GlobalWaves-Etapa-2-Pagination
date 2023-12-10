@@ -5,7 +5,7 @@ import main.CommandVisitor;
 import main.SearchBar;
 import main.users.User;
 
-public class Forward implements Command {
+public final class Forward implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
@@ -15,13 +15,17 @@ public class Forward implements Command {
     /**
      * Executes the command
      */
-    public void execute(final User user) {
+    public void execute(final User currUser) {
 
-        this.setForward(user);
+        this.setForward(currUser);
     }
 
+    /**
+     * Accept method for the visitor
+     * @param visitor the visitor
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
@@ -37,26 +41,26 @@ public class Forward implements Command {
 
     /**
      * Skips forward 90 seconds
-     * @param user the current user
+     * @param currUser the current user
      */
-    public void setForward(final User user) {
+    public void setForward(final User currUser) {
 
-//        if the user is offline
-        if (user.getOnline() == false) {
+//        if the currUser is offline
+        if (!currUser.getOnline()) {
             this.message = this.user + " is offline.";
             return;
         }
 
-        if (user.getCurrentType() == null) {
+        if (currUser.getCurrentType() == null) {
             this.message = "Please load a source before attempting to forward.";
             return;
         }
-        if (user.getTypeLoaded() != 1) {
+        if (currUser.getTypeLoaded() != 1) {
             this.message = "The loaded source is not a podcast.";
             return;
         }
 
-        user.getCurrentType().setSecondsGone(user.
+        currUser.getCurrentType().setSecondsGone(currUser.
                 getCurrentType().getSecondsGone() + SECONDS_TO_FORWARD);
         this.message = "Skipped forward successfully.";
     }

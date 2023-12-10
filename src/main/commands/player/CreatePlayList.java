@@ -9,7 +9,7 @@ import main.users.User;
 
 import java.util.ArrayList;
 
-public class CreatePlayList implements Command {
+public final class CreatePlayList implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
@@ -17,38 +17,52 @@ public class CreatePlayList implements Command {
     private String message;
     private  Playlist playlist;
 
+    /**
+     * executes the command CreatePlayList
+     * @param input the input given by the user
+     * @param currUser the user that issued the command
+     * @param everyPlaylist the list of all playlists
+     */
+    public void execute(final SearchBar input, final User currUser,
+                        final ArrayList<Playlist> everyPlaylist) {
 
-    public void execute(final SearchBar input, final User user, final ArrayList<Playlist> everyPlaylist) {
-
-//        if the user is offline
-        if (user.getOnline() == false) {
-            this.message = this.user + " is offline.";
+//        if the currUser is offline
+        if (!currUser.getOnline()) {
+            this.setMessage(this.user + " is offline.");
             return;
         }
 
 //                verify if a playlist with the same name exists;
-        String message = "Playlist created successfully.";
-        for (Playlist playlist : everyPlaylist) {
-            if (playlist.getName().equals(input.getPlaylistName())) {
-                message = "A playlist with the same name already exists.";
+        String msg = "Playlist created successfully.";
+        for (Playlist p : everyPlaylist) {
+            if (p.getName().equals(input.getPlaylistName())) {
+                msg = "A playlist with the same name already exists.";
             }
         }
 
-        this.setMessage(message);
+        this.setMessage(msg);
 
-        if (!message.equals("A playlist with the same name already exists.")) {
-            user.addPlaylistToList(this.getPlaylist());
+        if (!msg.equals("A playlist with the same name already exists.")) {
+            currUser.addPlaylistToList(this.getPlaylist());
             everyPlaylist.add(this.getPlaylist());
         }
 
     }
 
-
+    /**
+     * accepts a visitor for the command
+     * @param visitor the visitor
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
+
+    /**
+     * constructor for the command CreatePlayList
+     * @param input the input given
+     */
     public CreatePlayList(final SearchBar input) {
 
         this.command = input.getCommand();
@@ -58,7 +72,6 @@ public class CreatePlayList implements Command {
 
         this.playlist = new Playlist(input.getPlaylistName(), user);
     }
-
 
     /**
      * @return the command
@@ -103,8 +116,11 @@ public class CreatePlayList implements Command {
         return message;
     }
 
-
-    public void setMessage(String message) {
+    /**
+     * sets the message
+     * @param message the message to set
+     */
+    public void setMessage(final String message) {
         this.message = message;
     }
 

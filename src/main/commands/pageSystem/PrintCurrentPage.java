@@ -4,183 +4,249 @@ import main.Command;
 import main.CommandVisitor;
 import main.SearchBar;
 import main.users.User;
-import main.commands.types.*;
+import main.commands.types.Song;
+import main.commands.types.Playlist;
+import main.commands.types.Album;
+import main.commands.types.Merch;
+import main.commands.types.Event;
+import main.commands.types.Podcast;
+import main.commands.types.Episode;
+import main.commands.types.Announcement;
 import main.users.Artist;
 import main.users.Host;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class PrintCurrentPage implements Command {
-
+public final class PrintCurrentPage implements Command {
     private final String user;
     private final String command;
     private final int timestamp;
     private String message;
 
-    public void execute(final User user, final ArrayList<Artist> artists, final ArrayList<Host> hosts) {
-        this.setPrintCurrPage(user, artists, hosts);
+    private static final int MAX_RESULTS = 5;
+
+    /**
+     * executes the command
+     * calls the setPrintCurrPage method
+     */
+    public void execute(final User currUser, final ArrayList<Artist> artists,
+                        final ArrayList<Host> hosts) {
+        this.setPrintCurrPage(currUser, artists, hosts);
     }
 
-    public void setPrintCurrPage(User user, ArrayList<Artist> artists, ArrayList<Host> hosts) {
+    /**
+     * sets the message to be printed for the current page
+     *
+     * @param currUser the current user
+     * @param artists the list of artists
+     * @param hosts the list of hosts
+     */
+    public void setPrintCurrPage(final User currUser, final ArrayList<Artist> artists,
+                                 final ArrayList<Host> hosts) {
 
-//        if the user is offline
-        if (!user.getOnline()) {
-            this.message = this.user + " is offline.";
+//        if the currUser is offline
+        if (!currUser.getOnline()) {
+            this.setMessage(this.user + " is offline.");
             return;
         }
 
 //        if the current page is Home
-        if (user.getCurrentPage().equals("Home")) {
+        if (currUser.getCurrentPage().equals("Home")) {
+            printHome(currUser);
 
-            ArrayList<String> likedSongs = new ArrayList<>();
-            ArrayList<String> followedPlaylists = new ArrayList<>();
-
-
-            ArrayList<Song> sortedSongsByNoLikes = new ArrayList<>(user.getLikedSongs());
-
-            sortedSongsByNoLikes.sort(Comparator.comparingInt(Song::getNumberOfLikes).reversed());
-
-
-            int i = 0;
-            for (Song song : sortedSongsByNoLikes) {
-                likedSongs.add(song.getName());
-
-                i++;
-                if (i == 5) {
-                    break;
-                }
-            }
-            for (Playlist playlist : user.getFollowedPlaylists()) {
-                followedPlaylists.add(playlist.getName());
-            }
-
-            this.message = "Liked songs:\n\t" + likedSongs + "\n\n"
-                    + "Followed playlists:\n\t" + followedPlaylists;
 //          if the current page is LikedContent
-        } else if (user.getCurrentPage().equals("LikedContent")) {
+        } else if (currUser.getCurrentPage().equals("LikedContent")) {
+            printLikedContent(currUser);
 
-            StringBuilder likedSongs = new StringBuilder();
-
-            for (Song song : user.getLikedSongs()) {
-                likedSongs.append(song.getName())
-                        .append(" - ")
-                        .append(song.getArtist());
-
-                if (user.getLikedSongs().indexOf(song) != user.getLikedSongs().size() - 1) {
-                    likedSongs.append(", ");
-                }
-            }
-
-
-            StringBuilder followedPlaylists = new StringBuilder();
-            for (Playlist playlist : user.getFollowedPlaylists()) {
-                followedPlaylists.append(playlist.getName())
-                        .append(" - ")
-                        .append(playlist.getUser());
-
-                if (user.getFollowedPlaylists().indexOf(playlist) != user.getFollowedPlaylists().size() - 1) {
-                    followedPlaylists.append(", ");
-                }
-            }
-
-
-            this.message = "Liked songs:\n\t[" + likedSongs + "]\n\n"
-                    + "Followed playlists:\n\t[" + followedPlaylists + "]";
 //          if the current page is Artist
-        } else if (user.getCurrentPage().equals("Artist")) {
-            Artist currentArtist = null;
-            for (Artist artist : artists) {
-                if (artist.getUsername().equals(user.getSelectedPageOwner())) {
-                    currentArtist = artist;
-                    break;
-                }
-            }
+        } else if (currUser.getCurrentPage().equals("Artist")) {
+            printArtist(currUser, artists);
 
-            ArrayList<String> albumsByName = new ArrayList<>();
-            StringBuilder merchByName = new StringBuilder();
-            StringBuilder eventsBuilder = new StringBuilder();
-
-            for (Album album : currentArtist.getAlbums()) {
-                albumsByName.add(album.getName());
-            }
-            for (Merch merch : currentArtist.getMerchandise()) {
-                merchByName.append(merch.getName())
-                        .append(" - ")
-                        .append(merch.getPrice())
-                        .append(":\n\t")
-                        .append(merch.getDescription());
-
-                if (currentArtist.getMerchandise().indexOf(merch) != currentArtist.getMerchandise().size() - 1) {
-                    merchByName.append(", ");
-                }
-            }
-
-            for (Event event : currentArtist.getEvents()) {
-                // if it's the last event -> to avoid the ", " at the end of the last event
-                eventsBuilder.append(event.getName())
-                        .append(" - ")
-                        .append(event.getDate())
-                        .append(":\n\t")
-                        .append(event.getDescription());
-
-                if (currentArtist.getEvents().indexOf(event) != currentArtist.getEvents().size() - 1) {
-                    eventsBuilder.append(", ");
-                }
-            }
-
-            this.message = "Albums:\n\t" + albumsByName + "\n\n"
-                    + "Merch:\n\t[" + merchByName + "]\n\n"
-                    + "Events:\n\t[" + eventsBuilder.toString() + "]";
 //          if the current page is Host
-        } else if (user.getCurrentPage().equals("Host")) {
-            Host currentHost = null;
-            for (Host host : hosts) {
-                if (host.getUsername().equals(user.getSelectedPageOwner())) {
-                    currentHost = host;
-                    break;
-                }
+        } else if (currUser.getCurrentPage().equals("Host")) {
+            printHost(currUser, hosts);
+        }
+    }
+
+    /**
+     * prints the home page of the user (liked songs and followed playlists)
+     * @param currUser the current user
+     */
+    private void printHome(final User currUser) {
+
+        ArrayList<String> likedSongs = new ArrayList<>();
+        ArrayList<String> followedPlaylists = new ArrayList<>();
+
+
+        ArrayList<Song> sortedSongsByNoLikes = new ArrayList<>(currUser.getLikedSongs());
+
+        sortedSongsByNoLikes.sort(Comparator.comparingInt(Song::getNumberOfLikes).reversed());
+
+
+        int i = 0;
+        for (Song song : sortedSongsByNoLikes) {
+            likedSongs.add(song.getName());
+
+            i++;
+            if (i == MAX_RESULTS) {
+                break;
             }
-
-            StringBuilder podcastsByName = new StringBuilder();
-            StringBuilder announcementsByName = new StringBuilder();
-
-            for (Podcast podcast : currentHost.getHostPodcasts()) {
-                podcastsByName.append(podcast.getName())
-                        .append(":\n\t[");
-
-                for (Episode episode : podcast.getEpisodesList()) {
-                    podcastsByName.append(episode.getName())
-                            .append(" - ")
-                            .append(episode.getDescription());
-
-                    if (podcast.getEpisodesList().indexOf(episode) != podcast.getEpisodes().size() - 1) {
-                        podcastsByName.append(", ");
-                    }
-                }
-
-                if (currentHost.getHostPodcasts().indexOf(podcast) != currentHost.getHostPodcasts().size() - 1) {
-                    podcastsByName.append("]\n, ");
-                }
-            }
-            podcastsByName.append("]");
-
-            for (Announcement announcement : currentHost.getAnnouncements()) {
-                announcementsByName.append(announcement.getName())
-                        .append(":\n\t")
-                        .append(announcement.getDescription())
-                        .append("\n");
-
-                if (currentHost.getAnnouncements().indexOf(announcement) != currentHost.getAnnouncements().size() - 1) {
-                    announcementsByName.append(", ");
-                }
-            }
-
-            this.message = "Podcasts:\n\t[" + podcastsByName + "\n]\n\n"
-                    + "Announcements:\n\t[" + announcementsByName + "]";
+        }
+        for (Playlist playlist : currUser.getFollowedPlaylists()) {
+            followedPlaylists.add(playlist.getName());
         }
 
+        this.message = "Liked songs:\n\t" + likedSongs + "\n\n"
+                + "Followed playlists:\n\t" + followedPlaylists;
     }
+
+    /**
+     * prints the liked content of the user (liked songs and followed playlists)
+     * @param currUser the current user
+     */
+    private void printLikedContent(final User currUser) {
+
+        StringBuilder likedSongs = new StringBuilder();
+
+        for (Song song : currUser.getLikedSongs()) {
+            likedSongs.append(song.getName())
+                    .append(" - ")
+                    .append(song.getArtist());
+
+            if (currUser.getLikedSongs().indexOf(song) != currUser.getLikedSongs().size() - 1) {
+                likedSongs.append(", ");
+            }
+        }
+
+        StringBuilder followedPlaylists = new StringBuilder();
+        for (Playlist playlist : currUser.getFollowedPlaylists()) {
+            followedPlaylists.append(playlist.getName())
+                    .append(" - ")
+                    .append(playlist.getUser());
+
+            if (currUser.getFollowedPlaylists().indexOf(playlist)
+                    != currUser.getFollowedPlaylists().size() - 1) {
+                followedPlaylists.append(", ");
+            }
+        }
+
+        this.message = "Liked songs:\n\t[" + likedSongs + "]\n\n"
+                + "Followed playlists:\n\t[" + followedPlaylists + "]";
+    }
+
+    /**
+     * prints the artist page of the user (albums, merchandise and events)
+     *
+     * @param currUser the current user
+     * @param artists the list of artists
+     */
+    private void printArtist(final User currUser, final ArrayList<Artist> artists) {
+
+        Artist currentArtist = null;
+        for (Artist artist : artists) {
+            if (artist.getUsername().equals(currUser.getSelectedPageOwner())) {
+                currentArtist = artist;
+                break;
+            }
+        }
+
+        ArrayList<String> albumsByName = new ArrayList<>();
+        StringBuilder merchByName = new StringBuilder();
+        StringBuilder eventsBuilder = new StringBuilder();
+
+        for (Album album : currentArtist.getAlbums()) {
+            albumsByName.add(album.getName());
+        }
+        for (Merch merch : currentArtist.getMerchandise()) {
+            merchByName.append(merch.getName())
+                    .append(" - ")
+                    .append(merch.getPrice())
+                    .append(":\n\t")
+                    .append(merch.getDescription());
+
+            if (currentArtist.getMerchandise().indexOf(merch)
+                    != currentArtist.getMerchandise().size() - 1) {
+                merchByName.append(", ");
+            }
+        }
+
+        for (Event event : currentArtist.getEvents()) {
+            // if it's the last event -> to avoid the ", " at the end of the last event
+            eventsBuilder.append(event.getName())
+                    .append(" - ")
+                    .append(event.getDate())
+                    .append(":\n\t")
+                    .append(event.getDescription());
+
+            if (currentArtist.getEvents().indexOf(event)
+                    != currentArtist.getEvents().size() - 1) {
+                eventsBuilder.append(", ");
+            }
+        }
+
+        this.message = "Albums:\n\t" + albumsByName + "\n\n"
+                + "Merch:\n\t[" + merchByName + "]\n\n"
+                + "Events:\n\t[" + eventsBuilder.toString() + "]";
+    }
+
+    /**
+     * prints the host page of the user (podcasts and announcements)
+     *
+     * @param currUser the current user
+     * @param hosts the list of hosts
+     */
+    private void printHost(final User currUser, final ArrayList<Host> hosts) {
+
+        Host currentHost = null;
+        for (Host host : hosts) {
+            if (host.getUsername().equals(currUser.getSelectedPageOwner())) {
+                currentHost = host;
+                break;
+            }
+        }
+
+        StringBuilder podcastsByName = new StringBuilder();
+        StringBuilder announcementsByName = new StringBuilder();
+
+        for (Podcast podcast : currentHost.getHostPodcasts()) {
+            podcastsByName.append(podcast.getName())
+                    .append(":\n\t[");
+
+            for (Episode episode : podcast.getEpisodesList()) {
+                podcastsByName.append(episode.getName())
+                        .append(" - ")
+                        .append(episode.getDescription());
+
+                if (podcast.getEpisodesList().indexOf(episode)
+                        != podcast.getEpisodes().size() - 1) {
+                    podcastsByName.append(", ");
+                }
+            }
+
+            if (currentHost.getHostPodcasts().indexOf(podcast)
+                    != currentHost.getHostPodcasts().size() - 1) {
+                podcastsByName.append("]\n, ");
+            }
+        }
+        podcastsByName.append("]");
+
+        for (Announcement announcement : currentHost.getAnnouncements()) {
+            announcementsByName.append(announcement.getName())
+                    .append(":\n\t")
+                    .append(announcement.getDescription())
+                    .append("\n");
+
+            if (currentHost.getAnnouncements().indexOf(announcement)
+                    != currentHost.getAnnouncements().size() - 1) {
+                announcementsByName.append(", ");
+            }
+        }
+
+        this.message = "Podcasts:\n\t[" + podcastsByName + "\n]\n\n"
+                + "Announcements:\n\t[" + announcementsByName + "]";
+    }
+
 
     public PrintCurrentPage(final SearchBar input) {
         this.user = input.getUsername();
@@ -188,28 +254,52 @@ public class PrintCurrentPage implements Command {
         this.timestamp = input.getTimestamp();
     }
 
-
+    /**
+     * accepts the visitor for the visitor pattern
+     * @param visitor the visitor
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
+    /**
+     * get the user
+     * @return the user
+     */
     public String getUser() {
         return user;
     }
+
+    /**
+     * gets the command
+     * @return the command
+     */
     public String getCommand() {
         return command;
     }
 
+    /**
+     * gets the timestamp
+     * @return the timestamp
+     */
     public int getTimestamp() {
         return timestamp;
     }
 
+    /**
+     * gets the message
+     * @return the message
+     */
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    /**
+     * sets the message
+     * @param message the message
+     */
+    public void setMessage(final String message) {
         this.message = message;
     }
 }

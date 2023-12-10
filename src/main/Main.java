@@ -178,7 +178,6 @@ public final class Main {
         ArrayList<Artist> everyArtist = new ArrayList<>();
         ArrayList<Host> everyHost = new ArrayList<>();
 
-
 //        creating the executor
         ConcreteCommandVisitor executor = new ConcreteCommandVisitor();
 

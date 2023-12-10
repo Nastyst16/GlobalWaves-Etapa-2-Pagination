@@ -73,7 +73,7 @@ public final class Load implements Command {
 
 //          if the last command was select
         if (currUser.getCurrentSelect() != null) {
-//          if the last selection was sucesfull we can do the load
+//          if the last selection was successful we can do the load
 //          boolean selectSuccessful = currentSelect.getMessage().contains("Successfully");
         boolean selectSuccessful = currUser.getCurrentSelect().
                 getMessage().contains("Successfully");
@@ -109,7 +109,12 @@ public final class Load implements Command {
     currUser.setCurrentSelect(null);
 }
 
-
+    /**
+     * this method loads a playlist
+     * when load it is important to deep-copy the playlist
+     * @param currUser the current user
+     * @param everyPlaylist every playlist
+     */
     public void loadPlaylist(final User currUser, final ArrayList<Playlist> everyPlaylist) {
         for (Playlist playlist : everyPlaylist) {
             if (playlist.getName().equals(currUser.
@@ -140,7 +145,12 @@ public final class Load implements Command {
         }
     }
 
-
+    /**
+     * this method loads an album
+     * when load it is important to deepcopy the album
+     * @param currUser the current user
+     * @param everyAlbum every album
+     */
     public void loadAlbum(final User currUser, final ArrayList<Album> everyAlbum) {
 //         albums
         for (Album album : everyAlbum) {
@@ -171,6 +181,10 @@ public final class Load implements Command {
         }
     }
 
+    /**
+     * this method loads a song
+     * @param currUser the current user
+     */
     public void loadSong(final User currUser) {
         for (Song song : currUser.getEverySong()) {
             if (song.getName().equals(currUser.
@@ -189,7 +203,14 @@ public final class Load implements Command {
         }
     }
 
-
+    /**
+     * this method loads a podcast
+     * verifying if the podcast was already played
+     * if it was played it loads the last episode watched
+     * if it wasn't played it loads the first episode
+     * @param currUser the current user
+     * @param podcasts every podcast
+     */
     public void loadPodcast(final User currUser, final ArrayList<Podcast> podcasts) {
 
         for (Podcast podcast : podcasts) {
@@ -258,7 +279,7 @@ public final class Load implements Command {
     }
 
     /**
-     * preparing stats for load
+     * preparing stats for user
      * @param currUser the current user
      */
     public void preparingStats(final User currUser) {

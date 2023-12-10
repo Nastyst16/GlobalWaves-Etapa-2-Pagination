@@ -298,7 +298,7 @@ public class ConcreteCommandVisitor implements CommandVisitor {
      */
     @Override
     public void visit(final AddAlbum addAlbum) {
-        addAlbum.execute(user, artist, host, songs, users, artists, albums);
+        addAlbum.execute(user, artist, host, songs, albums, users);
     }
 
     /**
@@ -354,7 +354,7 @@ public class ConcreteCommandVisitor implements CommandVisitor {
      */
     @Override
     public void visit(final AddPodcast addPodcast) {
-        addPodcast.execute(user, artist, host, users, podcasts, hosts);
+        addPodcast.execute(user, artist, host, users, podcasts);
     }
 
     /**
@@ -394,7 +394,7 @@ public class ConcreteCommandVisitor implements CommandVisitor {
      */
     @Override
     public void visit(final RemovePodcast removePodcast) {
-        removePodcast.execute(user, artist, host, users, songs, podcasts);
+        removePodcast.execute(user, artist, host, users, podcasts);
     }
 
     /**
@@ -402,7 +402,7 @@ public class ConcreteCommandVisitor implements CommandVisitor {
      */
     @Override
     public void visit(final RemoveEvent removeEvent) {
-        removeEvent.execute(user, artist, host, users);
+        removeEvent.execute(user, artist, host);
     }
 
     /**

@@ -11,7 +11,7 @@ import main.users.User;
  * Represents a command to add or remove a song in a playlist.
  * Implements the {@link Command} interface for execution.
  */
-public class AddRemoveInPlaylist implements Command {
+public final class AddRemoveInPlaylist implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
@@ -20,21 +20,26 @@ public class AddRemoveInPlaylist implements Command {
 
 
     /**
-     * Execute the command
+     * Executes the command to add or remove a song in a playlist.
+     * calls the setMessage method to set the message based on the execution of the command.
      */
-    public void execute(final SearchBar input, final User user) {
+    public void execute(final SearchBar input, final User currUser) {
 //        setting message
-        this.setMessage(user, input.getPlaylistId());
+        this.setMessage(currUser, input.getPlaylistId());
     }
 
+    /**
+     * Accepts a visitor to this command
+     * and calls the visit method of the visitor.
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
     /**
-     * Constructs an {@code AddRemoveInPlaylist} object with the specified parameters.
-     * @param input The input {@code SearchBar} object.
+     * constructor for the AddRemoveInPlaylist class
+     * @param input the input from the user
      */
     public AddRemoveInPlaylist(final SearchBar input) {
         this.command = input.getCommand();
@@ -43,44 +48,41 @@ public class AddRemoveInPlaylist implements Command {
         this.playlistId = input.getPlaylistId();
     }
 
-
     /**
      * Sets the message based on the execution of the command.
      *
-     * @param user The current user issuing the command.
+     * @param currUser The current user issuing the command.
      * @param index       The index of the playlist in the user's playlist list.
      */
-    public void setMessage(final User user, final int index) {
+    public void setMessage(final User currUser, final int index) {
 
-//        if the user is offline
-        if (!user.getOnline()) {
+//        if the currUser is offline
+        if (!currUser.getOnline()) {
             this.message = this.user + " is offline.";
             return;
         }
 
-        if (user.getTypeLoaded() == 1) {
+        if (currUser.getTypeLoaded() == 1) {
             this.message = "The loaded source is not a song.";
             return;
         }
 
-        if (user.getCurrentType() == null) {
+        if (currUser.getCurrentType() == null) {
             this.message = "Please load a source before adding to or removing from the playlist.";
         } else {
-            if (index > user.getPlayListList().size()) {
+            if (index > currUser.getPlayListList().size()) {
                 this.message = "The specified playlist does not exist.";
             } else {
-                if (user.getTypeSelected() == 2
-                        || user.getTypeSelected() == 1) {
+                if (currUser.getTypeSelected() == 2
+                        || currUser.getTypeSelected() == 1) {
                     this.message = "The loaded source is not a song.";
                 } else {
-                    this.message = user.getPlayListList().get(index - 1).
-                            addRemoveSong((Song) user.getCurrentType());
+                    this.message = currUser.getPlayListList().get(index - 1).
+                            addRemoveSong((Song) currUser.getCurrentType());
                 }
             }
         }
     }
-
-
 
     /**
      * Gets the command string associated with this {@code AddRemoveInPlaylist} instance.

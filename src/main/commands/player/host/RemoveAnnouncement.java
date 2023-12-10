@@ -6,7 +6,7 @@ import main.CommandVisitor;
 import main.SearchBar;
 import main.users.Host;
 
-public class RemoveAnnouncement implements Command {
+public final class RemoveAnnouncement implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
@@ -14,12 +14,19 @@ public class RemoveAnnouncement implements Command {
     private final String name;
     private String message;
 
-    public void execute(Host host) {
+    /**
+     * execute method for visitor pattern
+     * @param host the host
+     */
+    public void execute(final Host host) {
         removeAnnouncement(host);
     }
 
-
-    public void removeAnnouncement(Host host) {
+    /**
+     * method that removes an announcement
+     * @param host the host
+     */
+    public void removeAnnouncement(final Host host) {
 
 //        verifying if the host exists
         if (host == null) {
@@ -40,41 +47,70 @@ public class RemoveAnnouncement implements Command {
 
     }
 
-
-    public RemoveAnnouncement(SearchBar input) {
+    /**
+     * constructor with parameters for RemoveAnnouncement
+     * @param input the input
+     */
+    public RemoveAnnouncement(final SearchBar input) {
         this.command = input.getCommand();
         this.user = input.getUsername();
         this.timestamp = input.getTimestamp();
         this.name = input.getName();
     }
 
-
-    public void accept(CommandVisitor commandVisitor) {
+    /**
+     * accept method for visitor pattern
+     * @param commandVisitor the command visitor
+     */
+    public void accept(final CommandVisitor commandVisitor) {
         commandVisitor.visit(this);
     }
 
-
+    /**
+     * getter for the command
+     * @return the command
+     */
     public String getCommand() {
         return command;
     }
 
+    /**
+     * getter for the user
+     * @return the user
+     */
     public String getUser() {
         return user;
     }
 
+    /**
+     * getter for the timestamp
+     * @return the timestamp
+     */
     public int getTimestamp() {
         return timestamp;
     }
 
+    /**
+     * getter for the name
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * getter for the message
+     * @return the message
+     */
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    /**
+     * setter for the message
+     * @param message the message
+     */
+    public void setMessage(final String message) {
         this.message = message;
     }
 }

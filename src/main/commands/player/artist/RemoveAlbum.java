@@ -14,7 +14,7 @@ import main.users.Host;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class RemoveAlbum implements Command {
+public final class RemoveAlbum implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
@@ -22,25 +22,36 @@ public class RemoveAlbum implements Command {
     private final String name;
     private String message;
 
-
-    public void execute(User user, Artist artist, Host host, ArrayList<User> users,
-                        ArrayList<Song> songs, ArrayList<Album> albums) {
-        this.setRemoveAlbum(user, artist, host, users, songs, albums);
+    /**
+     * executes the RemoveAlbum command
+     */
+    public void execute(final User currUser, final Artist artist, final Host host,
+                        final ArrayList<User> users, final ArrayList<Song> songs,
+                        final ArrayList<Album> albums) {
+        this.setRemoveAlbum(currUser, artist, host, users, songs, albums);
     }
 
+    /**
+     * sets the message of the RemoveAlbum command
+     * @param currUser the current user
+     * @param artist the artist
+     * @param host the host
+     * @param users the list of users
+     * @param songs the list of songs
+     * @param albums the list of albums
+     */
+    public void setRemoveAlbum(final User currUser, final Artist artist, final Host host,
+                               final ArrayList<User> users, final ArrayList<Song> songs,
+                               final ArrayList<Album> albums) {
 
-    public void setRemoveAlbum(User user, Artist artist, Host host, ArrayList<User> users,
-                               ArrayList<Song> songs, ArrayList<Album> albums) {
 
-
-        if (user != null || host != null) {
-            this.message = this.user + " is not an artist.";
+        if (currUser != null || host != null) {
+            this.setMessage(this.user + " is not an artist.");
             return;
         } else if (artist == null) {
-            this.message = "The username " + this.user + " doesn't exist.";
+            this.setMessage("The username " + this.user + " doesn't exist.");
             return;
         }
-
 
 //        verifying if the album exists
         Album albumToRemove = null;
@@ -70,7 +81,8 @@ public class RemoveAlbum implements Command {
                 for (Song s : currentUser.getCurrentPlaylist().getSongList()) {
 
                     for (Song albumSong : albumToRemove.getAlbumSongs()) {
-                        if (s.getName().equals(albumSong.getName()) && s.getAlbum().equals(albumSong.getAlbum())) {
+                        if (s.getName().equals(albumSong.getName())
+                                && s.getAlbum().equals(albumSong.getAlbum())) {
                             this.setMessage(this.user + " can't delete this album.");
                             return;
                         }
@@ -97,7 +109,8 @@ public class RemoveAlbum implements Command {
                         while (iterator.hasNext()) {
                             Song song = iterator.next();
                             for (Song albumSong : album.getAlbumSongs()) {
-                                if (song.getName().equals(albumSong.getName()) && song.getAlbum().equals(albumSong.getAlbum())) {
+                                if (song.getName().equals(albumSong.getName())
+                                        && song.getAlbum().equals(albumSong.getAlbum())) {
                                     iterator.remove();
                                     playlist.getSongs().remove(song.getName());
 
@@ -105,55 +118,79 @@ public class RemoveAlbum implements Command {
                                 }
                             }
                         }
-
                     }
-
                 }
-
                 break;
             }
         }
-
         this.setMessage(this.user + " deleted the album successfully.");
-
-
     }
 
-
-    public RemoveAlbum(SearchBar input) {
+    /**
+     * constructor for the RemoveAlbum command
+     * @param input the input given by the user
+     */
+    public RemoveAlbum(final SearchBar input) {
         this.command = input.getCommand();
         this.user = input.getUsername();
         this.timestamp = input.getTimestamp();
         this.name = input.getName();
     }
 
-
+    /**
+     * accepts a visitor for the command
+     * @param visitor the visitor
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
+    /**
+     * gets the message of the command
+     * @return the message
+     */
     public String getCommand() {
         return command;
     }
 
+    /**
+     * gets the user of the command
+     * @return the user
+     */
     public String getUser() {
         return user;
     }
 
+    /**
+     * gets the message of the command
+     * @return the message
+     */
     public int getTimestamp() {
         return timestamp;
     }
 
+    /**
+     * gets the name of the event
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * gets the message of the command
+     * @return the message
+     */
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    /**
+     * sets the message of the command
+     * @param message the message
+     */
+    public void setMessage(final String message) {
         this.message = message;
     }
 }

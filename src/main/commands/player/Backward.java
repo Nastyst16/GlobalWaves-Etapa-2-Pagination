@@ -5,24 +5,26 @@ import main.CommandVisitor;
 import main.SearchBar;
 import main.users.User;
 
-public class Backward implements Command {
+public final class Backward implements Command {
     private final String command;
     private final String user;
     private final int timestamp;
     private String message;
     private static final int SECONDS_TO_FORWARD = 90;
 
-
     /**
      * Executes the command.
      */
-    public void execute(final User user) {
-
-        this.setBackward(user);
+    public void execute(final User currUser) {
+        this.setBackward(currUser);
     }
 
+    /**
+     * Accepts a visitor for the command.
+     * @param visitor The visitor to accept.
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
@@ -38,30 +40,28 @@ public class Backward implements Command {
 
     /**
      * goes back 90 seconds in the current track
-     * @param user the current user
+     * @param currUser the current user
      */
-    public void setBackward(final User user) {
+    public void setBackward(final User currUser) {
 
-//        if the user is offline
-        if (user.getOnline() == false) {
-            this.message = this.user + " is offline.";
+//        if the currUser is offline
+        if (!currUser.getOnline()) {
+            this.setMessage(this.user + " is offline.");
             return;
         }
 
-        if (user.getTypeLoaded() != 1) {
-            this.message = "The loaded source is not a podcast.";
+        if (currUser.getTypeLoaded() != 1) {
+            this.setMessage("The loaded source is not a podcast.");
             return;
         }
-        if (user.getCurrentType() == null) {
-            this.message = "Please load a source before returning to the previous track.";
+        if (currUser.getCurrentType() == null) {
+            this.setMessage("Please load a source before returning to the previous track.");
             return;
         }
-        user.getCurrentType().setSecondsGone(user.
+        currUser.getCurrentType().setSecondsGone(currUser.
                 getCurrentType().getSecondsGone() - SECONDS_TO_FORWARD);
-        this.message = "Rewound successfully.";
+        this.setMessage("Rewound successfully.");
     }
-
-
 
     /**
      * Gets the command string.

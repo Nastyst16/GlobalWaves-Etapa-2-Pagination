@@ -12,7 +12,7 @@ import main.users.Host;
 
 import java.util.ArrayList;
 
-public class AddPodcast implements Command {
+public final class AddPodcast implements Command {
 
     private final String command;
     private final String user;
@@ -23,13 +23,24 @@ public class AddPodcast implements Command {
     private final ArrayList<Episode> episodes;
     private String message;
 
-
-    public void execute(User user, Artist artist, Host host, ArrayList<User> users, ArrayList<Podcast> everyPodcast,
-                            ArrayList<Host> hosts) {
-        addPodcast(user, artist, host, users, everyPodcast, hosts);
+    /**
+     * execute method for visitor pattern
+     * @param currUser the current user
+     * @param artist the artist
+     * @param host the host
+     * @param users the users
+     * @param everyPodcast every podcast
+     */
+    public void execute(final User currUser, final Artist artist, final Host host,
+                        final ArrayList<User> users, final ArrayList<Podcast> everyPodcast) {
+        addPodcast(currUser, artist, host, users, everyPodcast);
     }
 
-    public AddPodcast(SearchBar input) {
+    /**
+     * constructor with parameters for AddPodcast
+     * @param input the input
+     */
+    public AddPodcast(final SearchBar input) {
         this.command = input.getCommand();
         this.user = input.getUsername();
         this.timestamp = input.getTimestamp();
@@ -37,28 +48,34 @@ public class AddPodcast implements Command {
         this.episodes = input.getEpisodes();
     }
 
-    public void addPodcast(User user, Artist artist, Host host, ArrayList<User> users, ArrayList<Podcast> everyPodcast,
-                           ArrayList<Host> hosts) {
+    /**
+     * method that adds a podcast
+     * @param currUser the user
+     * @param artist the artist
+     * @param host the host
+     * @param users the users
+     * @param everyPodcast every podcast
+     */
+    public void addPodcast(final User currUser, final Artist artist, final Host host,
+                           final ArrayList<User> users, final ArrayList<Podcast> everyPodcast) {
 
-        if (user != null || artist != null) {
-            this.message = this.user + " is not a host.";
+        if (currUser != null || artist != null) {
+            this.setMessage(this.user + " is not a host.");
             return;
         } else if (host == null) {
-            this.message = "The username " + this.user + " doesn't exist.";
+            this.setMessage("The username " + this.user + " doesn't exist.");
             return;
         }
-
 
 //        verifying if the podcast already exists
         for (Podcast podcast : everyPodcast) {
             if (podcast.getName().equals(this.name)) {
-                this.message = this.user + " has another podcast with the same name.";
+                this.setMessage(this.user + " has another podcast with the same name.");
                 return;
             }
         }
 
 //        adding the podcast
-
         everyPodcast.add(new Podcast(this.name, this.user, this.episodes));
         host.getHostPodcasts().add(new Podcast(this.name, this.user, this.episodes));
 
@@ -77,43 +94,71 @@ public class AddPodcast implements Command {
 
         }
 
-
-
-
         this.setMessage(this.user + " has added new podcast successfully.");
     }
 
-
+    /**
+     * accept method for visitor pattern
+     * @param visitor the command visitor
+     */
     @Override
-    public void accept(CommandVisitor visitor) {
+    public void accept(final CommandVisitor visitor) {
         visitor.visit(this);
     }
 
+    /**
+     * getter for the command
+     * @return the command
+     */
     public String getCommand() {
         return command;
     }
 
+    /**
+     * getter for the user
+     * @return the user
+     */
     public String getUser() {
         return user;
     }
 
+    /**
+     * getter for the timestamp
+     * @return the timestamp
+     */
     public int getTimestamp() {
         return timestamp;
     }
 
+    /**
+     * getter for the name
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * getter for the episodes
+     * @return the episodes
+     */
     public ArrayList<Episode> getEpisodes() {
         return episodes;
     }
 
+    /**
+     * getter for the message
+     * @return the message
+     */
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    /**
+     * setter for the message
+     * @param message the message
+     */
+    public void setMessage(final String message) {
         this.message = message;
     }
 }

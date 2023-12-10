@@ -44,11 +44,12 @@ public final class Repeat implements Command {
     /**
      * Sets the repeat status of the current user
      * @param currUser the current user
-     * @param repeatStatus the current repeat status
+     * @param repStatus the current repeat status
      * @param typeLoaded the type of source loaded
      * @return the new repeat status
      */
-    public int setRepeatMessage(final User currUser, int repeatStatus, final int typeLoaded) {
+    public int setRepeatMessage(final User currUser, final int repStatus, final int typeLoaded) {
+        int repeatStatus = repStatus;
 
 //        if the currUser is offline
         if (!currUser.getOnline()) {
