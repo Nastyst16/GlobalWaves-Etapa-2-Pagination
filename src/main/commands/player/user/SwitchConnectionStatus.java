@@ -8,6 +8,8 @@ import main.commands.types.Album;
 import main.commands.types.Playlist;
 import main.commands.types.Podcast;
 import main.commands.types.Song;
+import main.users.Artist;
+import main.users.Host;
 
 import java.util.ArrayList;
 
@@ -25,9 +27,15 @@ public class SwitchConnectionStatus implements Command {
         this.message = this.user + " has changed status successfully.";
     }
 
-    public void execute(final User user) {
+    public void execute(final User user, final Artist artist, final Host host) {
+
+        if (artist != null || host != null) {
+            this.setMessage(this.user + " is not a normal user.");
+            return;
+        }
+
         if (user == null) {
-            this.message = "The username " + this.user + " doesn't exist.";
+            this.setMessage("The username " + this.user + " doesn't exist.");
             return;
         }
 

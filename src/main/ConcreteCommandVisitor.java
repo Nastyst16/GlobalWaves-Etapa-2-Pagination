@@ -165,7 +165,7 @@ public class ConcreteCommandVisitor implements CommandVisitor {
 
     @Override
     public void visit(SwitchConnectionStatus switchConnectionStatus) {
-        switchConnectionStatus.execute(user);
+        switchConnectionStatus.execute(user, artist, host);
     }
 
     @Override
@@ -180,7 +180,7 @@ public class ConcreteCommandVisitor implements CommandVisitor {
 
     @Override
     public void visit(AddAlbum addAlbum) {
-        addAlbum.execute(artist, songs, users, artists, albums);
+        addAlbum.execute(user, artist, host, songs, users, artists, albums);
     }
 
     @Override
@@ -251,6 +251,11 @@ public class ConcreteCommandVisitor implements CommandVisitor {
     @Override
     public void visit(GetTop5Albums getTop5Albums) {
         getTop5Albums.execute(albums);
+    }
+
+    @Override
+    public void visit(GetTop5Artists getTop5Artists) {
+        getTop5Artists.execute(artists);
     }
 
 }

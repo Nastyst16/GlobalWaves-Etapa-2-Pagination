@@ -142,7 +142,7 @@ public class User {
 
 //            removing the song from the likedSongs
             for (Song tmp : likedSongs) {
-                if (tmp.getName().equals(song.getName())) {
+                if (tmp.getName().equals(song.getName()) && tmp.getAlbum().equals(song.getAlbum())) {
                     likedSongs.remove(tmp);
                     break;
                 }
@@ -151,7 +151,7 @@ public class User {
             song.setNumberOfLikes(song.getNumberOfLikes() - 1);
 
             for (Song tmp : songs) {
-                if (tmp.getName().equals(song.getName())) {
+                if (tmp.getName().equals(song.getName()) && tmp.getAlbum().equals(song.getAlbum())) {
                     tmp.setNumberOfLikes(tmp.getNumberOfLikes() - 1);
                     break;
                 }
@@ -159,11 +159,14 @@ public class User {
             return false;
 
         } else {
-            this.likedSongs.add(song);
-            song.setNumberOfLikes(song.getNumberOfLikes() + 1);
+
+
+//            this.likedSongs.add(song);
+//            song.setNumberOfLikes(song.getNumberOfLikes() + 1);
 
             for (Song tmp : songs) {
-                if (tmp.getName().equals(song.getName())) {
+                if (tmp.getName().equals(song.getName()) && tmp.getAlbum().equals(song.getAlbum())) {
+                    this.likedSongs.add(tmp);
                     tmp.setNumberOfLikes(tmp.getNumberOfLikes() + 1);
                     break;
                 }
@@ -253,7 +256,7 @@ public class User {
                 if (user.getCurrentPlaylist().getSongList().get(index).
                         getName().equals(user.getSelectedName())) {
                     currentType = user.getCurrentPlaylist().getSongList().get(0);
-                    currentType.setSecondsGone(currentType.getDuration() + user.getRemainingTime());
+                    currentType.setSecondsGone(currentType.getDuration() + currentType.getSecondsGone());
                 }
             }
         }
@@ -270,9 +273,8 @@ public class User {
                 int indexEpisode = user.getCurrentPodcast().getLastRemainingEpisode();
 
 
-
 //                if it is the last episode in podcast
-                if (user.getCurrentPodcast().getEpisodesList().size() - 1 == indexEpisode) {
+                if (user.getCurrentPodcast().getEpisodesList().size() == indexEpisode) {
 
                     user.setCurrentType(null);
                     user.setCurrentPodcast(null);
@@ -307,7 +309,7 @@ public class User {
                 Song lastSong = user.getCurrentPlaylist().getSongList().get(index);
 
 //                if it is the last song in playlist
-                if (lastSong.getName().equals(currentType.getName())) {
+                if (lastSong.getName().equals(currentType.getName()) && !user.isShuffle()) {
 
                     if (user.getRepeatStatus() == 0) {
                         user.setCurrentType(null);
@@ -365,6 +367,7 @@ public class User {
                     nextShuffledIndex = user.getShuffledIndices().get(nextShuffledIndex);
 
                     newSong = user.getCurrentPlaylist().getSongList().get(nextShuffledIndex);
+
                     currentType = newSong;
 
 //                if repeat current song we wont change the currentType

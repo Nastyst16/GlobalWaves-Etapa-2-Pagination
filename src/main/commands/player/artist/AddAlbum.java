@@ -7,6 +7,7 @@ import main.SearchBar;
 import main.User;
 import main.commands.types.*;
 import main.users.Artist;
+import main.users.Host;
 
 import java.util.ArrayList;
 
@@ -38,18 +39,20 @@ public class AddAlbum implements Command {
     }
 
 
-    public void execute(Artist artist, ArrayList<Song> songs, ArrayList<User> users,
+    public void execute(User user, Artist artist, Host host, ArrayList<Song> songs, ArrayList<User> users,
                         ArrayList<Artist> artists, ArrayList<Album> everyAlbum) {
 
-        this.addAlbum(artist, songs, everyAlbum, artists, users);
+        this.addAlbum(user, artist, host, songs, everyAlbum, artists, users);
     }
 
-    public void addAlbum(final Artist artist, final ArrayList<Song> everySong,
+    public void addAlbum(final User user, final Artist artist, final Host host, final ArrayList<Song> everySong,
                          final ArrayList<Album> everyAlbum, final ArrayList<Artist> artists,
                          final ArrayList<User> users) {
 
-//        verifying if the user exists
-        if (user == null) {
+        if (user != null || host != null) {
+            this.message = this.user + " is not an artist.";
+            return;
+        } else if (artist == null) {
             this.message = "The username " + this.user + " doesn't exist.";
             return;
         }

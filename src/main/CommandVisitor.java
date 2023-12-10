@@ -60,4 +60,5 @@ public interface CommandVisitor {
     void visit(RemovePodcast removePodcast);
     void visit(RemoveEvent removeEvent);
     void visit(GetTop5Albums getTop5Albums);
+    void visit(GetTop5Artists getTop5Artists);
 }

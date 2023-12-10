@@ -183,8 +183,24 @@ public class Load implements Command {
                             getCurrentSelect().getSelectedName())) {
                         user.setTypeLoaded(2);
 
-                        user.setCurrentPlaylist(album);
-                        user.setCurrentType(album.getAlbumSongs().get(0));
+
+//                        deepcopy album
+                        ArrayList<Song> songsCopy = new ArrayList<>();
+                        for (Song song : album.getAlbumSongs()) {
+                            songsCopy.add(new Song(song.getName(), song.getDuration(),
+                                    song.getAlbum(), song.getTags(), song.getLyrics(),
+                                    song.getGenre(), song.getReleaseYear(), song.getArtist()));
+                        }
+                        Album albumCopy = new Album(album.getUser(), album.getName(), album.getReleaseYear(),
+                                album.getDescription(), songsCopy);
+                        for (Song song : albumCopy.getAlbumSongs()) {
+                            song.setSecondsGone(0);
+                        }
+
+
+
+                        user.setCurrentPlaylist(albumCopy);
+                        user.setCurrentType(albumCopy.getAlbumSongs().get(0));
                         user.setRemainingTime(user.getCurrentType().getDuration());
                         user.getCurrentType().setSecondsGone(0);
 

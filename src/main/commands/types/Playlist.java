@@ -62,12 +62,33 @@ public class Playlist {
     public String addRemoveSong(final Song currentSong) {
 
         String message;
-        if (songList.contains(currentSong)) {
-            songList.remove(currentSong);
+
+        boolean exists = false;
+        for (Song song : songList) {
+            if (song.getName().equals(currentSong.getName())) {
+                exists = true;
+                break;
+            }
+        }
+
+
+        if (exists) {
+            for (Song song : songList) {
+                if (song.getName().equals(currentSong.getName())) {
+                    songList.remove(song);
+                    break;
+                }
+            }
+
             songs.remove(currentSong.getName());
             message = "Successfully removed from playlist.";
         } else {
-            songList.add(currentSong);
+            Song newSong = new Song(currentSong.getName(), currentSong.getDuration(),
+                    currentSong.getAlbum(), currentSong.getTags(), currentSong.getLyrics(),
+                    currentSong.getGenre(), currentSong.getReleaseYear(), currentSong.getArtist());
+
+            songList.add(newSong);
+
             songs.add(currentSong.getName());
             message = "Successfully added to playlist.";
         }

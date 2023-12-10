@@ -10,6 +10,7 @@ import main.users.Host;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class PrintCurrentPage implements Command {
 
@@ -36,8 +37,20 @@ public class PrintCurrentPage implements Command {
             ArrayList<String> likedSongs = new ArrayList<>();
             ArrayList<String> followedPlaylists = new ArrayList<>();
 
-            for (Song song : user.getLikedSongs()) {
+
+            ArrayList<Song> sortedSongsByNoLikes = new ArrayList<>(user.getLikedSongs());
+
+            sortedSongsByNoLikes.sort(Comparator.comparingInt(Song::getNumberOfLikes).reversed());
+
+
+            int i = 0;
+            for (Song song : sortedSongsByNoLikes) {
                 likedSongs.add(song.getName());
+
+                i++;
+                if (i == 5) {
+                    break;
+                }
             }
             for (Playlist playlist : user.getFollowedPlaylists()) {
                 followedPlaylists.add(playlist.getName());
@@ -49,6 +62,7 @@ public class PrintCurrentPage implements Command {
         } else if (user.getCurrentPage().equals("LikedContent")) {
 
             StringBuilder likedSongs = new StringBuilder();
+
             for (Song song : user.getLikedSongs()) {
                 likedSongs.append(song.getName())
                         .append(" - ")

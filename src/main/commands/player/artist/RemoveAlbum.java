@@ -71,7 +71,7 @@ public class RemoveAlbum implements Command {
                 for (Song s : currentUser.getCurrentPlaylist().getSongList()) {
 
                     for (Song albumSong : albumToRemove.getAlbumSongs()) {
-                        if (s.getName().equals(albumSong.getName())) {
+                        if (s.getName().equals(albumSong.getName()) && s.getAlbum().equals(albumSong.getAlbum())) {
                             this.setMessage(this.user + " can't delete this album.");
                             return;
                         }
@@ -98,7 +98,7 @@ public class RemoveAlbum implements Command {
                         while (iterator.hasNext()) {
                             Song song = iterator.next();
                             for (Song albumSong : album.getAlbumSongs()) {
-                                if (song.getName().equals(albumSong.getName())) {
+                                if (song.getName().equals(albumSong.getName()) && song.getAlbum().equals(albumSong.getAlbum())) {
                                     iterator.remove();
                                     playlist.getSongs().remove(song.getName());
 

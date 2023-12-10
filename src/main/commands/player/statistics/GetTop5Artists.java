@@ -3,14 +3,14 @@ package main.commands.player.statistics;
 import main.Command;
 import main.CommandVisitor;
 import main.SearchBar;
+import main.commands.searchBar.Search;
 import main.commands.types.Album;
-
-import java.util.Collections;
-import java.util.Comparator;
+import main.commands.types.Song;
+import main.users.Artist;
 
 import java.util.ArrayList;
 
-public class GetTop5Albums implements Command {
+public class GetTop5Artists implements Command {
     private final String command;
     private final int timestamp;
     private final ArrayList<String> result;
@@ -18,67 +18,71 @@ public class GetTop5Albums implements Command {
 
 
 
-    public void execute(ArrayList<Album> everyAlbums) {
-        this.searchTop5Albums(everyAlbums);
+    public void execute(ArrayList<Artist> everyArtist) {
+        this.searchTop5Artists(everyArtist);
     }
 
 
-    public void searchTop5Albums(ArrayList<Album> everyAlbums) {
+    private void searchTop5Artists(ArrayList<Artist> everyArtist) {
 
-//        calculating the number of likes of every album
+//        the artist with the most liked songs
         ArrayList<Integer> numberOfLikes = new ArrayList<>();
-        for (Album album : everyAlbums) {
+
+        for (Artist artist : everyArtist) {
             int nrOfLikes = 0;
-            for (int i = 0; i < album.getSongList().size(); i++) {
-                nrOfLikes += album.getSongList().get(i).getNumberOfLikes();
+            for (Album album : artist.getAlbums()) {
+                for (Song song : album.getSongList()) {
+                    nrOfLikes += song.getNumberOfLikes();
+                }
             }
             numberOfLikes.add(nrOfLikes);
         }
 
-        ArrayList<Album> sortedAlbums = new ArrayList<>(everyAlbums);
+        ArrayList<Artist> sortedArtists = new ArrayList<>(everyArtist);
         for (int i = 0; i < numberOfLikes.size(); i++) {
             for (int j = i + 1; j < numberOfLikes.size(); j++) {
                 if (numberOfLikes.get(i) < numberOfLikes.get(j)) {
-                    Album aux = sortedAlbums.get(i);
-                    sortedAlbums.set(i, sortedAlbums.get(j));
-                    sortedAlbums.set(j, aux);
+                    Artist aux = sortedArtists.get(i);
+                    sortedArtists.set(i, sortedArtists.get(j));
+                    sortedArtists.set(j, aux);
 
                     int aux2 = numberOfLikes.get(i);
                     numberOfLikes.set(i, numberOfLikes.get(j));
                     numberOfLikes.set(j, aux2);
-                } else if (numberOfLikes.get(i).equals(numberOfLikes.get(j))) {
-                    if (sortedAlbums.get(i).getName().compareTo(sortedAlbums.get(j).getName()) > 0) {
-                        Album aux = sortedAlbums.get(i);
-                        sortedAlbums.set(i, sortedAlbums.get(j));
-                        sortedAlbums.set(j, aux);
+                }
+
+                if (numberOfLikes.get(i).equals(numberOfLikes.get(j))) {
+                    if (sortedArtists.get(i).getUsername().compareTo(sortedArtists.get(j).getUsername()) > 0) {
+                        Artist aux = sortedArtists.get(i);
+                        sortedArtists.set(i, sortedArtists.get(j));
+                        sortedArtists.set(j, aux);
 
                         int aux2 = numberOfLikes.get(i);
                         numberOfLikes.set(i, numberOfLikes.get(j));
                         numberOfLikes.set(j, aux2);
                     }
-
                 }
             }
         }
 
-
-
-
         int i = 0;
-        while (i < TOP_NR && i < sortedAlbums.size()) {
-            result.add(sortedAlbums.get(i).getName());
+        while (i < TOP_NR && i < sortedArtists.size()) {
+            result.add(sortedArtists.get(i).getUsername());
             i++;
-        }
 
+            if (i == TOP_NR) {
+                break;
+            }
+        }
     }
 
-
-
-    public GetTop5Albums(SearchBar input) {
+    public GetTop5Artists(SearchBar input) {
         this.command = input.getCommand();
         this.timestamp = input.getTimestamp();
         result = new ArrayList<>();
     }
+
+
 
     @Override
     public void accept(CommandVisitor visitor) {

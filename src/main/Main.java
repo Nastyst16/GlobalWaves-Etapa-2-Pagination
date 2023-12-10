@@ -165,7 +165,7 @@ public final class Main {
                 }
             }
 
-            if (input.getTimestamp() == 7855) {
+            if (input.getTimestamp() == 6933) {
                 int x = 5;
             }
 
@@ -217,17 +217,18 @@ public final class Main {
 
 
 //            if for debugging
-            if (input.getTimestamp() == 6900) {
+            if (input.getTimestamp() == 10889 && input.getCommand().equals("printCurrentPage")) {
                 int x = 5;
             }
 
-            if (input.getTimestamp() == 740) {
+            if (input.getTimestamp() == 11139 && input.getCommand().equals("printCurrentPage")) {
                 int x = 5;
             }
 
-            if (input.getTimestamp() == 86) {
+            if (input.getTimestamp() == 14849) {
                 int x = 5;
             }
+
 
 
 
@@ -277,6 +278,7 @@ public final class Main {
                 case "removePodcast":       commands.add(new RemovePodcast(input));         break;
                 case "removeEvent":         commands.add(new RemoveEvent(input));           break;
                 case "getTop5Albums":       commands.add(new GetTop5Albums(input));         break;
+                case "getTop5Artists":      commands.add(new GetTop5Artists(input));        break;
 
 
                 default: break;

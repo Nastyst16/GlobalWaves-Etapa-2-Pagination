@@ -289,6 +289,13 @@ public class Search implements Command {
         user.setCurrentSearch(this);
         user.setTypeSelected(-1);
         user.setCurrentType(null);
+        user.setCurrentPodcast(null);
+        user.setCurrentPlaylist(null);
+
+        user.setTypeLoaded(-1);
+        user.setShuffle(false);
+
+
         user.setTypeLoaded(-1);
         user.setRepeatString("No Repeat");
     }
