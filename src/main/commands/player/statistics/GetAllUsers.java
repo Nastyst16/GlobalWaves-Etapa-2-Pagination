@@ -1,7 +1,10 @@
 package main.commands.player.statistics;
 
-import main.Command;
-import main.CommandVisitor;
+import main.Collections.Artists;
+import main.Collections.Hosts;
+import main.Collections.Users;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.SearchBar;
 import main.users.User;
 import main.users.Artist;
@@ -16,20 +19,16 @@ public final class GetAllUsers implements Command {
 
     /**
      * Method that executes the command
-     * @param users the list of all the users
-     * @param artists the list of all the artists
-     * @param hosts the list of all the hosts
      */
-    public void execute(final ArrayList<User> users, final ArrayList<Artist> artists,
-                        final ArrayList<Host> hosts) {
+    public void execute() {
 
-        for (User user : users) {
+        for (User user : Users.getUsers()) {
             this.result.add(user.getUsername());
         }
-        for (Artist artist : artists) {
+        for (Artist artist : Artists.getArtists()) {
             this.result.add(artist.getUsername());
         }
-        for (Host host : hosts) {
+        for (Host host : Hosts.getHosts()) {
             this.result.add(host.getUsername());
         }
 

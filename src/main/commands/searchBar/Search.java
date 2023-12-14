@@ -1,8 +1,13 @@
 package main.commands.searchBar;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import main.Command;
-import main.CommandVisitor;
+import main.Collections.Albums;
+import main.Collections.Artists;
+import main.Collections.Hosts;
+import main.Collections.Playlists;
+import main.Collections.Podcasts;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.SearchBar;
 import main.users.User;
 import main.commands.types.Album;
@@ -35,18 +40,14 @@ public class Search implements Command {
     /**
      * This method is used to execute the command.
      */
-    public void execute(final User currUser, final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts,
-                        final ArrayList<Album> albums,
-                        final ArrayList<Artist> artists,
-                        final ArrayList<Host> hosts) {
+    public void execute(final User currUser) {
 
         if (!currUser.getOnline()) {
             this.setMessage(this.user + " is offline.");
             return;
         }
 
-        this.setSearch(currUser, everyPlaylist, podcasts, albums, artists, hosts);
+        this.setSearch(currUser);
     }
 
 
@@ -133,14 +134,13 @@ public class Search implements Command {
 
     /**
      * searching by podcast type
-     * @param podcasts every podcast
      */
-    public void searchingByPodcastType(final ArrayList<Podcast> podcasts) {
+    public void searchingByPodcastType() {
 
         String podcastPrefix = (String) (filters.get("name"));
         String owner = (String) (filters.get("owner"));
 
-        for (Podcast podcast : podcasts) {
+        for (Podcast podcast : Podcasts.getPodcasts()) {
             if ((podcastPrefix == null || podcast.getName().startsWith(podcastPrefix))
                     && (owner == null || podcast.getOwner().equals(owner))) {
                 results.add(podcast.getName());
@@ -157,13 +157,12 @@ public class Search implements Command {
 
     /**
      * searching by playlist type
-     * @param everyPlaylist every playlist
      */
-    public void searchingByPlaylistType(final ArrayList<Playlist> everyPlaylist) {
+    public void searchingByPlaylistType() {
         String owner = (String) (filters.get("owner"));
         String name = (String) (filters.get("name"));
 
-        for (Playlist playlist : everyPlaylist) {
+        for (Playlist playlist : Playlists.getPlaylists()) {
             if (playlist.getVisibility().equals("private") && !playlist.getUser().equals(user)) {
                 continue;
             }
@@ -210,12 +209,11 @@ public class Search implements Command {
 
     /**
      * searching by artist type
-     * @param artists every artist
      */
-    public void searchingByArtist(final ArrayList<Artist> artists) {
+    public void searchingByArtist() {
         String name = (String) (filters.get("name"));
 
-        for (Artist artist : artists) {
+        for (Artist artist : Artists.getArtists()) {
             if (artist.getUsername().startsWith(name)) {
                 results.add(artist.getUsername());
             }
@@ -231,12 +229,11 @@ public class Search implements Command {
 
     /**
      * searching by host type
-     * @param hosts every host
      */
-    public void searchingByHost(final ArrayList<Host> hosts) {
+    public void searchingByHost() {
         String name = (String) (filters.get("name"));
 
-        for (Host host : hosts) {
+        for (Host host : Hosts.getHosts()) {
             if (host.getUsername().startsWith(name)) {
                 results.add(host.getUsername());
             }
@@ -254,14 +251,8 @@ public class Search implements Command {
     /**
      * This method is used to set the search.
      * @param currUser the current user
-     * @param everyPlaylist every playlist
-     * @param podcasts every podcast
      */
-    public void setSearch(final User currUser, final ArrayList<Playlist> everyPlaylist,
-                          final ArrayList<Podcast> podcasts,
-                          final ArrayList<Album> albums,
-                          final ArrayList<Artist> artists,
-                          final ArrayList<Host> hosts) {
+    public void setSearch(final User currUser) {
 
 //                if only type is songs:
         if (this.type.equals("song")) {
@@ -271,31 +262,31 @@ public class Search implements Command {
 
 //                if only type is podcasts:
         if (this.type.equals("podcast")) {
-            this.searchingByPodcastType(podcasts);
+            this.searchingByPodcastType();
             currUser.setTypeFoundBySearch(PODCAST);
         }
 
 //                if only type is playlist:
         if (this.type.equals("playlist")) {
-            this.searchingByPlaylistType(everyPlaylist);
+            this.searchingByPlaylistType();
             currUser.setTypeFoundBySearch(PLAYLIST);
         }
 
 //        if only type is album
         if (this.type.equals("album")) {
-            this.searchingByAlbum(albums);
+            this.searchingByAlbum(Albums.getAlbums());
             currUser.setTypeFoundBySearch(ALBUM);
         }
 
 //        if only type is artist:
         if (this.type.equals("artist")) {
-            this.searchingByArtist(artists);
+            this.searchingByArtist();
             currUser.setTypeFoundBySearch(ARTIST);
         }
 
 //        if only type is album
         if (this.type.equals("host")) {
-            this.searchingByHost(hosts);
+            this.searchingByHost();
             currUser.setTypeFoundBySearch(HOST);
         }
 

@@ -1,16 +1,17 @@
 package main.commands.player.admin;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import main.Command;
-import main.CommandVisitor;
+import main.Collections.Users;
+import main.Collections.Artists;
+import main.Collections.Hosts;
+import main.Collections.Songs;
+import main.Collections.Podcasts;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.SearchBar;
 import main.users.User;
-import main.commands.types.Podcast;
-import main.commands.types.Song;
 import main.users.Artist;
 import main.users.Host;
-
-import java.util.ArrayList;
 
 public final class AddUser implements Command {
     private final String command;
@@ -25,10 +26,8 @@ public final class AddUser implements Command {
      * execute method for AddUser command,
      * calls the addUser method and adds the user to the list of users
      */
-    public void execute(final ArrayList<Song> songs, final ArrayList<Podcast> podcasts,
-                        final ArrayList<User> users, final ArrayList<Artist> artists,
-                        final ArrayList<Host> hosts) {
-        this.addUser(songs, podcasts, users, artists, hosts);
+    public void execute() {
+        this.addUser();
     }
 
     /**
@@ -59,23 +58,21 @@ public final class AddUser implements Command {
      * if it is, we return a message
      * if it isn't, we add the user to the list of corresponding users
      */
-    public void addUser(final ArrayList<Song> everySong, final ArrayList<Podcast> everyPodcast,
-                        final ArrayList<User> users, final ArrayList<Artist> artists,
-                        final ArrayList<Host> hosts) {
+    public void addUser() {
 
-        for (User u : users) {
+        for (User u : Users.getUsers()) {
             if (u.getUsername().equals(this.user)) {
                 this.setMessage("The username " + this.user + " is already taken.");
                 return;
             }
         }
-        for (Artist artist : artists) {
+        for (Artist artist : Artists.getArtists()) {
             if (artist.getUsername().equals(this.user)) {
                 this.setMessage("The username " + this.user + " is already taken.");
                 return;
             }
         }
-        for (Host host : hosts) {
+        for (Host host : Hosts.getHosts()) {
             if (host.getUsername().equals(this.user)) {
                 this.setMessage("The username " + this.user + " is already taken.");
                 return;
@@ -84,15 +81,15 @@ public final class AddUser implements Command {
 
         if (this.type.equals("user")) {
 
-            users.add(new User(user, age, city, everySong, everyPodcast));
+            Users.addUser(new User(user, age, city, Songs.getSongs(), Podcasts.getPodcasts()));
 
         } else if (this.type.equals("artist")) {
 
-            artists.add(new Artist(user, age, city));
+            Artists.addArtist(new Artist(user, age, city));
 
         } else if (this.type.equals("host")) {
 
-            hosts.add(new Host(user, age, city));
+            Hosts.addHost(new Host(user, age, city));
         }
         this.setMessage("The username " + user + " has been added successfully.");
     }

@@ -1,15 +1,15 @@
 package main.commands.player.host;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import main.Command;
-import main.CommandVisitor;
+import main.Collections.Podcasts;
+import main.Collections.Users;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.SearchBar;
 import main.users.User;
 import main.commands.types.Podcast;
 import main.users.Artist;
 import main.users.Host;
-
-import java.util.ArrayList;
 
 public final class RemovePodcast implements Command {
     private final String command;
@@ -24,12 +24,9 @@ public final class RemovePodcast implements Command {
      * @param currUser the current user
      * @param artist the artist
      * @param host the host
-     * @param users the users
-     * @param podcasts the podcasts
      */
-    public void execute(final User currUser, final Artist artist, final Host host,
-                        final ArrayList<User> users, final ArrayList<Podcast> podcasts) {
-        this.setRemovePodcast(currUser, artist, host, users, podcasts);
+    public void execute(final User currUser, final Artist artist, final Host host) {
+        this.setRemovePodcast(currUser, artist, host);
     }
 
     /**
@@ -37,11 +34,8 @@ public final class RemovePodcast implements Command {
      * @param currUser the current user
      * @param artist the artist
      * @param host the host
-     * @param users the users
-     * @param podcasts the podcasts
      */
-    public void setRemovePodcast(final User currUser, final Artist artist, final Host host,
-                                 final ArrayList<User> users, final ArrayList<Podcast> podcasts) {
+    public void setRemovePodcast(final User currUser, final Artist artist, final Host host) {
 
         if (currUser != null || artist != null) {
             this.setMessage(this.user + " is not an host.");
@@ -67,7 +61,7 @@ public final class RemovePodcast implements Command {
         }
 
 //        verifying if a users currently listens to the podcast
-        for (User currentUser : users) {
+        for (User currentUser : Users.getUsers()) {
             if (currentUser.getCurrentType() != null) {
                 for (Podcast podcast : host.getHostPodcasts()) {
                     this.setMessage(this.user + " can't delete this podcast.");
@@ -79,9 +73,9 @@ public final class RemovePodcast implements Command {
 //        deleting everything related to the podcast
         for (Podcast p : host.getHostPodcasts()) {
 
-            for (User u : users) {
+            for (User u : Users.getUsers()) {
 
-                u.setEveryPodcast(podcasts);
+                u.setEveryPodcast(Podcasts.getPodcasts());
 //                deleting also every user listened podcasts
                 for (Podcast podcastToRemove : u.getPodcastsPlayed()) {
                     if (podcastToRemove.getName().equals(p.getName())) {
@@ -104,7 +98,7 @@ public final class RemovePodcast implements Command {
         for (Podcast podcast : host.getHostPodcasts()) {
             if (podcast.getName().equals(this.name)) {
                 host.getHostPodcasts().remove(podcast);
-                podcasts.remove(podcast);
+                Podcasts.removePodcast(podcast);
                 break;
             }
         }

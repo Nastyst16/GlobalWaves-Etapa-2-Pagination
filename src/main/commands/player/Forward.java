@@ -1,7 +1,7 @@
 package main.commands.player;
 
-import main.Command;
-import main.CommandVisitor;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.SearchBar;
 import main.users.User;
 

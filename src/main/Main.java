@@ -6,11 +6,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import fileio.input.EpisodeInput;
 import fileio.input.LibraryInput;
-import fileio.input.PodcastInput;
-import fileio.input.SongInput;
-import fileio.input.UserInput;
+import main.Collections.Users;
+import main.Collections.Albums;
+import main.Collections.Artists;
+import main.Collections.Hosts;
+import main.Collections.Playlists;
+import main.Collections.Podcasts;
+import main.Collections.Songs;
 import main.commands.pageSystem.ChangePage;
 import main.commands.pageSystem.PrintCurrentPage;
 import main.commands.player.admin.AddUser;
@@ -32,11 +35,6 @@ import main.commands.player.statistics.GetTop5Playlists;
 import main.commands.player.statistics.GetTop5Songs;
 import main.commands.searchBar.Search;
 import main.commands.searchBar.Select;
-import main.commands.types.Album;
-import main.commands.types.Episode;
-import main.commands.types.Playlist;
-import main.commands.types.Podcast;
-import main.commands.types.Song;
 import main.commands.types.Type;
 import main.commands.player.AddRemoveInPlaylist;
 import main.commands.player.CreatePlayList;
@@ -57,6 +55,8 @@ import main.commands.player.statistics.GetAllUsers;
 import main.commands.player.ShowPlaylists;
 import main.commands.player.ShowPreferredSongs;
 import main.commands.player.user.SwitchConnectionStatus;
+import main.inputCommand.Command;
+import main.inputCommand.ConcreteCommandVisitor;
 import main.users.Artist;
 import main.users.Host;
 import main.users.User;
@@ -128,55 +128,16 @@ public final class Main {
 
         ArrayNode outputs = objectMapper.createArrayNode();
 
-        // TODO add your implementation
-
-//        reading songs
-        ArrayList<SongInput> songInputs = library.getSongs();
-
-        ArrayList<Song> songs = new ArrayList<>();
-//        storing songs
-        for (SongInput songInput : songInputs) {
-            songs.add(new Song(songInput.getName(), songInput.getDuration(), songInput.getAlbum(),
-                    songInput.getTags(), songInput.getLyrics(), songInput.getGenre(),
-                    songInput.getReleaseYear(), songInput.getArtist()));
-        }
-
-//        reading Podcasts && Episodes
-        ArrayList<PodcastInput> podcastInputs = library.getPodcasts();
-
-        ArrayList<Podcast> podcasts = new ArrayList<>();
-        for (PodcastInput podcastInput : podcastInputs) {
-            ArrayList<Episode> episodes = new ArrayList<>();
-            for (EpisodeInput episodeInput : podcastInput.getEpisodes()) {
-                episodes.add(new Episode(episodeInput));
-            }
-            podcasts.add(new Podcast(podcastInput.getName(), podcastInput.getOwner(), episodes));
-        }
-
-
-//        reading users
-        ArrayList<UserInput> userInputs = library.getUsers();
-
-        ArrayList<User> users = new ArrayList<>();
-
-//        storing users
-        for (UserInput userInput : userInputs) {
-            users.add(new User(userInput.getUsername(), userInput.getAge(),
-                    userInput.getCity(), songs, podcasts));
-        }
-
 //        reading input test files
         ArrayList<SearchBar> searchBarInputs = objectMapper.
-                readValue(new File(CheckerConstants.TESTS_PATH + filePathInput),
-                        new TypeReference<ArrayList<SearchBar>>() { });
+                readValue(new File(CheckerConstants.TESTS_PATH
+                        + filePathInput), new TypeReference<>() { });
 
+//        storing the collections from the library
+        storeCollections(library);
+
+//        creating the list of commands
         ArrayList<Command> commands = new ArrayList<>();
-
-//        every playlist, album, artist, host
-        ArrayList<Playlist> everyPlaylist = new ArrayList<>();
-        ArrayList<Album> everyAlbum = new ArrayList<>();
-        ArrayList<Artist> everyArtist = new ArrayList<>();
-        ArrayList<Host> everyHost = new ArrayList<>();
 
 //        creating the executor
         ConcreteCommandVisitor executor = new ConcreteCommandVisitor();
@@ -185,19 +146,18 @@ public final class Main {
         for (SearchBar input : searchBarInputs) {
 
             String command = input.getCommand();
-            User user = findingUser(input, users);
+
+            User user = findingUser(input, Users.getUsers());
+            Artist artist = findingArtist(user, input);
+            Host host = findingHost(user, input);
 
 //            calculating how many seconds have gone sine the last command for every user
-            howManySecsGone(users, input);
+            howManySecsGone(input);
 
             int index = commands.size();
 
-            Artist artist = findingArtist(user, input, everyArtist);
-            Host host = findingHost(user, input, everyHost);
-
 //            creating the commands
-            executor.setExecutor(commands, input, user, songs, everyPlaylist,
-                    podcasts, users, everyAlbum, everyArtist, everyHost, artist, host);
+            executor.setExecutor(commands, input, user, artist, host);
 
             switch (command) {
                 case "search":              commands.add(new Search(input));                 break;
@@ -244,12 +204,14 @@ public final class Main {
                 case "getTop5Albums":       commands.add(new GetTop5Albums(input));          break;
                 case "getTop5Artists":      commands.add(new GetTop5Artists(input));         break;
 
-
                 default: break;
             }
 //            we have the command created, now we use the visitor design pattern
             commands.get(index).accept(executor);
         }
+//        reseting the collections after every test
+        resetCollections();
+
 //        parsing the requeriments
         parsingReq(commands, filePathOutput, outputs, objectMapper);
     }
@@ -275,14 +237,12 @@ public final class Main {
      * this method finds the artist
      * @param user the current user
      * @param input the current input
-     * @param everyArtist the list of artists
      * @return the artist
      */
-    public static Artist findingArtist(final User user, final SearchBar input,
-                                       final ArrayList<Artist> everyArtist) {
+    public static Artist findingArtist(final User user, final SearchBar input) {
         Artist artist = null;
         if (user == null) {
-            for (Artist a : everyArtist) {
+            for (Artist a : Artists.getArtists()) {
                 if (a.getUsername().equals(input.getUsername())) {
                     artist = a;
                     break;
@@ -296,14 +256,12 @@ public final class Main {
      * this method finds the host
      * @param user the current user
      * @param input the current input
-     * @param everyHost the list of hosts
      * @return the host
      */
-    public static Host findingHost(final User user, final SearchBar input,
-                                   final ArrayList<Host> everyHost) {
+    public static Host findingHost(final User user, final SearchBar input) {
         Host host = null;
         if (user == null) {
-            for (Host h : everyHost) {
+            for (Host h : Hosts.getHosts()) {
                 if (h.getUsername().equals(input.getUsername())) {
                     host = h;
                     break;
@@ -316,11 +274,10 @@ public final class Main {
 
     /**
      * this method calculates how many seconds have gone since the last command
-     * @param users the list of users
      * @param input the current input
      */
-    public static void howManySecsGone(final ArrayList<User> users, final SearchBar input) {
-        for (User u : users) {
+    public static void howManySecsGone(final SearchBar input) {
+        for (User u : Users.getUsers()) {
             if (u.getCurrentType() != null && !u.isPaused() && u.getOnline()) {
                 int newSecsGone = input.getTimestamp() - u.getPrevTimestamp();
 
@@ -361,5 +318,33 @@ public final class Main {
         objectWriter.writeValue(new File(filePathOutput), outputs);
     }
 
-}
+    /**
+     * this method stores the collections
+     * @param library the library
+     */
+    private static void storeCollections(final LibraryInput library) {
+//        storing songs
+        Songs.storeSongs(library);
 
+//        reading Podcasts && Episodes
+        Podcasts.storePodcasts(library);
+
+//        reading users
+        Users.storeUsers(library);
+    }
+
+    /**
+     * this method resets the collections
+     * after every test
+     */
+    public static void resetCollections() {
+        Songs.reset();
+        Podcasts.reset();
+        Playlists.reset();
+        Users.reset();
+        Artists.reset();
+        Hosts.reset();
+        Albums.reset();
+    }
+
+}

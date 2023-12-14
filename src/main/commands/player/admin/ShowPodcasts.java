@@ -1,7 +1,7 @@
 package main.commands.player.admin;
 
-import main.Command;
-import main.CommandVisitor;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.SearchBar;
 import main.commands.types.Podcast;
 import main.users.Host;

@@ -1,13 +1,12 @@
 package main.commands.player;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import main.Command;
-import main.CommandVisitor;
+import main.Collections.Playlists;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.commands.types.Playlist;
 import main.SearchBar;
 import main.users.User;
-
-import java.util.ArrayList;
 
 public final class CreatePlayList implements Command {
     private final String command;
@@ -21,10 +20,8 @@ public final class CreatePlayList implements Command {
      * executes the command CreatePlayList
      * @param input the input given by the user
      * @param currUser the user that issued the command
-     * @param everyPlaylist the list of all playlists
      */
-    public void execute(final SearchBar input, final User currUser,
-                        final ArrayList<Playlist> everyPlaylist) {
+    public void execute(final SearchBar input, final User currUser) {
 
 //        if the currUser is offline
         if (!currUser.getOnline()) {
@@ -34,7 +31,7 @@ public final class CreatePlayList implements Command {
 
 //                verify if a playlist with the same name exists;
         String msg = "Playlist created successfully.";
-        for (Playlist p : everyPlaylist) {
+        for (Playlist p : Playlists.getPlaylists()) {
             if (p.getName().equals(input.getPlaylistName())) {
                 msg = "A playlist with the same name already exists.";
             }
@@ -44,7 +41,7 @@ public final class CreatePlayList implements Command {
 
         if (!msg.equals("A playlist with the same name already exists.")) {
             currUser.addPlaylistToList(this.getPlaylist());
-            everyPlaylist.add(this.getPlaylist());
+            Playlists.addPlaylist(this.getPlaylist());
         }
 
     }

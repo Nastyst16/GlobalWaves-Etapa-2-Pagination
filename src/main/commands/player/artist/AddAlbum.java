@@ -1,8 +1,11 @@
 package main.commands.player.artist;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import main.Command;
-import main.CommandVisitor;
+import main.Collections.Albums;
+import main.Collections.Songs;
+import main.Collections.Users;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.SearchBar;
 import main.users.User;
 import main.commands.types.Song;
@@ -50,18 +53,14 @@ public class AddAlbum implements Command {
      * Method that executes the command
      * and adds a new album to the artist's albums.
      */
-    public void execute(final User currUser, final Artist artist, final Host host,
-                        final ArrayList<Song> everySong, final ArrayList<Album> everyAlbum,
-                        final ArrayList<User> users) {
-        this.addAlbum(currUser, artist, host, everySong, everyAlbum, users);
+    public void execute(final User currUser, final Artist artist, final Host host) {
+        this.addAlbum(currUser, artist, host);
     }
 
     /**
      * Method that adds a new album to the artist's albums.
      */
-    public void addAlbum(final User currUser, final Artist artist, final Host host,
-                         final ArrayList<Song> everySong, final ArrayList<Album> everyAlbum,
-                         final ArrayList<User> users) {
+    public void addAlbum(final User currUser, final Artist artist, final Host host) {
 
         if (currUser != null || host != null) {
             this.setMessage(this.user + " is not an artist.");
@@ -90,15 +89,17 @@ public class AddAlbum implements Command {
         }
 
         for (Song song : albumSongs) {
-            everySong.add(song);
+            Songs.addSong(song);
         }
-        for (User u : users) {
-            u.setEverySong(everySong);
+        for (User u : Users.getUsers()) {
+            u.setEverySong(Songs.getSongs());
         }
 
-        everyAlbum.add(new Album(this.user, this.name, this.releaseYear,
+        Albums.addAlbum(new Album(this.user, this.name, this.releaseYear,
                 this.description, this.albumSongs));
-        artist.getAlbums().add(everyAlbum.get(everyAlbum.size() - 1));
+
+        artist.getAlbums().add(Albums.getAlbums().
+                get(Albums.getAlbums().size() - 1));
         this.setMessage(this.user + " has added new album successfully.");
     }
 

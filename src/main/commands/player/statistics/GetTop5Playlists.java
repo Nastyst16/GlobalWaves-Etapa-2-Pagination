@@ -1,10 +1,10 @@
 package main.commands.player.statistics;
 
-import main.Command;
-import main.CommandVisitor;
+import main.Collections.Playlists;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.commands.types.Playlist;
 import main.SearchBar;
-import main.users.User;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,8 +20,8 @@ public final class GetTop5Playlists implements Command {
     /**
      * Execute the command
      */
-    public void execute(final ArrayList<Playlist> everyPlaylist, final ArrayList<User> users) {
-        this.searchTop5Playlists(everyPlaylist);
+    public void execute() {
+        this.searchTop5Playlists();
     }
 
     @Override
@@ -41,12 +41,10 @@ public final class GetTop5Playlists implements Command {
 
     /**
      * Search for the top 5 playlists
-     *
-     * @param everyPlaylists all the playlists
      */
-    public void searchTop5Playlists(final ArrayList<Playlist> everyPlaylists) {
+    public void searchTop5Playlists() {
 
-        ArrayList<Playlist> sortedPlaylists = new ArrayList<>(everyPlaylists);
+        ArrayList<Playlist> sortedPlaylists = new ArrayList<>(Playlists.getPlaylists());
         Collections.sort(sortedPlaylists, Comparator.
                 comparingInt(Playlist::getFollowers).reversed());
 

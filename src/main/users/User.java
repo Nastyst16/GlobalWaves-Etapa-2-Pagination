@@ -2,6 +2,7 @@ package main.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import main.Collections.Songs;
 import main.commands.searchBar.Search;
 import main.commands.searchBar.Select;
 import main.commands.types.Episode;
@@ -90,10 +91,9 @@ public class User {
             copyPodcast.setOwner(podcast.getOwner());
             ArrayList<Episode> episodes = new ArrayList<>();
             for (Episode episode : podcast.getEpisodesList()) {
-                Episode copyEpisode = new Episode();
-                copyEpisode.setName(episode.getName());
-                copyEpisode.setDuration(episode.getDuration());
-                copyEpisode.setDescription(episode.getDescription());
+                Episode copyEpisode = new Episode(episode.getName(), episode.getDuration(),
+                        episode.getDescription());
+
                 episodes.add(copyEpisode);
             }
             copyPodcast.setEpisodesList(episodes);
@@ -104,17 +104,9 @@ public class User {
 //        copy the songs
         this.everySong = new ArrayList<>();
         for (Song song : everySong) {
-            Song copySong = new Song();
-            copySong.setName(song.getName());
-            copySong.setDuration(song.getDuration());
-            copySong.setAlbum(song.getAlbum());
-            copySong.setTags(song.getTags());
-            copySong.setLyrics(song.getLyrics());
-            copySong.setGenre(song.getGenre());
-            copySong.setReleaseYear(song.getReleaseYear());
-            copySong.setArtist(song.getArtist());
-            copySong.setSecondsGone(song.getSecondsGone());
-            copySong.setNumberOfLikes(song.getNumberOfLikes());
+            Song copySong = new Song(song.getName(), song.getDuration(), song.getAlbum(),
+                    song.getTags(), song.getLyrics(), song.getGenre(),
+                    song.getReleaseYear(), song.getArtist());
 
             this.everySong.add(copySong);
         }
@@ -129,10 +121,9 @@ public class User {
     /**
      * setting the liked songs
      * @param song the song liked
-     * @param songs the songs
      * @return
      */
-    public boolean setLikedSongs(final Song song, final ArrayList<Song> songs) {
+    public boolean setLikedSongs(final Song song) {
 
         boolean exists = false;
         for (Song tmp : likedSongs) {
@@ -156,7 +147,7 @@ public class User {
 
             song.setNumberOfLikes(song.getNumberOfLikes() - 1);
 
-            for (Song tmp : songs) {
+            for (Song tmp : Songs.getSongs()) {
                 if (tmp.getName().equals(song.getName())
                         && tmp.getAlbum().equals(song.getAlbum())) {
                     tmp.setNumberOfLikes(tmp.getNumberOfLikes() - 1);
@@ -167,11 +158,7 @@ public class User {
 
         } else {
 
-
-//            this.likedSongs.add(song);
-//            song.setNumberOfLikes(song.getNumberOfLikes() + 1);
-
-            for (Song tmp : songs) {
+            for (Song tmp : Songs.getSongs()) {
                 if (tmp.getName().equals(song.getName())
                         && tmp.getAlbum().equals(song.getAlbum())) {
                     this.likedSongs.add(tmp);
@@ -228,42 +215,7 @@ public class User {
         }
 
 //        if the type loaded is a song or a podcast
-        if (user.getTypeLoaded() == 0 || user.getTypeLoaded() == 1) {
-
-            if (user.getRepeatStatus() == 1 && user.getRemainingTime() < 0) {
-                user.setRepeatStatus(0);
-                user.setRepeatString("No Repeat");
-
-                currentType.setSecondsGone(currentType.getSecondsGone()
-                        - currentType.getDuration());
-
-                user.setRemainingTime((currentType.getDuration())
-                        - currentType.getSecondsGone());
-            } else if (user.getRepeatStatus() == 2) {
-//                if repeat infinite
-                while (user.getRemainingTime() < 0) {
-
-                    currentType.setSecondsGone(currentType.getSecondsGone()
-                            - currentType.getDuration());
-                    user.setRemainingTime((currentType.getDuration())
-                            - currentType.getSecondsGone());
-                }
-            }
-//            if the type loaded is a playlist
-        } else if (user.getTypeLoaded() == 2) {
-
-            if (user.getRepeatStatus() == 1 && user.getRemainingTime() < 0) {
-
-                int index = user.getCurrentPlaylist().getSongList().size() - 1;
-//                if the last song is playing
-                if (user.getCurrentPlaylist().getSongList().get(index).
-                        getName().equals(user.getSelectedName())) {
-                    currentType = user.getCurrentPlaylist().getSongList().get(0);
-                    currentType.setSecondsGone(currentType.getDuration()
-                            + currentType.getSecondsGone());
-                }
-            }
-        }
+        loadedSongOrPodcast(user, currentType);
 
         if (user.getTypeLoaded() == 1) {
 //            comutam in episodul urmator pana cand este nevoie
@@ -378,6 +330,49 @@ public class User {
         this.currType = currentType;
         user.setCurrentType(currentType);
     }
+
+
+    private void loadedSongOrPodcast(final User user, final Type type) {
+        Type currentType = type;
+
+        if (user.getTypeLoaded() == 0 || user.getTypeLoaded() == 1) {
+
+            if (user.getRepeatStatus() == 1 && user.getRemainingTime() < 0) {
+                user.setRepeatStatus(0);
+                user.setRepeatString("No Repeat");
+
+                currentType.setSecondsGone(currentType.getSecondsGone()
+                        - currentType.getDuration());
+
+                user.setRemainingTime((currentType.getDuration())
+                        - currentType.getSecondsGone());
+            } else if (user.getRepeatStatus() == 2) {
+//                if repeat infinite
+                while (user.getRemainingTime() < 0) {
+
+                    currentType.setSecondsGone(currentType.getSecondsGone()
+                            - currentType.getDuration());
+                    user.setRemainingTime((currentType.getDuration())
+                            - currentType.getSecondsGone());
+                }
+            }
+//            if the type loaded is a playlist
+        } else if (user.getTypeLoaded() == 2) {
+
+            if (user.getRepeatStatus() == 1 && user.getRemainingTime() < 0) {
+
+                int index = user.getCurrentPlaylist().getSongList().size() - 1;
+//                if the last song is playing
+                if (user.getCurrentPlaylist().getSongList().get(index).
+                        getName().equals(user.getSelectedName())) {
+                    currentType = user.getCurrentPlaylist().getSongList().get(0);
+                    currentType.setSecondsGone(currentType.getDuration()
+                            + currentType.getSecondsGone());
+                }
+            }
+        }
+    }
+
 
     private void setNull(final User user) {
         user.setCurrentType(null);

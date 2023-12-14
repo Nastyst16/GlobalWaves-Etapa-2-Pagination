@@ -1,11 +1,9 @@
 package main.commands.player;
 
-import main.Command;
-import main.CommandVisitor;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.SearchBar;
 import main.users.User;
-
-import java.util.ArrayList;
 
 public final class Repeat implements Command {
     private final String command;
@@ -16,9 +14,9 @@ public final class Repeat implements Command {
     /**
      * Executes the command
      */
-    public void execute(final ArrayList<Command> commands, final User currUser) {
+    public void execute(final User currUser) {
 
-        currUser.setRepeatStatus(((Repeat) (commands.getLast())).setRepeatMessage(currUser,
+        currUser.setRepeatStatus(this.setRepeatMessage(currUser,
                 currUser.getRepeatStatus(), currUser.getTypeLoaded()));
     }
 

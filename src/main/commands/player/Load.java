@@ -1,17 +1,19 @@
 package main.commands.player;
 
-import main.CommandVisitor;
-import main.Command;
+import main.Collections.Playlists;
+import main.Collections.Podcasts;
+import main.inputCommand.CommandVisitor;
+import main.inputCommand.Command;
 import main.SearchBar;
 import main.commands.types.Playlist;
 import main.commands.types.Podcast;
 import main.commands.types.Song;
 import main.commands.types.Album;
 import main.commands.types.Episode;
-
 import main.users.User;
-
 import java.util.ArrayList;
+
+import main.Collections.Albums;
 
 public final class Load implements Command {
     private final String command;
@@ -27,13 +29,9 @@ public final class Load implements Command {
     /**
      * execute method for load
      * @param currUser the current user
-     * @param everyPlaylist every playlist
-     * @param podcasts every podcast
-     * @param albums every album
      */
-    public void execute(final User currUser, final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts, final ArrayList<Album> albums) {
-        this.setLoad(currUser, everyPlaylist, podcasts, albums);
+    public void execute(final User currUser) {
+        this.setLoad(currUser);
     }
 
     /**
@@ -59,11 +57,8 @@ public final class Load implements Command {
     /** load command method
      *
      * @param currUser current user
-     * @param everyPlaylist every playlist
-     * @param podcasts every podcast
      */
-    public void setLoad(final User currUser, final ArrayList<Playlist> everyPlaylist,
-                        final ArrayList<Podcast> podcasts, final ArrayList<Album> everyAlbum) {
+    public void setLoad(final User currUser) {
 
 //        if the currUser is offline
         if (!currUser.getOnline()) {
@@ -87,13 +82,13 @@ public final class Load implements Command {
                 loadSong(currUser);
 
             } else if (currUser.getTypeSelected() == PODCAST) {
-                loadPodcast(currUser, podcasts);
+                loadPodcast(currUser, Podcasts.getPodcasts());
 
             } else if (currUser.getTypeSelected() == PLAYLIST) {
-                loadPlaylist(currUser, everyPlaylist);
+                loadPlaylist(currUser);
 
             } else if (currUser.getTypeSelected() == ALBUM) {
-                loadAlbum(currUser, everyAlbum);
+                loadAlbum(currUser, Albums.getAlbums());
             }
 
         } else {
@@ -113,10 +108,9 @@ public final class Load implements Command {
      * this method loads a playlist
      * when load it is important to deep-copy the playlist
      * @param currUser the current user
-     * @param everyPlaylist every playlist
      */
-    public void loadPlaylist(final User currUser, final ArrayList<Playlist> everyPlaylist) {
-        for (Playlist playlist : everyPlaylist) {
+    public void loadPlaylist(final User currUser) {
+        for (Playlist playlist : Playlists.getPlaylists()) {
             if (playlist.getName().equals(currUser.
                     getCurrentSelect().getSelectedName())) {
                 currUser.setTypeLoaded(2);

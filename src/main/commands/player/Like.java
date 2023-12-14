@@ -1,12 +1,10 @@
 package main.commands.player;
 
-import main.Command;
-import main.CommandVisitor;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.commands.types.Song;
 import main.SearchBar;
 import main.users.User;
-
-import java.util.ArrayList;
 
 public final class Like implements Command {
     private final String command;
@@ -18,8 +16,8 @@ public final class Like implements Command {
     /**
      * executes the command
      */
-    public void execute(final User currUser, final ArrayList<Song> songs) {
-        this.likeHelper(currUser, songs);
+    public void execute(final User currUser) {
+        this.likeHelper(currUser);
     }
 
     /**
@@ -58,9 +56,8 @@ public final class Like implements Command {
      * evaluates the command
      *
      * @param currUser the user that called the command
-     * @param songs       the list of songs
      */
-    public void likeHelper(final User currUser, final ArrayList<Song> songs) {
+    public void likeHelper(final User currUser) {
 
         if (!currUser.getOnline()) {
             this.message = this.user + " is offline.";
@@ -69,7 +66,7 @@ public final class Like implements Command {
 
         if (currUser.getCurrentType() != null) {
 //                    if we have loaded a song
-            boolean like = currUser.setLikedSongs((Song) currUser.getCurrentType(), songs);
+            boolean like = currUser.setLikedSongs((Song) currUser.getCurrentType());
             this.setMessageIfLiked(like);
         } else if (currUser.getTypeLoaded() == 2) {
 //                    if we have loaded a playlist

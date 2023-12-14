@@ -1,7 +1,8 @@
 package main.commands.player.statistics;
 
-import main.Command;
-import main.CommandVisitor;
+import main.Collections.Songs;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.commands.types.Song;
 import main.SearchBar;
 
@@ -19,9 +20,9 @@ public final class GetTop5Songs implements Command {
     /**
      * Execute the command
      */
-    public void execute(final ArrayList<Song> songs) {
+    public void execute() {
 
-        this.searchTop5Songs(songs);
+        this.searchTop5Songs();
     }
 
     @Override
@@ -41,12 +42,10 @@ public final class GetTop5Songs implements Command {
 
     /**
      * Search for the top 5 songs
-     *
-     * @param everySong all the songs
      */
-    public void searchTop5Songs(final ArrayList<Song> everySong) {
+    public void searchTop5Songs() {
 
-        ArrayList<Song> sortedSong = new ArrayList<>(everySong);
+        ArrayList<Song> sortedSong = new ArrayList<>(Songs.getSongs());
         Collections.sort(sortedSong, Comparator.comparingInt(Song::getNumberOfLikes).reversed());
 
         int i = 0;

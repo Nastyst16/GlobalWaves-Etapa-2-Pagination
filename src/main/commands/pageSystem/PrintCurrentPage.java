@@ -1,7 +1,9 @@
 package main.commands.pageSystem;
 
-import main.Command;
-import main.CommandVisitor;
+import main.Collections.Artists;
+import main.Collections.Hosts;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.SearchBar;
 import main.users.User;
 import main.commands.types.Song;
@@ -30,20 +32,16 @@ public final class PrintCurrentPage implements Command {
      * executes the command
      * calls the setPrintCurrPage method
      */
-    public void execute(final User currUser, final ArrayList<Artist> artists,
-                        final ArrayList<Host> hosts) {
-        this.setPrintCurrPage(currUser, artists, hosts);
+    public void execute(final User currUser) {
+        this.setPrintCurrPage(currUser);
     }
 
     /**
      * sets the message to be printed for the current page
      *
      * @param currUser the current user
-     * @param artists the list of artists
-     * @param hosts the list of hosts
      */
-    public void setPrintCurrPage(final User currUser, final ArrayList<Artist> artists,
-                                 final ArrayList<Host> hosts) {
+    public void setPrintCurrPage(final User currUser) {
 
 //        if the currUser is offline
         if (!currUser.getOnline()) {
@@ -61,11 +59,11 @@ public final class PrintCurrentPage implements Command {
 
 //          if the current page is Artist
         } else if (currUser.getCurrentPage().equals("Artist")) {
-            printArtist(currUser, artists);
+            printArtist(currUser);
 
 //          if the current page is Host
         } else if (currUser.getCurrentPage().equals("Host")) {
-            printHost(currUser, hosts);
+            printHost(currUser);
         }
     }
 
@@ -139,17 +137,10 @@ public final class PrintCurrentPage implements Command {
      * prints the artist page of the user (albums, merchandise and events)
      *
      * @param currUser the current user
-     * @param artists the list of artists
      */
-    private void printArtist(final User currUser, final ArrayList<Artist> artists) {
+    private void printArtist(final User currUser) {
 
-        Artist currentArtist = null;
-        for (Artist artist : artists) {
-            if (artist.getUsername().equals(currUser.getSelectedPageOwner())) {
-                currentArtist = artist;
-                break;
-            }
-        }
+        Artist currentArtist = Artists.getArtist(currUser.getSelectedPageOwner());
 
         ArrayList<String> albumsByName = new ArrayList<>();
         StringBuilder merchByName = new StringBuilder();
@@ -194,17 +185,10 @@ public final class PrintCurrentPage implements Command {
      * prints the host page of the user (podcasts and announcements)
      *
      * @param currUser the current user
-     * @param hosts the list of hosts
      */
-    private void printHost(final User currUser, final ArrayList<Host> hosts) {
+    private void printHost(final User currUser) {
 
-        Host currentHost = null;
-        for (Host host : hosts) {
-            if (host.getUsername().equals(currUser.getSelectedPageOwner())) {
-                currentHost = host;
-                break;
-            }
-        }
+        Host currentHost = Hosts.getHost(currUser.getSelectedPageOwner());
 
         StringBuilder podcastsByName = new StringBuilder();
         StringBuilder announcementsByName = new StringBuilder();

@@ -1,8 +1,8 @@
 package main.commands.player;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import main.Command;
-import main.CommandVisitor;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.SearchBar;
 import main.users.User;
 import main.commands.types.Song;
@@ -159,6 +159,4 @@ public final class Status implements Command {
     public void setRemainingTime(final int remainingTime) {
         this.remainingTime = remainingTime;
     }
-
-
 }

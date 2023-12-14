@@ -1,8 +1,9 @@
 #
 <div align="center"><img src="https://i.ytimg.com/vi/VZ1d_M4coQ4/maxresdefault.jpg" width="500px"></div>
 
-# Proiect GlobalWaves  - Etapa 1
+# Proiect GlobalWaves  - Etapa 2
 
+#### I used my own code from the previous stage.
 
 ### Description
 

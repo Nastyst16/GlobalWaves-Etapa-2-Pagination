@@ -1,8 +1,10 @@
 package main.commands.player.host;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import main.Command;
-import main.CommandVisitor;
+import main.Collections.Podcasts;
+import main.Collections.Users;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.SearchBar;
 import main.users.User;
 import main.commands.types.Episode;
@@ -28,12 +30,9 @@ public final class AddPodcast implements Command {
      * @param currUser the current user
      * @param artist the artist
      * @param host the host
-     * @param users the users
-     * @param everyPodcast every podcast
      */
-    public void execute(final User currUser, final Artist artist, final Host host,
-                        final ArrayList<User> users, final ArrayList<Podcast> everyPodcast) {
-        addPodcast(currUser, artist, host, users, everyPodcast);
+    public void execute(final User currUser, final Artist artist, final Host host) {
+        addPodcast(currUser, artist, host);
     }
 
     /**
@@ -53,11 +52,8 @@ public final class AddPodcast implements Command {
      * @param currUser the user
      * @param artist the artist
      * @param host the host
-     * @param users the users
-     * @param everyPodcast every podcast
      */
-    public void addPodcast(final User currUser, final Artist artist, final Host host,
-                           final ArrayList<User> users, final ArrayList<Podcast> everyPodcast) {
+    public void addPodcast(final User currUser, final Artist artist, final Host host) {
 
         if (currUser != null || artist != null) {
             this.setMessage(this.user + " is not a host.");
@@ -68,7 +64,7 @@ public final class AddPodcast implements Command {
         }
 
 //        verifying if the podcast already exists
-        for (Podcast podcast : everyPodcast) {
+        for (Podcast podcast : Podcasts.getPodcasts()) {
             if (podcast.getName().equals(this.name)) {
                 this.setMessage(this.user + " has another podcast with the same name.");
                 return;
@@ -76,10 +72,10 @@ public final class AddPodcast implements Command {
         }
 
 //        adding the podcast
-        everyPodcast.add(new Podcast(this.name, this.user, this.episodes));
+        Podcasts.addPodcast(new Podcast(this.name, this.user, this.episodes));
         host.getHostPodcasts().add(new Podcast(this.name, this.user, this.episodes));
 
-        for (User u : users) {
+        for (User u : Users.getUsers()) {
 
             ArrayList<Episode> episodesCopy = new ArrayList<>();
             for (Episode e : this.episodes) {

@@ -1,8 +1,9 @@
 package main.commands.searchBar;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import main.Command;
-import main.CommandVisitor;
+import main.Collections.Playlists;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.commands.types.Playlist;
 import main.SearchBar;
 import main.users.User;
@@ -28,8 +29,8 @@ public class Select implements Command {
     /**
      * Execute.
      */
-    public void execute(final User currUser, final ArrayList<Playlist> everyPlaylist) {
-        this.setSelect(currUser, everyPlaylist);
+    public void execute(final User currUser) {
+        this.setSelect(currUser);
     }
 
     /**
@@ -57,9 +58,8 @@ public class Select implements Command {
      * Sets select.
      *
      * @param currUser   the current user
-     * @param everyPlaylist the every playlist
      */
-    public void setSelect(final User currUser, final ArrayList<Playlist> everyPlaylist) {
+    public void setSelect(final User currUser) {
 
 //                if the last command was search
         if (currUser.getCurrentSearch() != null) {
@@ -99,7 +99,7 @@ public class Select implements Command {
                 } else if (currUser.getTypeFoundBySearch() == PLAYLIST) {
                     currUser.setTypeSelected(PLAYLIST);
 
-                    for (Playlist playlist : everyPlaylist) {
+                    for (Playlist playlist : Playlists.getPlaylists()) {
                         if (playlist.getName().equals(name)) {
                             currUser.setSelectedPlaylist(playlist);
                             break;

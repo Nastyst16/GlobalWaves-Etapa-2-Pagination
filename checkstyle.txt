@@ -1,4 +1,2 @@
 Starting audit...
-[ERROR] C:\Users\crist\Desktop\GitHub\GlobalWaves-Etapa-2-Pagination\.\src\main\users\User.java:204:5: Method length is 177 lines (max allowed is 150). [MethodLength]
 Audit done.
-Checkstyle ends with 1 errors.

@@ -1,7 +1,8 @@
 package main.commands.player.statistics;
 
-import main.Command;
-import main.CommandVisitor;
+import main.Collections.Users;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.SearchBar;
 import main.users.User;
 
@@ -14,11 +15,10 @@ public final class GetOnlineUsers implements Command {
 
     /**
      * Method that executes the command
-     * @param users the list of all the users
      */
-    public void execute(final ArrayList<User> users) {
+    public void execute() {
 
-        for (User u : users) {
+        for (User u : Users.getUsers()) {
             if (u.getOnline()) {
                 result.add(u.getUsername());
             }

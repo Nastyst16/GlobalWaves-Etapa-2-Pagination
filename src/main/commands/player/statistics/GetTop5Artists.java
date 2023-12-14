@@ -1,7 +1,8 @@
 package main.commands.player.statistics;
 
-import main.Command;
-import main.CommandVisitor;
+import main.Collections.Artists;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.SearchBar;
 import main.commands.types.Album;
 import main.commands.types.Song;
@@ -17,23 +18,21 @@ public final class GetTop5Artists implements Command {
 
     /**
      * Execute method for the GetTop5Artists command
-     * @param everyArtist the list of all the artists
      */
-    public void execute(final ArrayList<Artist> everyArtist) {
-        this.searchTop5Artists(everyArtist);
+    public void execute() {
+        this.searchTop5Artists();
     }
 
 
     /**
      * Method that searches for the top 5 artists
-     * @param everyArtist the list of all the artists
      */
-    private void searchTop5Artists(final ArrayList<Artist> everyArtist) {
+    private void searchTop5Artists() {
 
 //        the artist with the most liked songs
         ArrayList<Integer> numberOfLikes = new ArrayList<>();
 
-        for (Artist artist : everyArtist) {
+        for (Artist artist : Artists.getArtists()) {
             int nrOfLikes = 0;
             for (Album album : artist.getAlbums()) {
                 for (Song song : album.getSongList()) {
@@ -43,7 +42,7 @@ public final class GetTop5Artists implements Command {
             numberOfLikes.add(nrOfLikes);
         }
 
-        ArrayList<Artist> sortedArtists = new ArrayList<>(everyArtist);
+        ArrayList<Artist> sortedArtists = new ArrayList<>(Artists.getArtists());
         for (int i = 0; i < numberOfLikes.size(); i++) {
             for (int j = i + 1; j < numberOfLikes.size(); j++) {
                 if (numberOfLikes.get(i) < numberOfLikes.get(j)) {

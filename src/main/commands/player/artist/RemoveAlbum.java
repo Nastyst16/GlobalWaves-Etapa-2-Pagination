@@ -1,8 +1,11 @@
 package main.commands.player.artist;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import main.Command;
-import main.CommandVisitor;
+import main.Collections.Albums;
+import main.Collections.Songs;
+import main.Collections.Users;
+import main.inputCommand.Command;
+import main.inputCommand.CommandVisitor;
 import main.SearchBar;
 import main.users.User;
 import main.commands.types.Album;
@@ -11,7 +14,6 @@ import main.commands.types.Song;
 import main.users.Artist;
 import main.users.Host;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 
 public final class RemoveAlbum implements Command {
@@ -25,10 +27,8 @@ public final class RemoveAlbum implements Command {
     /**
      * executes the RemoveAlbum command
      */
-    public void execute(final User currUser, final Artist artist, final Host host,
-                        final ArrayList<User> users, final ArrayList<Song> songs,
-                        final ArrayList<Album> albums) {
-        this.setRemoveAlbum(currUser, artist, host, users, songs, albums);
+    public void execute(final User currUser, final Artist artist, final Host host) {
+        this.setRemoveAlbum(currUser, artist, host);
     }
 
     /**
@@ -36,13 +36,8 @@ public final class RemoveAlbum implements Command {
      * @param currUser the current user
      * @param artist the artist
      * @param host the host
-     * @param users the list of users
-     * @param songs the list of songs
-     * @param albums the list of albums
      */
-    public void setRemoveAlbum(final User currUser, final Artist artist, final Host host,
-                               final ArrayList<User> users, final ArrayList<Song> songs,
-                               final ArrayList<Album> albums) {
+    public void setRemoveAlbum(final User currUser, final Artist artist, final Host host) {
 
 
         if (currUser != null || host != null) {
@@ -70,7 +65,7 @@ public final class RemoveAlbum implements Command {
 
 
 //        verifying if a users currently listens to the album
-        for (User currentUser : users) {
+        for (User currentUser : Users.getUsers()) {
             if (currentUser.getCurrentType() != null) {
                 if (currentUser.getCurrentPlaylist().getName().equals(this.name)) {
                     this.setMessage(this.user + " can't delete this album.");
@@ -96,11 +91,11 @@ public final class RemoveAlbum implements Command {
         for (Album album : artist.getAlbums()) {
             if (album.getName().equals(this.name)) {
                 artist.getAlbums().remove(album);
-                albums.remove(album);
+                Albums.removeAlbum(album);
 
 //                deleting also every song from the album
-                songs.removeAll(album.getAlbumSongs());
-                for (User u : users) {
+                Songs.getSongs().removeAll(album.getAlbumSongs());
+                for (User u : Users.getUsers()) {
                     u.getLikedSongs().removeAll(album.getAlbumSongs());
 
                     for (Playlist playlist : u.getPlayListList()) {
