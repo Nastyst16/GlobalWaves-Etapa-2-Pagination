@@ -39,6 +39,40 @@
 4. Statistics
     * GetTop5Songs: The most 5 liked songs will be shown
     * GetTop5Playlists: The most 5 followed playlists will be shown
+    * GetTop5Albums: The 5 albums with the most liked songs will be shown
+    * GetTop5Artists: The artist with the most liked songs will be shown
+    * GetAllUsers: All the users will be shown
+    * GetOnlineUsers: All the online users will be shown
+5. Admin
+   * AddUser: The admin can add a new user. It can be a simple user, an artist or a host.
+   * DeleteUser: The admin can delete a user/artist/host.
+        * removeUser: if a user is listening to one of removeUser's playlists, we can't delete it.
+        * removeArtist: if a user is listening to removeArtist's songs, or has selected it's page, we can't delete it.
+        * removeHost: if a user is listening to removeHost's podcasts, or has selected it's page, we can't delete it.
+   * ShowAlbums: Shows all the albums from the library.
+   * ShowPodcasts: Shows all the podcasts from the library.
+6. Artist
+   * AddAlbum: adds a new album.
+   * AddEvent: adds a new event.
+   * AddMerch: adds a new merch.
+   * RemoveAlbum: removes an album. If a user is currently listening to one of the songs from the album, we can't delete it.
+   * RemoveEvent: removes an event.
+7. Host
+   * AddAnnouncement: adds a new announcement.
+   * AddPodcast: adds a new podcast.
+   * RemoveAnnouncement: removes an announcement.
+   * RemovePodcast: removes a podcast. If a user is currently listening to the podcast, we can't delete it.
+8. User
+   * SwitchConnectionStatus: The user can choose if he is online or offline.
+9. PageSystem:
+   * ChangePage: The user can change the page he is currently on. The pages are: Home, LikedSongs.
+   * PrintCurrentPage: The user can see the current page he is on. 
+        * The available pages are: Home, LikedSongs, ArtistPage, HostPage.
+        * The user can search an artist or host and select it's page.
+        * "Home": display liked songs sorted by number of likes and followed playlists
+        * "LikedSongs": display most recent liked songs and followed playlists
+        * "ArtistPage": display artist's albums, merch and events
+        * "HostPage": display host's podcasts and announcements
 
     
 
@@ -63,45 +97,128 @@
         The "currentType" variable i call it "generic", because in it i can store a song or a podcast or an episode.
     I made this generic because i wanted that the set of instructions to be made only once, not three times.
 
+        In contrast to the stage 1, besides of the required commands, I implemented 2 design patterns: Singleton and Visitor.
+    The Singleton pattern is in the "Collections" classes, there are 7 of them, one for each type of object.
+    The Visitor pattern is in the "inputCommand" package.
+
         At the end of main, we write everything into the Json file.
 
 
 ## Project Structure;
 
 * src/
-  * main/
-    * Commands/
-      * Command
-      * Main
-      * SearchBar
-      * Test
-      * User
-      * SearchBar/
-        * Search
-        * SearchPlaylist
-      * Types/
-        * Episode
-        * Playlist
-        * Podcast
-        * Song
-        * Type
-      * Player/
-        * AddRemoveInPlaylist
-        * Backward
-        * CreatePlaylist
-        * Follow
-        * Forward
-        * GetTop5Playlists
-        * GetTop5Songs
-        * Like
-        * Load
-        * Next
-        * PlayPause
-        * Prev
-        * Repeat
-        * ShowPlaylist
-        * Shuffle
-        * Status
-        * SwitchVisibility
+    * main/
+        * Commands/
+            * Command
+            * Main
+            * SearchBar
+            * Test
+            * User
+            * SearchBar/
+                * Search
+                * SearchPlaylist
+            * Types/
+                * Episode
+                * Playlist
+                * Podcast
+                * Song
+                * Type
+            * Player/
+                * AddRemoveInPlaylist
+                * Backward
+                * CreatePlaylist
+                * Follow
+                * Forward
+                * GetTop5Playlists
+                * GetTop5Songs
+                * Like
+                * Load
+                * Next
+                * PlayPause
+                * Prev
+                * Repeat
+                * ShowPlaylist
+                * Shuffle
+                * Status
+                * SwitchVisibility
+        * Collections/
+            * Albums.java
+            * Artists.java
+            * Hosts.java
+            * Playlists.java
+            * Podcasts.java
+            * Songs.java
+            * Users.java
+        * Main.java
+        * SearchBar.java
+        * Test.java
+  * commands/
+      * pageSystem/
+          * ChangePage.java
+          * PrintCurrentPage.java
+      * player/
+          * AddRemoveInPlaylist.java
+          * Backward.java
+          * CreatePlayList.java
+          * Follow.java
+          * Forward.java
+          * Like.java
+          * Load.java
+          * Next.java
+          * PlayPause.java
+          * Prev.java
+          * Repeat.java
+          * ShowPlaylists.java
+          * ShowPreferredSongs.java
+          * Shuffle.java
+          * Status.java
+          * SwitchVisibility.java
+          * admin/
+              * AddUser.java
+              * DeleteUser.java
+              * ShowAlbums.java
+              * ShowPodcasts.java
+          * artist/
+              * AddAlbum.java
+              * AddEvent.java
+              * AddMerch.java
+              * RemoveAlbum.java
+              * RemoveEvent.java
+          * host/
+              * AddAnnouncement.java
+              * AddPodcast.java
+              * RemoveAnnouncement.java
+              * RemovePodcast.java
+          * statistics/
+              * GetAllUsers.java
+              * GetOnlineUsers.java
+              * GetTop5Albums.java
+              * GetTop5Artists.java
+              * GetTop5Playlists.java
+              * GetTop5Songs.java
+          * user/
+              * SwitchConnectionStatus.java
+      * searchBar/
+          * Search.java
+          * Select.java
+      * types/
+          * Album.java
+          * Announcement.java
+          * Episode.java
+          * Event.java
+          * Merch.java
+          * Playlist.java
+          * Podcast.java
+          * Song.java
+          * Type.java
+  * inputCommand/
+      * Command.java
+      * CommandVisitor.java
+      * ConcreteCommandVisitor.java
+  * users/
+      * Artist.java
+      * Host.java
+      * User.java
+
 
 #### Assignment Link: [https://ocw.cs.pub.ro/courses/poo-ca-cd/teme/proiect/etapa1](https://ocw.cs.pub.ro/courses/poo-ca-cd/teme/proiect/etapa1)

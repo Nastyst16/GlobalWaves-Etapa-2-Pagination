@@ -38,7 +38,7 @@ public final class ShowAlbums implements Command {
      * constructor for the ShowAlbums command
      * @param input the input given by the user
      */
-    public ShowAlbums(final SearchBar input) {
+    public  ShowAlbums(final SearchBar input) {
         this.command = input.getCommand();
         this.user = input.getUsername();
         this.timestamp = input.getTimestamp();

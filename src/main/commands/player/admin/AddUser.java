@@ -34,7 +34,7 @@ public final class AddUser implements Command {
      * constructor for AddUser command
      * @param input the input from the user
      */
-    public AddUser(final SearchBar input) {
+    public  AddUser(final SearchBar input) {
         this.command = input.getCommand();
         this.user = input.getUsername();
         this.timestamp = input.getTimestamp();
